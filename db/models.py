@@ -1,17 +1,19 @@
 from django.db import models                                                                                                                          
 import jdatetime
 import datetime
+import re
+ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
 class Manager(models.Manager):                                                                                                                      
         def filter(self, *args, **kwargs):
             new_kwargs = {}
             for k in kwargs:
                 if '__year' in k :
-                    first_year = jdatetime.datetime(kwargs[k],1 ,1)
-                    new_kwargs['da__gte'] = jdatetime.datetime(kwargs[k],1 ,1)
+                    first_year = jdatetime.datetime(int(kwargs[k]),1 ,1)
+                    new_kwargs['da__gte'] = jdatetime.datetime(int(kwargs[k]),1 ,1)
                     last_day = 29
                     if first_year.isleap() :
                         last_day = 30
-                    new_kwargs['da__lte'] = jdatetime.datetime(kwargs[k],12, last_day, 23, 59, 59)
+                    new_kwargs['da__lte'] = jdatetime.datetime(int(kwargs[k]),12, last_day, 23, 59, 59)
                 else :
                     new_kwargs[k] = kwargs[k]
             return models.Manager.filter(self, *args, **new_kwargs )
@@ -67,7 +69,10 @@ class DateField(models.Field):
         # produces much friendlier error messages.
         year, month, day = map(int, value.split('-'))
         try:
-            return jdatetime.date.fromgregorian(date=datetime.date(year, month, day))
+            if year > 1500 :
+                return jdatetime.date.fromgregorian(date=datetime.date(year, month, day))
+            else:
+                return jdatetime.date(year,month,day)
         except ValueError, e:
             msg = self.error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
@@ -92,10 +97,10 @@ class DateField(models.Field):
         # For "__month", "__day", and "__week_day" lookups, convert the value
         # to an int so the database backend always sees a consistent type.
         if lookup_type == 'year':
-            date_start = jdatetime.date(value, 1, 1)
-            date_end   = jdatetime.date(value, 12, 29)
+            date_start = jdatetime.date(int(value), 1, 1)
+            date_end   = jdatetime.date(int(value), 12, 29)
             return date_start.togregorian().year
-        return super(DateField, self).get_prep_lookup(lookup_type, value)
+        #return super(DateField, self).get_prep_lookup(lookup_type, value)
         if lookup_type in (
                 'regex', 'iregex', 'month', 'day', 'week_day', 'search',
                 'contains', 'icontains', 'iexact', 'startswith', 'istartswith',
@@ -104,7 +109,8 @@ class DateField(models.Field):
             return value
 
         elif lookup_type in ('exact', 'gt', 'gte', 'lt', 'lte'):
-            return self.get_prep_value(value)
+            prep  = self.get_prep_value(value)
+            return prep.togregorian()
 
         elif lookup_type in ('range', 'in'):
             return [self.get_prep_value(v) for v in value]
