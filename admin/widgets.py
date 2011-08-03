@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 
 import settings
 
-class AdminjDateWidget(forms.DateInput):
+class AdminjDateWidget(forms.jDateInput):
     class Media:
         js = (settings.ADMIN_MEDIA_PREFIX + "js/jcalendar.js",
             settings.ADMIN_MEDIA_PREFIX + "js/admin/jDateTimeShortcuts.js")

@@ -1,4 +1,4 @@
-from django_jalali.forms.widgets import DateInput as JWDateInput
+from django_jalali.forms.widgets import jDateInput
 from django import forms
 import time
 import datetime
@@ -7,14 +7,14 @@ from django.core import validators
 from django.utils import datetime_safe, formats
 from django.utils.translation import ugettext as _
 from widgets import *
-class DateField(forms.Field):
-    widget = JWDateInput
+class jDateField(forms.Field):
+    widget = jDateInput
     default_error_messages = {
         'invalid': _(u'Enter a valid date.'),
     }
 
     def __init__(self, input_formats=None, *args, **kwargs):
-        super(DateField, self).__init__(*args, **kwargs)
+        super(jDateField, self).__init__(*args, **kwargs)
         self.input_formats = input_formats
 
     def to_python(self, value):

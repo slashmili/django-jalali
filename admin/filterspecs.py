@@ -4,7 +4,7 @@ to add filtering to your admin interface you need to import django_jalali.admin.
 from django.contrib.admin.filterspecs import FilterSpec
 from django.utils.translation import ugettext as _
 import jdatetime
-from django_jalali.db import models as jmodels
+from django_jalali.db.models import jDateField
 class jDateFieldFilterSpec(FilterSpec):
     def __init__(self, f, request, params, model, model_admin,
                  field_path=None): 
@@ -69,4 +69,4 @@ for f in FilterSpec.filter_specs :
 
 
 if register_jdate  == True :
-    FilterSpec.filter_specs.insert(0, (lambda f: isinstance(f, jmodels.DateField), jDateFieldFilterSpec))
+    FilterSpec.filter_specs.insert(0, (lambda f: isinstance(f, jDateField), jDateFieldFilterSpec))

@@ -5,12 +5,12 @@ import time
 import datetime
 import jdatetime
 
-class DateInput(widgets.Input):
+class jDateInput(widgets.Input):
     input_type = 'text'
     format = None
 
     def __init__(self, attrs=None, format=None):
-        super(DateInput, self).__init__(attrs)
+        super(jDateInput, self).__init__(attrs)
         if format:
             self.format = format
 
@@ -25,7 +25,7 @@ class DateInput(widgets.Input):
 
     def render(self, name, value, attrs=None):
         value = self._format_value(value)
-        return super(DateInput, self).render(name, value, attrs)
+        return super(jDateInput, self).render(name, value, attrs)
 
     def _has_changed(self, initial, data):
         # If our field has show_hidden_initial=True, initial will be a string
@@ -36,5 +36,5 @@ class DateInput(widgets.Input):
             initial = jdatetime.date(*time.strptime(initial, input_format)[:3])
         except (TypeError, ValueError):
             pass
-        return super(DateInput, self)._has_changed(self._format_value(initial), data)
+        return super(jDateInput, self)._has_changed(self._format_value(initial), data)
 

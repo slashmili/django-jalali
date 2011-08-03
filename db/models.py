@@ -1,33 +1,33 @@
-from django.db import models                                                                                                                          
 import jdatetime
 import datetime
 import re
+from django.db import models
 from django.utils.translation import ugettext as _
-
-ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
-class Manager(models.Manager):                                                                                                                      
-        def filter(self, *args, **kwargs):
-            new_kwargs = {}
-            for k in kwargs:
-                if '__year' in k :
-                    first_year = jdatetime.datetime(int(kwargs[k]),1 ,1)
-                    new_kwargs['da__gte'] = jdatetime.datetime(int(kwargs[k]),1 ,1)
-                    last_day = 29
-                    if first_year.isleap() :
-                        last_day = 30
-                    new_kwargs['da__lte'] = jdatetime.datetime(int(kwargs[k]),12, last_day, 23, 59, 59)
-                else :
-                    new_kwargs[k] = kwargs[k]
-            return models.Manager.filter(self, *args, **new_kwargs )
-
-class Model(object):
-    objects = Manager()
-
-from django_jalali.forms import DateField as jDateField                                                                                               
+from django_jalali import forms
 from django.utils.functional import curry
 from django.core import exceptions
 
-class DateField(models.Field):
+ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
+class jManager(models.Manager):
+    """we need to rewrite this class to handle year filter"""
+    def filter(self, *args, **kwargs):
+        """if filter is year we divide to __gte and __lte"""
+        new_kwargs = {}
+        for k in kwargs:
+            if '__year' in k :
+                first_year = jdatetime.datetime(int(kwargs[k]),1 ,1)
+                new_kwargs['da__gte'] = jdatetime.datetime(int(kwargs[k]),1 ,1)
+                last_day = 29
+                if first_year.isleap() :
+                    last_day = 30
+                new_kwargs['da__lte'] = jdatetime.datetime(int(kwargs[k]),12, last_day, 23, 59, 59)
+            else :
+                new_kwargs[k] = kwargs[k]
+        return models.Manager.filter(self, *args, **new_kwargs )
+
+
+
+class jDateField(models.Field):
     #objects = JDManager()
     description = _("Date (without time)")
     __metaclass__ = models.SubfieldBase
@@ -84,10 +84,10 @@ class DateField(models.Field):
             setattr(model_instance, self.attname, value)
             return value
         else:
-            return super(DateField, self).pre_save(model_instance, add)
+            return super(jDateField, self).pre_save(model_instance, add)
 
     def contribute_to_class(self, cls, name):
-        super(DateField,self).contribute_to_class(cls, name)
+        super(jDateField,self).contribute_to_class(cls, name)
         if not self.null:
             setattr(cls, 'get_next_by_%s' % self.name,
                 curry(cls._get_next_or_previous_by_FIELD, field=self, is_next=True))
@@ -101,7 +101,7 @@ class DateField(models.Field):
             date_start = jdatetime.date(int(value), 1, 1)
             date_end   = jdatetime.date(int(value), 12, 29)
             return date_start.togregorian().year
-        #return super(DateField, self).get_prep_lookup(lookup_type, value)
+        #return super(jDateField, self).get_prep_lookup(lookup_type, value)
         if lookup_type in (
                 'regex', 'iregex', 'month', 'day', 'week_day', 'search',
                 'contains', 'icontains', 'iexact', 'startswith', 'istartswith',
@@ -124,7 +124,7 @@ class DateField(models.Field):
         if lookup_type in ('month', 'day', 'week_day'):
             return int(value)
 
-        return super(DateField, self).get_prep_lookup(lookup_type, value)
+        return super(jDateField, self).get_prep_lookup(lookup_type, value)
 
     def get_prep_value(self, value):
         return self.to_python(value)
@@ -150,6 +150,6 @@ class DateField(models.Field):
         return data
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': jDateField}
+        defaults = {'form_class': forms.jDateField}
         defaults.update(kwargs)
-        return super(DateField, self).formfield(**defaults)
+        return super(jDateField, self).formfield(**defaults)
