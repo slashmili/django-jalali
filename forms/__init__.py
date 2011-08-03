@@ -5,12 +5,12 @@ import datetime
 import jdatetime 
 from django.core import validators
 from django.utils import datetime_safe, formats
-
-
+from django.utils.translation import ugettext as _
+from widgets import *
 class DateField(forms.Field):
     widget = JWDateInput
     default_error_messages = {
-        'invalid': u'Enter a valid date.',
+        'invalid': _(u'Enter a valid date.'),
     }
 
     def __init__(self, input_formats=None, *args, **kwargs):

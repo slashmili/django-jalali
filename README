@@ -1,0 +1,67 @@
+This module gives you a DateField same as Django's DateField but you can get and query data based on Jalali Date
+== DEPENDENCY ==
+
+To use this module you need to install jdatetime module which you can install it with easy_install or pip
+
+== INSTALL ==
+
+== USAGE ==
+
+=== DIRECT USAGE ===
+
+1. run : 
+> django-admin.py startproject jalali_test
+2. start your app :
+> python manage.py startapp foo
+
+3. edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
+
+4. edit foo/models.py 
+
+from django.db import models                                                                                                                          
+from django_jalali.db import models as jmodels
+
+class Bar(models.Model):
+    objects = jmodels.Manager()
+    name =  models.CharField(max_length=200)
+    date =  jmodels.DateField()
+    def __str__(self):
+        return self.name
+
+5. run 
+    python manage.py syncdb
+
+6. test it
+> python manage.py shell
+Python 2.6.6 (r266:84292, Sep 15 2010, 15:52:39) 
+[GCC 4.4.5] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from foo.models import Bar
+>>> import jdatetime
+>>> today = jdatetime.date(1390, 5, 12)
+>>> mybar = Bar(name="foo", date=today)
+>>> mybar.save()
+>>> mybar.date
+jdatetime.date(1390, 5, 12)
+>>> Bar.objects.filter(date=today)
+[<Bar: foo>]
+>>> Bar.objects.filter(date__gte="1390-5-12")
+[<Bar: foo>]
+>>> Bar.objects.filter(date='1363-08-01')
+[]
+
+=== ADMIN INTERFACE USAGE
+1. create foo/admin.py
+
+from foo.models import Bar
+from django.contrib import admin
+import django_jalali.admin.filterspecs #you need to import this for adding filter in admin interface
+import django_jalali.admin as jadmin #you need import this for adding jalali calander widget
+
+class BarAdmin(admin.ModelAdmin):
+    list_filter = ['date']
+
+    admin.site.register(Bar, BarAdmin)
+
+2. fire up your django and enjoy using jalali date !

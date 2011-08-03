@@ -2,6 +2,8 @@ from django.db import models
 import jdatetime
 import datetime
 import re
+from django.utils.translation import ugettext as _
+
 ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
 class Manager(models.Manager):                                                                                                                      
         def filter(self, *args, **kwargs):
@@ -23,17 +25,16 @@ class Model(object):
 
 from django_jalali.forms import DateField as jDateField                                                                                               
 from django.utils.functional import curry
-from django.core.exceptions import ValidationError
-
+from django.core import exceptions
 
 class DateField(models.Field):
     #objects = JDManager()
-    description = "Date (without time)"
+    description = _("Date (without time)")
     __metaclass__ = models.SubfieldBase
     empty_strings_allowed = False
     default_error_messages = {
-        'invalid': 'Enter a valid date in YYYY-MM-DD format.',
-        'invalid_date': 'Invalid date: %s',
+        'invalid': _('Enter a valid date in YYYY-MM-DD format.'),
+        'invalid_date': _('Invalid date: %s'),
     }
 
     def __init__(self, verbose_name=None, name=None, auto_now=False, auto_now_add=False, **kwargs):
@@ -152,7 +153,3 @@ class DateField(models.Field):
         defaults = {'form_class': jDateField}
         defaults.update(kwargs)
         return super(DateField, self).formfield(**defaults)
-
-
-
-
