@@ -1,7 +1,10 @@
-from django_jalali.db.models import jDateField
+from django_jalali.db.models import jDateField, jDateTimeField
 from django.contrib.admin import options
 import django_jalali.admin.widgets 
-options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateField] = {'widget': widgets.AdminjDateWidget }
+from django import forms
+
+options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateField]     = {'widget': widgets.AdminjDateWidget }
+options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateTimeField] = {'form_class':  forms.SplitDateTimeField, 'widget': widgets.AdminSplitjDateTime}
 #maybe we can use same time
 #models.TimeField:       {'widget': widgets.AdminTimeWidget},
 #models.DateTimeField: {

@@ -26,7 +26,7 @@ class Bar(models.Model):
     name =  models.CharField(max_length=200)
     date =  jmodels.jDateField()
     def __str__(self):
-        return self.name
+        return "%s, %s"%(self.name, self.date)
 class BarTime(models.Model):
     objects = jmodels.jManager()
     name =  models.CharField(max_length=200)
@@ -50,9 +50,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> mybar.date
 jdatetime.date(1390, 5, 12)
 >>> Bar.objects.filter(date=today)
-[<Bar: foo>]
+[<Bar: foo, 1390-05-12>]
 >>> Bar.objects.filter(date__gte="1390-5-12")
-[<Bar: foo>]
+[<Bar: foo, 1390-05-12>]
 >>> Bar.objects.filter(date='1363-08-01')
 []
 >>> from foo.models import BarTime
@@ -71,7 +71,7 @@ jdatetime.date(1390, 5, 12)
 === ADMIN INTERFACE USAGE
 1. create foo/admin.py
 
-from foo.models import Bar
+from foo.models import Bar,BarTime
 from django.contrib import admin
 import django_jalali.admin.filterspecs #you need to import this for adding filter in admin interface
 import django_jalali.admin as jadmin #you need import this for adding jalali calander widget
@@ -80,5 +80,10 @@ class BarAdmin(admin.ModelAdmin):
     list_filter = ['date']
 
 admin.site.register(Bar, BarAdmin)
+
+class BarTimeAdmin(admin.ModelAdmin):
+    list_filter = ['datetime']
+
+admin.site.register(BarTime, BarTimeAdmin)
 
 2. Config admin interface and fire up your django and enjoy using jalali date !

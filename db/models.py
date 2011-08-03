@@ -162,14 +162,29 @@ class jDateTimeField(jDateField):
         if value is None:
             return value
         if isinstance(value, datetime.datetime):
-            return jdatetime.datetime.fromgregorian(datetime=value)
+            try :
+                if value.year < 1700 :
+                    return jdatetime.datetime(value.year, value.month, value.day, value.hour, value.minute, value.second, value.microsecond, value.tzinfo)
+                else :
+                    return jdatetime.datetime.fromgregorian(datetime=value)
+            except ValueError :
+                raise exceptions.ValidationError(self.error_messages['invalid'])
         if isinstance(value, datetime.date):
-            return jdatetime.datetime.fromgregorian(date=value)
-
+            try :
+                if value.year < 1700 :
+                    return jdatetime.datetime(value.year, value.month, value.day)
+                else :
+                    return jdatetime.datetime.fromgregorian(date=value)
+            except ValueError :
+                raise exceptions.ValidationError(self.error_messages['invalid'])
         if isinstance(value, jdatetime.datetime):
             return value
         if isinstance(value, jdatetime.date):
-            return jdatetime.datetime(value.year, value.month, value.day)
+            try :
+                d = jdatetime.datetime(value.year, value.month, value.day)
+            except ValueError :
+                raise exceptions.ValidationError(self.error_messages['invalid'])
+            return d
 
 
         # Attempt to parse a datetime:
@@ -246,6 +261,6 @@ class jDateTimeField(jDateField):
         return data
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': mainforms.DateTimeField}
+        defaults = {'form_class': forms.jDateTimeField}
         defaults.update(kwargs)
         return super(jDateTimeField, self).formfield(**defaults)
