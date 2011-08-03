@@ -1,9 +1,9 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
         name='django_jalali',
         version='0.9',
-        packages=['django_jalali',],
+        packages=find_packages(),
         description = ("Jalali Date support for Django model and admin interface"),
         url = 'http://github.com/slashmili/django-jalali',
         download_url = 'http://github.com/slashmili/django-jalali/tarball/master',
