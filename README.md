@@ -4,8 +4,8 @@ This module gives you a DateField same as Django's DateField but you can get and
 
 Dependencies
 ------------
-    * [.jdatetime](http://pypi.python.org/pypi/jdatetime/) -- easy_install jdatetime
-    * [.Django](https://www.djangoproject.com/) -- easy_install django
+* [.jdatetime](http://pypi.python.org/pypi/jdatetime/) -- easy_install jdatetime
+* [.Django](https://www.djangoproject.com/) -- easy_install django
 
 Install
 -------
@@ -17,17 +17,17 @@ Usage
 
 ### Direct Usage
 
-    * Run : 
+1. Run : 
 
     $ django-admin.py startproject jalali_test
 
-    * Start your app :
+2. Start your app :
 
     $ python manage.py startapp foo
 
-    * Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
+3. Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
 
-    * Edit foo/models.py 
+4. Edit foo/models.py 
 
     from django.db import models                                                                                                                          
     from django_jalali.db import models as jmodels
@@ -44,10 +44,10 @@ Usage
         datetime = jmodels.jDateTimeField()
         def __str__(self):
             return "%s, %s" %(self.name, self.datetime)
-    * Run 
+5. Run 
     $ python manage.py syncdb
 
-    * Test it
+6. Test it
     $ python manage.py shell
     Python 2.6.6 (r266:84292, Sep 15 2010, 15:52:39) 
     [GCC 4.4.5] on linux2
@@ -82,7 +82,7 @@ Usage
 Admin Interface 
 ---------------
 
-    * Create foo/admin.py
+1. Create foo/admin.py
 
     from foo.models import Bar,BarTime
     from django.contrib import admin
@@ -99,4 +99,4 @@ Admin Interface
 
     admin.site.register(BarTime, BarTimeAdmin)
 
-    * Config admin interface and fire up your django and enjoy using jalali date !
+2. Config admin interface and fire up your django and enjoy using jalali date !
