@@ -3,7 +3,7 @@ from django import forms
 import time
 import datetime
 import jdatetime 
-from django.core import validators
+from django.core import validators, exceptions
 from django.utils import datetime_safe, formats
 from django.utils.translation import ugettext as _
 from widgets import *
@@ -33,7 +33,7 @@ class jDateField(forms.Field):
                 return jdatetime.date(*time.strptime(value, format)[:3])
             except ValueError:
                 continue
-        raise ValidationError(self.error_messages['invalid'])
+        raise exceptions.ValidationError(self.error_messages['invalid'])
 
 
 class jDateTimeField(forms.Field):

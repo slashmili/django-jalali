@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-        name='django_jalali',
-        version='0.9',
+        name='django-jalali',
+        version='1.0',
         packages=find_packages(),
         description = ("Jalali Date support for Django model and admin interface"),
         url = 'http://github.com/slashmili/django-jalali',
@@ -12,6 +12,6 @@ setup(
         keywords = "django jalali",
         license='Python Software Foundation License',
         platforms='any',
-        requires = ["jdatetime","django"],
+        install_requires = ["jdatetime","django"],
         long_description=open('README').read()
 )
