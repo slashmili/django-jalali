@@ -104,6 +104,8 @@ class jDateField(models.Field):
 
         if lookup_type in ('exact', 'gt', 'gte', 'lt', 'lte'):
             prep  = self.get_prep_value(value)
+            if type(prep) == datetime.datetime or type(prep) == datetime.date:
+                return prep
             return prep.togregorian()
 
         elif lookup_type in ('range', 'in'):

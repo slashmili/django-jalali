@@ -1,6 +1,6 @@
 from django_jalali.db.models import jDateField, jDateTimeField
 from django.contrib.admin import options
-import django_jalali.admin.widgets 
+from django_jalali.admin import widgets
 from django import forms
 
 options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateField]     = {'widget': widgets.AdminjDateWidget }
