@@ -5,7 +5,7 @@ import jdatetime
 import datetime
 
 
-from django_jalali.tests.models import jDateModel, jDateTimeModel
+from django_jalali.tests.models import jDateModel, jDateModelAutoNow, jDateTimeModel, jDateTimeModelAutoNow
 
 from  custom_settings import change_settings
 settings_manager = change_settings(append_apps=['django_jalali.tests'])
@@ -14,9 +14,10 @@ settings_manager = change_settings(append_apps=['django_jalali.tests'])
 
 
 class JalaliDateModelTestCase(TestCase):
+    fixtures = ['initial_unittest_info.json']
     def tearDown(self):
         global settings_manager
-        settings_manager.revert()
+        #settings_manager.revert()
 
     def test_simple_save(self):
         """test simple function, including saving and retrieving jalali date from database"""
@@ -25,11 +26,21 @@ class JalaliDateModelTestCase(TestCase):
         d = jDateModel.objects.filter(date=jdatetime.date.today())
         self.assertEqual(d[0].date.togregorian(), datetime.date.today())
         
+        jd_model_auto_now = jDateModelAutoNow()
+        jd_model_auto_now.save()
+        self.assertEqual(jd_model_auto_now.date, jdatetime.date.today())
+
         j_date_time = jdatetime.datetime.today()
         jdt_model = jDateTimeModel(date_time=j_date_time)
         jdt_model.save()
         dt = jDateTimeModel.objects.filter(date_time=j_date_time)
         self.assertEqual(dt[0].date_time.togregorian(), j_date_time.togregorian())
+
+        j_date_time_auto_now = jDateTimeModelAutoNow()
+        j_date_time_auto_now.save()
+        self.assertEqual(j_date_time_auto_now.date_time.date(), jdatetime.date.today())
+        
+        
 
     def test_diffrent_saving(self):
         jd_model = jDateModel(date='1391-01-01')
@@ -81,6 +92,9 @@ class JalaliDateModelTestCase(TestCase):
         #self.assertEqual(jDateTimeModel.objects.filter(date_time=datetime.datetime(2012, 01, 01, 12, 12))[0].date_time, jdt_model.date_time)
         self.assertEqual(jDateTimeModel.objects.filter(date_time='2012-01-01 12:12')[0].date_time, jdatetime.datetime(1390, 10, 11, 12, 12))
 
+        jdt_model.date_time = '2012-01-01'
+        jdt_model.save()
+        self.assertEqual(jDateTimeModel.objects.filter(date_time='2012-01-01')[0].date_time, jdatetime.datetime(1390, 10, 11))
 
         jdt_model.date_time = '2012-01-01 12:12:12'
         jdt_model.save()
@@ -139,3 +153,12 @@ class JalaliDateModelTestCase(TestCase):
         with self.assertRaises(ValueError):
             jDateModel.objects.filter(date__month="12")
 
+
+    def test_admin_gui(self):
+        from django.contrib.auth.models import User
+        users =   User.objects.all()
+        from django.test.client import Client
+        c = Client()
+        response = c.post('/admin/', {'username': 'milad', 'password': 'milad'})
+        response = c.get('/admin/jtest/jtest/')
+        #print response

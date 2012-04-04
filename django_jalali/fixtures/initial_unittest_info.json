@@ -1,0 +1,45 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "milad", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2012-03-23 08:02:12", 
+            "groups": [
+                1, 
+                2, 
+                3, 
+                4
+            ], 
+            "user_permissions": [], 
+            "password": "sha1$2bb3a$aa5a623bdc32b8f6e73fdf99056b29629827b69d", 
+            "email": "milad@milad.com", 
+            "date_joined": "2012-03-22 14:07:57"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "user_writer", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": true, 
+            "last_login": "2012-03-23 08:18:33", 
+            "groups": [
+                5
+            ], 
+            "user_permissions": [], 
+            "password": "sha1$59869$c0ba6657dd28e8318b3c5ddcd58a0465c451c0db", 
+            "email": "", 
+            "date_joined": "2012-03-23 08:18:33"
+        }
+    }
+]
