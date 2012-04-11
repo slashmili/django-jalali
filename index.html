@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Django-jalali by slashmili</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Django-jalali</h1>
+        <p>Jalali DateField support for Django model</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/slashmili/django-jalali" class="button fork"><strong>Fork On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/slashmili/django-jalali/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/slashmili/django-jalali/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Django Jalali</h1>
+
+<p>This module gives you a DateField same as Django's DateField but you can get and query data based on Jalali Date</p>
+
+<h2>Dependencies</h2>
+
+<ul>
+<li><a href="http://pypi.python.org/pypi/jdatetime/">jdatetime</a></li>
+<li><a href="https://www.djangoproject.com/">Django</a></li>
+</ul><h2>Install</h2>
+
+<pre><code>easy_install django_jalali
+</code></pre>
+
+<h2>Usage</h2>
+
+<h3>Direct Usage</h3>
+
+<ol>
+<li>Run : </li>
+</ol><pre><code>$ django-admin.py startproject jalali_test
+</code></pre>
+
+<ol>
+<li>Start your app :</li>
+</ol><pre><code>    $ python manage.py startapp foo
+</code></pre>
+
+<ol>
+<li><p>Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)</p></li>
+<li><p>Edit foo/models.py </p></li>
+</ol><div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>                                                                                                                          
+<span class="kn">from</span> <span class="nn">django_jalali.db</span> <span class="kn">import</span> <span class="n">models</span> <span class="k">as</span> <span class="n">jmodels</span>
+
+<span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">jmodels</span><span class="o">.</span><span class="n">jManager</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span>  <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">date</span> <span class="o">=</span>  <span class="n">jmodels</span><span class="o">.</span><span class="n">jDateField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">"</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BarTime</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">jmodels</span><span class="o">.</span><span class="n">jManager</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span>  <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">datetime</span> <span class="o">=</span> <span class="n">jmodels</span><span class="o">.</span><span class="n">jDateTimeField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<ol>
+<li>Run </li>
+</ol><pre><code>$ python manage.py syncdb
+</code></pre>
+
+<ol>
+<li>Test it</li>
+</ol><div class="highlight">
+<pre><span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
+<span class="n">Python</span> <span class="mf">2.6</span><span class="o">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">r266</span><span class="p">:</span><span class="mi">84292</span><span class="p">,</span> <span class="n">Sep</span> <span class="mi">15</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">15</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">39</span><span class="p">)</span> 
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">4.4</span><span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux2</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="p">(</span><span class="n">InteractiveConsole</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">foo.models</span> <span class="kn">import</span> <span class="n">Bar</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">jdatetime</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">today</span> <span class="o">=</span> <span class="n">jdatetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">1390</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mybar</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"foo"</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mybar</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mybar</span><span class="o">.</span><span class="n">date</span>
+<span class="n">jdatetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">1390</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Bar</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Bar</span><span class="p">:</span> <span class="n">foo</span><span class="p">,</span> <span class="mi">1390</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mi">12</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Bar</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="s">"1390-5-12"</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Bar</span><span class="p">:</span> <span class="n">foo</span><span class="p">,</span> <span class="mi">1390</span><span class="o">-</span><span class="mo">05</span><span class="o">-</span><span class="mi">12</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Bar</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s">'1363-08-01'</span><span class="p">)</span>
+<span class="p">[]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">foo.models</span> <span class="kn">import</span> <span class="n">BarTime</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"Bar Time now"</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="n">jdatetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1380</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">datetime__lt</span><span class="o">=</span> <span class="n">jdatetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1380</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span> <span class="p">))</span>
+<span class="p">[]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">datetime__lte</span><span class="o">=</span> <span class="n">jdatetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1380</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span> <span class="p">))</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">BarTime</span><span class="p">:</span> <span class="n">Bar</span> <span class="n">Time</span> <span class="n">now</span><span class="p">,</span> <span class="mi">1380</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mo">0212</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">12</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">datetime__gt</span><span class="o">=</span><span class="s">'1380-08-02'</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">BarTime</span><span class="p">:</span> <span class="n">Bar</span> <span class="n">Time</span> <span class="n">now</span><span class="p">,</span> <span class="mi">1380</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mo">0212</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">12</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">datetime__gt</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="p">[]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">BarTime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">datetime__year</span><span class="o">=</span><span class="mi">1380</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">BarTime</span><span class="p">:</span> <span class="n">Bar</span> <span class="n">Time</span> <span class="n">now</span><span class="p">,</span> <span class="mi">1380</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mo">0212</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">12</span><span class="o">&gt;</span><span class="p">]</span>
+</pre>
+</div>
+
+
+<h3>Admin Interface</h3>
+
+<ol>
+<li>Create foo/admin.py</li>
+</ol><div class="highlight">
+<pre><span class="kn">from</span> <span class="nn">foo.models</span> <span class="kn">import</span> <span class="n">Bar</span><span class="p">,</span><span class="n">BarTime</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">import</span> <span class="nn">django_jalali.admin.filterspecs</span> <span class="c">#you need to import this for adding filter in admin interface</span>
+<span class="kn">import</span> <span class="nn">django_jalali.admin</span> <span class="kn">as</span> <span class="nn">jadmin</span> <span class="c">#you need import this for adding jalali calander widget</span>
+
+<span class="k">class</span> <span class="nc">BarAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">[</span><span class="s">'date'</span><span class="p">]</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Bar</span><span class="p">,</span> <span class="n">BarAdmin</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">BarTimeAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">[</span><span class="s">'datetime'</span><span class="p">]</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BarTime</span><span class="p">,</span> <span class="n">BarTimeAdmin</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<ol>
+<li>Config admin interface and fire up your django and enjoy using jalali date !</li>
+</ol>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/slashmili">slashmili</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
