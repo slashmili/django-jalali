@@ -3,13 +3,12 @@ from django.utils.translation import ugettext as _
 from django import forms
 from django.contrib.admin.widgets import AdminTimeWidget
 from django.utils.safestring import mark_safe
-
-import settings
+from django.conf import settings
 
 class AdminjDateWidget(jforms.jDateInput):
     class Media:
-        js = (settings.ADMIN_MEDIA_PREFIX + "js/jcalendar.js",
-            settings.ADMIN_MEDIA_PREFIX + "js/admin/jDateTimeShortcuts.js")
+        js = (settings.STATIC_URL + "js/jcalendar.js",
+            settings.STATIC_URL + "js/admin/jDateTimeShortcuts.js")
     def __init__(self, attrs={}, format=None):
         super(AdminjDateWidget, self).__init__(attrs={'class': 'vjDateField', 'size': '10'}, format=format)
 
