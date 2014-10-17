@@ -4,6 +4,8 @@ setup(
         name='django-jalali',
         version='1.0',
         packages=find_packages(),
+        include_package_data=True,
+        zip_safe=False,
         description = ("Jalali Date support for Django model and admin interface"),
         url = 'http://github.com/slashmili/django-jalali',
         download_url = 'http://github.com/slashmili/django-jalali/tarball/master',

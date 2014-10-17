@@ -2,15 +2,20 @@ from django_jalali import forms as jforms
 from django.utils.translation import ugettext as _
 from django import forms
 from django.contrib.admin.widgets import AdminTimeWidget
+from django.contrib.admin.templatetags.admin_static import static
 from django.utils.safestring import mark_safe
-from django.conf import settings
 
 class AdminjDateWidget(jforms.jDateInput):
-    class Media:
-        js = (settings.STATIC_URL + "js/jcalendar.js",
-            settings.STATIC_URL + "js/admin/jDateTimeShortcuts.js")
-    def __init__(self, attrs={}, format=None):
-        super(AdminjDateWidget, self).__init__(attrs={'class': 'vjDateField', 'size': '10'}, format=format)
+    @property
+    def media(self):
+        js = ["jcalendar.js",]
+        return forms.Media(js=[static("admin/js/%s" % path) for path in js])
+
+    def __init__(self, attrs=None, format=None):
+        final_attrs = {'class': 'vDateField', 'size': '10'}
+        if attrs is not None:
+            final_attrs.update(attrs)
+        super(AdminjDateWidget, self).__init__(attrs=final_attrs, format=format)
 
 
 
