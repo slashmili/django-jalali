@@ -8,11 +8,15 @@ from django.utils.safestring import mark_safe
 class AdminjDateWidget(jforms.jDateInput):
     @property
     def media(self):
-        js = ["jcalendar.js",]
-        return forms.Media(js=[static("admin/js/%s" % path) for path in js])
+        js = ["admin/jalalijscalendar/jalali.js", "admin/jalalijscalendar/calendar.js",
+              "admin/jalalijscalendar/calendar-setup.js",
+              "admin/jalalijscalendar/calendar-fa.js", "admin/jDateTimeShortcuts.js"]
+        # css = ["calendar-green.css"]
+        return forms.Media(js=[static("admin/js/%s" % path) for path in js],
+                           css={'all': ('admin/css/calendar-green.css',)})
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'vDateField', 'size': '10'}
+        final_attrs = {'class': 'vjDateField', 'size': '10'}
         if attrs is not None:
             final_attrs.update(attrs)
         super(AdminjDateWidget, self).__init__(attrs=final_attrs, format=format)
