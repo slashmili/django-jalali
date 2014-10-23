@@ -33,6 +33,8 @@ $ django-admin.py startproject jalali_test
 
 3. Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
 
+    django_jalali should be added **before** your apps in order to work properly
+
 4. Edit foo/models.py 
 
 ```python
