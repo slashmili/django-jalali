@@ -9,7 +9,7 @@
  */
 
 /** The Calendar object constructor. */
-Calendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
+JCalendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
 	// member variables
 	this.activeDiv = null;
 	this.currentDateEl = null;
@@ -25,11 +25,11 @@ Calendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
 	this.maxYear = 3000;
 	this.langNumbers = false;
 	this.dateType = 'gregorian';
-	this.dateFormat = Calendar._TT["DEF_DATE_FORMAT"];
-	this.ttDateFormat = Calendar._TT["TT_DATE_FORMAT"];
+	this.dateFormat = JCalendar._TT["DEF_DATE_FORMAT"];
+	this.ttDateFormat = JCalendar._TT["TT_DATE_FORMAT"];
 	this.isPopup = true;
 	this.weekNumbers = true;
-	this.firstDayOfWeek = typeof firstDayOfWeek == "number" ? firstDayOfWeek : Calendar._FD; // 0 for Sunday, 1 for Monday, etc.
+	this.firstDayOfWeek = typeof firstDayOfWeek == "number" ? firstDayOfWeek : JCalendar._FD; // 0 for Sunday, 1 for Monday, etc.
 	this.showsOtherMonths = false;
 	this.dateStr = dateStr;
 	this.ar_days = null;
@@ -54,56 +54,56 @@ Calendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
 	this.dateClicked = false;
 
 	// one-time initializations
-	if (typeof Calendar._SDN == "undefined") {
+	if (typeof JCalendar._SDN == "undefined") {
 		// table of short day names
-		if (typeof Calendar._SDN_len == "undefined")
-			Calendar._SDN_len = 3;
+		if (typeof JCalendar._SDN_len == "undefined")
+			JCalendar._SDN_len = 3;
 		var ar = new Array();
 		for (var i = 8; i > 0;) {
-			ar[--i] = Calendar._DN[i].substr(0, Calendar._SDN_len);
+			ar[--i] = JCalendar._DN[i].substr(0, JCalendar._SDN_len);
 		}
-		Calendar._SDN = ar;
+		JCalendar._SDN = ar;
 		// table of short month names
-		if (typeof Calendar._SMN_len == "undefined")
-			Calendar._SMN_len = 3;
-		if (typeof Calendar._JSMN_len == "undefined")
-			Calendar._JSMN_len = 3;
+		if (typeof JCalendar._SMN_len == "undefined")
+			JCalendar._SMN_len = 3;
+		if (typeof JCalendar._JSMN_len == "undefined")
+			JCalendar._JSMN_len = 3;
 			
 		ar = new Array();
 		for (var i = 12; i > 0;) {
-			ar[--i] = Calendar._MN[i].substr(0, Calendar._SMN_len);
+			ar[--i] = JCalendar._MN[i].substr(0, JCalendar._SMN_len);
 		}
-		Calendar._SMN = ar;
+		JCalendar._SMN = ar;
 		
 		ar = new Array();
 		for (var i = 12; i > 0;) {
-			ar[--i] = Calendar._JMN[i].substr(0, Calendar._JSMN_len);
+			ar[--i] = JCalendar._JMN[i].substr(0, JCalendar._JSMN_len);
 		}
-		Calendar._JSMN = ar;
+		JCalendar._JSMN = ar;
 	}
 };
 
 // ** constants
 
 /// "static", needed for event handlers.
-Calendar._C = null;
+JCalendar._C = null;
 
 /// detect a special case of "web browser"
-Calendar.is_ie = ( /msie/i.test(navigator.userAgent) &&
+JCalendar.is_ie = ( /msie/i.test(navigator.userAgent) &&
 		   !/opera/i.test(navigator.userAgent) );
 
-Calendar.is_ie5 = ( Calendar.is_ie && /msie 5\.0/i.test(navigator.userAgent) );
+JCalendar.is_ie5 = ( JCalendar.is_ie && /msie 5\.0/i.test(navigator.userAgent) );
 
 /// detect Opera browser
-Calendar.is_opera = /opera/i.test(navigator.userAgent);
+JCalendar.is_opera = /opera/i.test(navigator.userAgent);
 
 /// detect KHTML-based browsers
-Calendar.is_khtml = /Konqueror|Safari|KHTML/i.test(navigator.userAgent);
+JCalendar.is_khtml = /Konqueror|Safari|KHTML/i.test(navigator.userAgent);
 
 // BEGIN: UTILITY FUNCTIONS; beware that these might be moved into a separate
 //        library, at some point.
 
-Calendar.getAbsolutePos = function(el) {
+JCalendar.getAbsolutePos = function(el) {
 	var SL = 0, ST = 0;
 	var is_div = /^div$/i.test(el.tagName);
 	if (is_div && el.scrollLeft)
@@ -119,7 +119,7 @@ Calendar.getAbsolutePos = function(el) {
 	return r;
 };
 
-Calendar.isRelated = function (el, evt) {
+JCalendar.isRelated = function (el, evt) {
 	var related = evt.relatedTarget;
 	if (!related) {
 		var type = evt.type;
@@ -138,7 +138,7 @@ Calendar.isRelated = function (el, evt) {
 	return false;
 };
 
-Calendar.removeClass = function(el, className) {
+JCalendar.removeClass = function(el, className) {
 	if (!(el && el.className)) {
 		return;
 	}
@@ -152,29 +152,29 @@ Calendar.removeClass = function(el, className) {
 	el.className = ar.join(" ");
 };
 
-Calendar.addClass = function(el, className) {
-	Calendar.removeClass(el, className);
+JCalendar.addClass = function(el, className) {
+	JCalendar.removeClass(el, className);
 	el.className += " " + className;
 };
 
 // FIXME: the following 2 functions totally suck, are useless and should be replaced immediately.
-Calendar.getElement = function(ev) {
-	var f = Calendar.is_ie ? window.event.srcElement : ev.currentTarget;
+JCalendar.getElement = function(ev) {
+	var f = JCalendar.is_ie ? window.event.srcElement : ev.currentTarget;
 	while (f.nodeType != 1 || /^div$/i.test(f.tagName))
 		f = f.parentNode;
 	return f;
 };
 
-Calendar.getTargetElement = function(ev) {
-	var f = Calendar.is_ie ? window.event.srcElement : ev.target;
+JCalendar.getTargetElement = function(ev) {
+	var f = JCalendar.is_ie ? window.event.srcElement : ev.target;
 	while (f.nodeType != 1)
 		f = f.parentNode;
 	return f;
 };
 
-Calendar.stopEvent = function(ev) {
+JCalendar.stopEvent = function(ev) {
 	ev || (ev = window.event);
-	if (Calendar.is_ie) {
+	if (JCalendar.is_ie) {
 		ev.cancelBubble = true;
 		ev.returnValue = false;
 	} else {
@@ -184,7 +184,7 @@ Calendar.stopEvent = function(ev) {
 	return false;
 };
 
-Calendar.addEvent = function(el, evname, func) {
+JCalendar.addEvent = function(el, evname, func) {
 	if (el.attachEvent) { // IE
 		el.attachEvent("on" + evname, func);
 	} else if (el.addEventListener) { // Gecko / W3C
@@ -194,7 +194,7 @@ Calendar.addEvent = function(el, evname, func) {
 	}
 };
 
-Calendar.removeEvent = function(el, evname, func) {
+JCalendar.removeEvent = function(el, evname, func) {
 	if (el.detachEvent) { // IE
 		el.detachEvent("on" + evname, func);
 	} else if (el.removeEventListener) { // Gecko / W3C
@@ -204,7 +204,7 @@ Calendar.removeEvent = function(el, evname, func) {
 	}
 };
 
-Calendar.createElement = function(type, parent) {
+JCalendar.createElement = function(type, parent) {
 	var el = null;
 	if (document.createElementNS) {
 		// use the XHTML namespace; IE won't normally get here unless
@@ -219,7 +219,7 @@ Calendar.createElement = function(type, parent) {
 	return el;
 };
 
-Calendar.prototype.convertNumbers = function(str) {
+JCalendar.prototype.convertNumbers = function(str) {
 	str = str.toString();
 	if (this.langNumbers) str = str.convertNumbers();
 	return str;
@@ -227,9 +227,9 @@ Calendar.prototype.convertNumbers = function(str) {
 
 String.prototype.toEnglish = function() {
 	str = this.toString();
-	if (Calendar._NUMBERS) {
-		for (var i = 0; i < Calendar._NUMBERS.length; i++) {
-			str = str.replace(new RegExp(Calendar._NUMBERS[i], 'g'), i);
+	if (JCalendar._NUMBERS) {
+		for (var i = 0; i < JCalendar._NUMBERS.length; i++) {
+			str = str.replace(new RegExp(JCalendar._NUMBERS[i], 'g'), i);
 		}
 	}
 	return str;
@@ -237,9 +237,9 @@ String.prototype.toEnglish = function() {
 
 String.prototype.convertNumbers = function() {
 	str = this.toString();
-	if (Calendar._NUMBERS) {
-		for (var i = 0; i < Calendar._NUMBERS.length; i++) {
-			str = str.replace(new RegExp(i, 'g'), Calendar._NUMBERS[i]);
+	if (JCalendar._NUMBERS) {
+		for (var i = 0; i < JCalendar._NUMBERS.length; i++) {
+			str = str.replace(new RegExp(i, 'g'), JCalendar._NUMBERS[i]);
 		}
 	}
 	return str;
@@ -248,11 +248,11 @@ String.prototype.convertNumbers = function() {
 
 // END: UTILITY FUNCTIONS
 
-// BEGIN: CALENDAR STATIC FUNCTIONS
+// BEGIN: JCalendar STATIC FUNCTIONS
 
 /** Internal -- adds a set of events to make some element behave like a button. */
-Calendar._add_evs = function(el) {
-	with (Calendar) {
+JCalendar._add_evs = function(el) {
+	with (JCalendar) {
 		addEvent(el, "mouseover", dayMouseOver);
 		addEvent(el, "mousedown", dayMouseDown);
 		addEvent(el, "mouseout", dayMouseOut);
@@ -263,7 +263,7 @@ Calendar._add_evs = function(el) {
 	}
 };
 
-Calendar.findMonth = function(el) {
+JCalendar.findMonth = function(el) {
 	if (typeof el.month != "undefined") {
 		return el;
 	} else if (typeof el.parentNode.month != "undefined") {
@@ -272,7 +272,7 @@ Calendar.findMonth = function(el) {
 	return null;
 };
 
-Calendar.findYear = function(el) {
+JCalendar.findYear = function(el) {
 	if (typeof el.year != "undefined") {
 		return el;
 	} else if (typeof el.parentNode.year != "undefined") {
@@ -281,8 +281,8 @@ Calendar.findYear = function(el) {
 	return null;
 };
 
-Calendar.showMonthsCombo = function () {
-	var cal = Calendar._C;
+JCalendar.showMonthsCombo = function () {
+	var cal = JCalendar._C;
 	if (!cal) {
 		return false;
 	}
@@ -290,13 +290,13 @@ Calendar.showMonthsCombo = function () {
 	var cd = cal.activeDiv;
 	var mc = cal.monthsCombo;
 	if (cal.hilitedMonth) {
-		Calendar.removeClass(cal.hilitedMonth, "hilite");
+		JCalendar.removeClass(cal.hilitedMonth, "hilite");
 	}
 	if (cal.activeMonth) {
-		Calendar.removeClass(cal.activeMonth, "active");
+		JCalendar.removeClass(cal.activeMonth, "active");
 	}
 	var mon = cal.monthsCombo.getElementsByTagName("div")[cal.date.getLocalMonth(true, cal.dateType)];
-	Calendar.addClass(mon, "active");
+	JCalendar.addClass(mon, "active");
 	cal.activeMonth = mon;
 	var s = mc.style;
 	s.display = "block";
@@ -312,8 +312,8 @@ Calendar.showMonthsCombo = function () {
 	s.top = (cd.offsetTop + cd.offsetHeight) + "px";
 };
 
-Calendar.showYearsCombo = function (fwd) {
-	var cal = Calendar._C;
+JCalendar.showYearsCombo = function (fwd) {
+	var cal = JCalendar._C;
 	if (!cal) {
 		return false;
 	}
@@ -321,10 +321,10 @@ Calendar.showYearsCombo = function (fwd) {
 	var cd = cal.activeDiv;
 	var yc = cal.yearsCombo;
 	if (cal.hilitedYear) {
-		Calendar.removeClass(cal.hilitedYear, "hilite");
+		JCalendar.removeClass(cal.hilitedYear, "hilite");
 	}
 	if (cal.activeYear) {
-		Calendar.removeClass(cal.activeYear, "active");
+		JCalendar.removeClass(cal.activeYear, "active");
 	}
 	cal.activeYear = null;
 	var Y = cal.date.getLocalFullYear(true, cal.dateType) + (fwd ? 1 : -1);
@@ -360,8 +360,8 @@ Calendar.showYearsCombo = function (fwd) {
 
 // event handlers
 
-Calendar.tableMouseUp = function(ev) {
-	var cal = Calendar._C;
+JCalendar.tableMouseUp = function(ev) {
+	var cal = JCalendar._C;
 	if (!cal) {
 		return false;
 	}
@@ -372,13 +372,13 @@ Calendar.tableMouseUp = function(ev) {
 	if (!el) {
 		return false;
 	}
-	var target = Calendar.getTargetElement(ev);
+	var target = JCalendar.getTargetElement(ev);
 	ev || (ev = window.event);
-	Calendar.removeClass(el, "active");
+	JCalendar.removeClass(el, "active");
 	if (target == el || target.parentNode == el) {
-		Calendar.cellClick(el, ev);
+		JCalendar.cellClick(el, ev);
 	}
-	var mon = Calendar.findMonth(target);
+	var mon = JCalendar.findMonth(target);
 	var date = null;
 	if (mon) {
 		date = new Date(cal.date);
@@ -389,7 +389,7 @@ Calendar.tableMouseUp = function(ev) {
 			cal.callHandler();
 		}
 	} else {
-		var year = Calendar.findYear(target);
+		var year = JCalendar.findYear(target);
 		if (year) {
 			date = new Date(cal.date);
 			if (year.year != date.getLocalFullYear(true, cal.dateType)) {
@@ -400,7 +400,7 @@ Calendar.tableMouseUp = function(ev) {
 			}
 		}
 	}
-	with (Calendar) {
+	with (JCalendar) {
 		removeEvent(document, "mouseup", tableMouseUp);
 		removeEvent(document, "mouseover", tableMouseOver);
 		removeEvent(document, "mousemove", tableMouseOver);
@@ -410,25 +410,25 @@ Calendar.tableMouseUp = function(ev) {
 	}
 };
 
-Calendar.tableMouseOver = function (ev) {
-	var cal = Calendar._C;
+JCalendar.tableMouseOver = function (ev) {
+	var cal = JCalendar._C;
 	if (!cal) {
 		return;
 	}
 	var el = cal.activeDiv;
-	var target = Calendar.getTargetElement(ev);
+	var target = JCalendar.getTargetElement(ev);
 	if (target == el || target.parentNode == el) {
-		Calendar.addClass(el, "hilite active");
-		Calendar.addClass(el.parentNode, "rowhilite");
+		JCalendar.addClass(el, "hilite active");
+		JCalendar.addClass(el.parentNode, "rowhilite");
 	} else {
 		if (typeof el.navtype == "undefined" || (el.navtype != 50 && (el.navtype == 0 || Math.abs(el.navtype) > 2)))
-			Calendar.removeClass(el, "active");
-		Calendar.removeClass(el, "hilite");
-		Calendar.removeClass(el.parentNode, "rowhilite");
+			JCalendar.removeClass(el, "active");
+		JCalendar.removeClass(el, "hilite");
+		JCalendar.removeClass(el.parentNode, "rowhilite");
 	}
 	ev || (ev = window.event);
 	if (el.navtype == 50 && target != el) {
-		var pos = Calendar.getAbsolutePos(el);
+		var pos = JCalendar.getAbsolutePos(el);
 		var w = el.offsetWidth;
 		var x = ev.clientX;
 		var dx;
@@ -457,53 +457,53 @@ Calendar.tableMouseOver = function (ev) {
 
 		cal.onUpdateTime();
 	}
-	var mon = Calendar.findMonth(target);
+	var mon = JCalendar.findMonth(target);
 	if (mon) {
 		if (mon.month != cal.date.getLocalMonth(true, cal.dateType)) {
 			if (cal.hilitedMonth) {
-				Calendar.removeClass(cal.hilitedMonth, "hilite");
+				JCalendar.removeClass(cal.hilitedMonth, "hilite");
 			}
-			Calendar.addClass(mon, "hilite");
+			JCalendar.addClass(mon, "hilite");
 			cal.hilitedMonth = mon;
 		} else if (cal.hilitedMonth) {
-			Calendar.removeClass(cal.hilitedMonth, "hilite");
+			JCalendar.removeClass(cal.hilitedMonth, "hilite");
 		}
 	} else {
 		if (cal.hilitedMonth) {
-			Calendar.removeClass(cal.hilitedMonth, "hilite");
+			JCalendar.removeClass(cal.hilitedMonth, "hilite");
 		}
-		var year = Calendar.findYear(target);
+		var year = JCalendar.findYear(target);
 		if (year) {
 			if (year.year != cal.date.getLocalFullYear(true, cal.dateType)) {
 				if (cal.hilitedYear) {
-					Calendar.removeClass(cal.hilitedYear, "hilite");
+					JCalendar.removeClass(cal.hilitedYear, "hilite");
 				}
-				Calendar.addClass(year, "hilite");
+				JCalendar.addClass(year, "hilite");
 				cal.hilitedYear = year;
 			} else if (cal.hilitedYear) {
-				Calendar.removeClass(cal.hilitedYear, "hilite");
+				JCalendar.removeClass(cal.hilitedYear, "hilite");
 			}
 		} else if (cal.hilitedYear) {
-			Calendar.removeClass(cal.hilitedYear, "hilite");
+			JCalendar.removeClass(cal.hilitedYear, "hilite");
 		}
 	}
-	return Calendar.stopEvent(ev);
+	return JCalendar.stopEvent(ev);
 };
 
-Calendar.tableMouseDown = function (ev) {
-	if (Calendar.getTargetElement(ev) == Calendar.getElement(ev)) {
-		return Calendar.stopEvent(ev);
+JCalendar.tableMouseDown = function (ev) {
+	if (JCalendar.getTargetElement(ev) == JCalendar.getElement(ev)) {
+		return JCalendar.stopEvent(ev);
 	}
 };
 
-Calendar.calDragIt = function (ev) {
-	var cal = Calendar._C;
+JCalendar.calDragIt = function (ev) {
+	var cal = JCalendar._C;
 	if (!(cal && cal.dragging)) {
 		return false;
 	}
 	var posX;
 	var posY;
-	if (Calendar.is_ie) {
+	if (JCalendar.is_ie) {
 		posY = window.event.clientY + document.body.scrollTop;
 		posX = window.event.clientX + document.body.scrollLeft;
 	} else {
@@ -514,16 +514,16 @@ Calendar.calDragIt = function (ev) {
 	var st = cal.element.style;
 	st.left = (posX - cal.xOffs) + "px";
 	st.top = (posY - cal.yOffs) + "px";
-	return Calendar.stopEvent(ev);
+	return JCalendar.stopEvent(ev);
 };
 
-Calendar.calDragEnd = function (ev) {
-	var cal = Calendar._C;
+JCalendar.calDragEnd = function (ev) {
+	var cal = JCalendar._C;
 	if (!cal) {
 		return false;
 	}
 	cal.dragging = false;
-	with (Calendar) {
+	with (JCalendar) {
 		removeEvent(document, "mousemove", calDragIt);
 		removeEvent(document, "mouseup", calDragEnd);
 		tableMouseUp(ev);
@@ -531,20 +531,20 @@ Calendar.calDragEnd = function (ev) {
 	cal.hideShowCovered();
 };
 
-Calendar.dayMouseDown = function(ev) {
-	var el = Calendar.getElement(ev);
+JCalendar.dayMouseDown = function(ev) {
+	var el = JCalendar.getElement(ev);
 	if (el.disabled) {
 		return false;
 	}
 	var cal = el.calendar;
 	cal.activeDiv = el;
-	Calendar._C = cal;
-	if (el.navtype != 300) with (Calendar) {
+	JCalendar._C = cal;
+	if (el.navtype != 300) with (JCalendar) {
 		if (el.navtype == 50) {
 			el._current = el.innerHTML.toEnglish();
 			addEvent(document, "mousemove", tableMouseOver);
 		} else
-			addEvent(document, Calendar.is_ie5 ? "mousemove" : "mouseover", tableMouseOver);
+			addEvent(document, JCalendar.is_ie5 ? "mousemove" : "mouseover", tableMouseOver);
 		addClass(el, "hilite active");
 		addEvent(document, "mouseup", tableMouseUp);
 	} else if (cal.isPopup) {
@@ -552,26 +552,26 @@ Calendar.dayMouseDown = function(ev) {
 	}
 	if (el.navtype == -1 || el.navtype == 1) {
 		if (cal.timeout) clearTimeout(cal.timeout);
-		cal.timeout = setTimeout("Calendar.showMonthsCombo()", 250);
+		cal.timeout = setTimeout("JCalendar.showMonthsCombo()", 250);
 	} else if (el.navtype == -2 || el.navtype == 2) {
 		if (cal.timeout) clearTimeout(cal.timeout);
-		cal.timeout = setTimeout((el.navtype > 0) ? "Calendar.showYearsCombo(true)" : "Calendar.showYearsCombo(false)", 250);
+		cal.timeout = setTimeout((el.navtype > 0) ? "JCalendar.showYearsCombo(true)" : "JCalendar.showYearsCombo(false)", 250);
 	} else {
 		cal.timeout = null;
 	}
-	return Calendar.stopEvent(ev);
+	return JCalendar.stopEvent(ev);
 };
 
-Calendar.dayMouseDblClick = function(ev) {
-	Calendar.cellClick(Calendar.getElement(ev), ev || window.event);
-	if (Calendar.is_ie) {
+JCalendar.dayMouseDblClick = function(ev) {
+	JCalendar.cellClick(JCalendar.getElement(ev), ev || window.event);
+	if (JCalendar.is_ie) {
 		document.selection.empty();
 	}
 };
 
-Calendar.dayMouseOver = function(ev) {
-	var el = Calendar.getElement(ev);
-	if (Calendar.isRelated(el, ev) || Calendar._C || el.disabled) {
+JCalendar.dayMouseOver = function(ev) {
+	var el = JCalendar.getElement(ev);
+	if (JCalendar.isRelated(el, ev) || JCalendar._C || el.disabled) {
 		return false;
 	}
 	if (el.ttip) {
@@ -581,16 +581,16 @@ Calendar.dayMouseOver = function(ev) {
 		el.calendar.tooltips.innerHTML = el.ttip;
 	}
 	if (el.navtype != 300) {
-		Calendar.addClass(el, "hilite");
+		JCalendar.addClass(el, "hilite");
 		if (el.caldate || el.navtype == 501) {
-			Calendar.addClass(el.parentNode, "rowhilite");
+			JCalendar.addClass(el.parentNode, "rowhilite");
 		}
 	}
-	return Calendar.stopEvent(ev);
+	return JCalendar.stopEvent(ev);
 };
 
-Calendar.dayMouseOut = function(ev) {
-	with (Calendar) {
+JCalendar.dayMouseOut = function(ev) {
+	with (JCalendar) {
 		var el = getElement(ev);
 		if (isRelated(el, ev) || _C || el.disabled)
 			return false;
@@ -605,17 +605,17 @@ Calendar.dayMouseOut = function(ev) {
 
 /**
  *  A generic "click" handler :) handles all types of buttons defined in this
- *  calendar.
+ *  JCalendar.
  */
-Calendar.cellClick = function(el, ev) {
+JCalendar.cellClick = function(el, ev) {
 	var cal = el.calendar;
 	var closing = false;
 	var newdate = false;
 	var date = null;
 	if (typeof el.navtype == "undefined") {
 		if (cal.currentDateEl) {
-			Calendar.removeClass(cal.currentDateEl, "selected");
-			Calendar.addClass(el, "selected");
+			JCalendar.removeClass(cal.currentDateEl, "selected");
+			JCalendar.addClass(el, "selected");
 			closing = (cal.currentDateEl == el);
 			if (!closing) {
 				cal.currentDateEl = el;
@@ -633,7 +633,7 @@ Calendar.cellClick = function(el, ev) {
 			cal._init(cal.firstDayOfWeek, date);
 	} else {
 		if (el.navtype == 200) {
-			Calendar.removeClass(el, "hilite");
+			JCalendar.removeClass(el, "hilite");
 			cal.callCloseHandler();
 			return;
 		}
@@ -657,10 +657,10 @@ Calendar.cellClick = function(el, ev) {
 		};
 		switch (el.navtype) {
 		    case 400:
-			Calendar.removeClass(el, "hilite");
-			var text = Calendar._TT["ABOUT"];
+			JCalendar.removeClass(el, "hilite");
+			var text = JCalendar._TT["ABOUT"];
 			if (typeof text != "undefined") {
-				text += cal.showsTime ? Calendar._TT["ABOUT_TIME"] : "";
+				text += cal.showsTime ? JCalendar._TT["ABOUT_TIME"] : "";
 			} else {
 				// FIXME: this should be removed as soon as lang files get updated!
 				text = "Help and about box text is not translated into this language.\n" +
@@ -742,14 +742,14 @@ Calendar.cellClick = function(el, ev) {
 		ev && cal.callHandler();
 	}
 	if (closing) {
-		Calendar.removeClass(el, "hilite");
+		JCalendar.removeClass(el, "hilite");
 		ev && cal.callCloseHandler();
 	}
 };
 
-// END: CALENDAR STATIC FUNCTIONS
+// END: JCalendar STATIC FUNCTIONS
 
-// BEGIN: CALENDAR OBJECT FUNCTIONS
+// BEGIN: JCalendar OBJECT FUNCTIONS
 
 /**
  *  This function creates the calendar inside the given parent.  If _par is
@@ -757,11 +757,11 @@ Calendar.cellClick = function(el, ev) {
  *  an element, be it BODY, then it creates a non-popup calendar (still
  *  hidden).  Some properties need to be set before calling this function.
  */
-Calendar.prototype.create = function (_par) {
+JCalendar.prototype.create = function (_par) {
 	var parent = null;
 	if (! _par) {
 		// default parent is the document body, in which case we create
-		// a popup calendar.
+		// a popup JCalendar.
 		parent = document.getElementsByTagName("body")[0];
 		this.isPopup = true;
 	} else {
@@ -770,131 +770,131 @@ Calendar.prototype.create = function (_par) {
 	}
 	if (!this.date) this.date = this.dateStr ? new Date(this.dateStr) : new Date();
 
-	var table = Calendar.createElement("table");
+	var table = JCalendar.createElement("table");
 	this.table = table;
 	table.cellSpacing = 0;
 	table.cellPadding = 0;
 	table.calendar = this;
-	Calendar.addEvent(table, "mousedown", Calendar.tableMouseDown);
+	JCalendar.addEvent(table, "mousedown", JCalendar.tableMouseDown);
 
-	var div = Calendar.createElement("div");
+	var div = JCalendar.createElement("div");
 	this.element = div;
-	if (Calendar._DIR) {
-		this.element.style.direction = Calendar._DIR;
+	if (JCalendar._DIR) {
+		this.element.style.direction = JCalendar._DIR;
 	}
-	div.className = "calendar";
+	div.className = "jcalendar";
 	if (this.isPopup) {
 		div.style.position = "absolute";
 		div.style.display = "none";
 	}
 	div.appendChild(table);
 
-	var thead = Calendar.createElement("thead", table);
+	var thead = JCalendar.createElement("thead", table);
 	var cell = null;
 	var row = null;
 
 	var cal = this;
 	var hh = function (text, cs, navtype) {
-		cell = Calendar.createElement("td", row);
+		cell = JCalendar.createElement("td", row);
 		cell.colSpan = cs;
 		cell.className = "button";
 		if (navtype != 0 && Math.abs(navtype) <= 2)
 			cell.className += " nav";
-		Calendar._add_evs(cell);
+		JCalendar._add_evs(cell);
 		cell.calendar = cal;
 		cell.navtype = navtype;
 		cell.innerHTML = "<div unselectable='on'>" + text + "</div>";
 		return cell;
 	};
 
-	row = Calendar.createElement("tr", thead);
+	row = JCalendar.createElement("tr", thead);
 	var title_length = 6;
 	(this.isPopup) && --title_length;
 	(this.weekNumbers) && ++title_length;
 
-	hh("?", 1, 400).ttip = Calendar._TT["INFO"];
+	hh("?", 1, 400).ttip = JCalendar._TT["INFO"];
 	this.title = hh("", title_length, 300);
 	this.title.className = "title";
 	if (this.isPopup) {
-		this.title.ttip = Calendar._TT["DRAG_TO_MOVE"];
+		this.title.ttip = JCalendar._TT["DRAG_TO_MOVE"];
 		this.title.style.cursor = "move";
-		hh("&#x00d7;", 1, 200).ttip = Calendar._TT["CLOSE"];
+		hh("&#x00d7;", 1, 200).ttip = JCalendar._TT["CLOSE"];
 	}
 
-	row = Calendar.createElement("tr", thead);
+	row = JCalendar.createElement("tr", thead);
 	row.className = "headrow";
 
 	this._nav_py = hh("&#x00ab;", 1, -2);
-	this._nav_py.ttip = Calendar._TT["PREV_YEAR"];
+	this._nav_py.ttip = JCalendar._TT["PREV_YEAR"];
 
 	this._nav_pm = hh("&#x2039;", 1, -1);
-	this._nav_pm.ttip = Calendar._TT["PREV_MONTH"];
+	this._nav_pm.ttip = JCalendar._TT["PREV_MONTH"];
 
-	this._nav_now = hh(Calendar._TT["TODAY"], this.weekNumbers ? 4 : 3, 0);
-	this._nav_now.ttip = Calendar._TT["GO_TODAY"];
+	this._nav_now = hh(JCalendar._TT["TODAY"], this.weekNumbers ? 4 : 3, 0);
+	this._nav_now.ttip = JCalendar._TT["GO_TODAY"];
 
 	this._nav_nm = hh("&#x203a;", 1, 1);
-	this._nav_nm.ttip = Calendar._TT["NEXT_MONTH"];
+	this._nav_nm.ttip = JCalendar._TT["NEXT_MONTH"];
 
 	this._nav_ny = hh("&#x00bb;", 1, 2);
-	this._nav_ny.ttip = Calendar._TT["NEXT_YEAR"];
+	this._nav_ny.ttip = JCalendar._TT["NEXT_YEAR"];
 
 	// day names
-	row = Calendar.createElement("tr", thead);
+	row = JCalendar.createElement("tr", thead);
 	row.className = "daynames";
 	if (this.weekNumbers) {
-		cell = Calendar.createElement("td", row);
+		cell = JCalendar.createElement("td", row);
 		cell.className = "name wn";
-		cell.innerHTML = Calendar._TT["WK"];
+		cell.innerHTML = JCalendar._TT["WK"];
 	}
 	for (var i = 7; i > 0; --i) {
-		cell = Calendar.createElement("td", row);
+		cell = JCalendar.createElement("td", row);
 	}
 	this.firstdayname = (this.weekNumbers) ? row.firstChild.nextSibling : row.firstChild;
 	this._displayWeekdays();
 
-	var tbody = Calendar.createElement("tbody", table);
+	var tbody = JCalendar.createElement("tbody", table);
 	this.tbody = tbody;
 
 	for (i = 6; i > 0; --i) {
-		row = Calendar.createElement("tr", tbody);
+		row = JCalendar.createElement("tr", tbody);
 		if (this.weekNumbers) {
-			cell = Calendar.createElement("td", row);
+			cell = JCalendar.createElement("td", row);
 			if (this.multiple) {
-				cell.ttip = Calendar._TT["SELECT_ROW"];
+				cell.ttip = JCalendar._TT["SELECT_ROW"];
 				cell.calendar = this;
 				cell.navtype = 501;
 				cell.weekIndex = 7-i;
-				Calendar._add_evs(cell);
+				JCalendar._add_evs(cell);
 			}
 		}
 		for (var j = 7; j > 0; --j) {
-			cell = Calendar.createElement("td", row);
+			cell = JCalendar.createElement("td", row);
 			cell.calendar = this;
-			Calendar._add_evs(cell);
+			JCalendar._add_evs(cell);
 		}
 	}
 
 	if (this.showsTime) {
-		row = Calendar.createElement("tr", tbody);
+		row = JCalendar.createElement("tr", tbody);
 		row.className = "time";
 
-		cell = Calendar.createElement("td", row);
+		cell = JCalendar.createElement("td", row);
 		cell.className = "time";
 		cell.colSpan = 2;
-		cell.innerHTML = Calendar._TT["TIME"] || "&nbsp;";
+		cell.innerHTML = JCalendar._TT["TIME"] || "&nbsp;";
 
-		cell = Calendar.createElement("td", row);
+		cell = JCalendar.createElement("td", row);
 		cell.className = "time";
 		cell.colSpan = this.weekNumbers ? 4 : 3;
 
 		(function(){
 			function makeTimePart(className, init, range_start, range_end) {
-				var part = Calendar.createElement("span", cell);
+				var part = JCalendar.createElement("span", cell);
 				part.className = className;
 				part.innerHTML = cal.convertNumbers(init);
 				part.calendar = cal;
-				part.ttip = Calendar._TT["TIME_PART"];
+				part.ttip = JCalendar._TT["TIME_PART"];
 				part.navtype = 50;
 				part._range = [];
 				if (typeof range_start != "number")
@@ -907,7 +907,7 @@ Calendar.prototype.create = function (_par) {
 						part._range[part._range.length] = txt;
 					}
 				}
-				Calendar._add_evs(part);
+				JCalendar._add_evs(part);
 				return part;
 			};
 			var hrs = cal.date.getUTCHours();
@@ -916,16 +916,16 @@ Calendar.prototype.create = function (_par) {
 			var pm = (hrs > 12);
 			if (t12 && pm) hrs -= 12;
 			var H = makeTimePart("hour", hrs, t12 ? 1 : 0, t12 ? 12 : 23);
-			var span = Calendar.createElement("span", cell);
+			var span = JCalendar.createElement("span", cell);
 			span.innerHTML = ":";
 			span.className = "colon";
 			var M = makeTimePart("minute", mins, 0, 59);
 			var AP = null;
-			cell = Calendar.createElement("td", row);
+			cell = JCalendar.createElement("td", row);
 			cell.className = "time";
 			cell.colSpan = 2;
 			if (t12)
-				AP = makeTimePart("ampm", pm ? Calendar._TT["LPM"] : Calendar._TT["LAM"], [Calendar._TT["LAM"], Calendar._TT["LPM"]]);
+				AP = makeTimePart("ampm", pm ? JCalendar._TT["LPM"] : JCalendar._TT["LAM"], [JCalendar._TT["LAM"], JCalendar._TT["LPM"]]);
 			else
 				cell.innerHTML = "&nbsp;";
 
@@ -936,7 +936,7 @@ Calendar.prototype.create = function (_par) {
 					pm = (hrs >= 12);
 					if (pm) hrs -= 12;
 					if (hrs == 0) hrs = 12;
-					AP.innerHTML = pm ? Calendar._TT["LPM"] : Calendar._TT["LAM"];
+					AP.innerHTML = pm ? JCalendar._TT["LPM"] : JCalendar._TT["LAM"];
 				}
 				hrs = (hrs < 10) ? ("0" + hrs) : hrs;
 				mins = (mins < 10) ? ("0" + mins) : mins;
@@ -948,9 +948,9 @@ Calendar.prototype.create = function (_par) {
 				var date = this.date;
 				var h = parseInt(H.innerHTML.toEnglish(), 10);
 				if (t12) {
-					if ((AP.innerHTML == Calendar._TT["LPM"] || AP.innerHTML == Calendar._TT["PM"]) && h < 12)
+					if ((AP.innerHTML == JCalendar._TT["LPM"] || AP.innerHTML == JCalendar._TT["PM"]) && h < 12)
 						h += 12;
-					else if ((AP.innerHTML == Calendar._TT["LAM"] || AP.innerHTML == Calendar._TT["AM"]) && h == 12)
+					else if ((AP.innerHTML == JCalendar._TT["LAM"] || AP.innerHTML == JCalendar._TT["AM"]) && h == 12)
 						h = 0;
 				}
 				var d = date.getLocalDate(true, this.dateType);
@@ -969,36 +969,36 @@ Calendar.prototype.create = function (_par) {
 		this.onSetTime = this.onUpdateTime = function() {};
 	}
 
-	var tfoot = Calendar.createElement("tfoot", table);
+	var tfoot = JCalendar.createElement("tfoot", table);
 
-	row = Calendar.createElement("tr", tfoot);
+	row = JCalendar.createElement("tr", tfoot);
 	row.className = "footrow";
 
-	cell = hh(Calendar._TT["SEL_DATE"], this.weekNumbers ? 8 : 7, 300);
+	cell = hh(JCalendar._TT["SEL_DATE"], this.weekNumbers ? 8 : 7, 300);
 	cell.className = "ttip";
 	if (this.isPopup) {
-		cell.ttip = Calendar._TT["DRAG_TO_MOVE"];
+		cell.ttip = JCalendar._TT["DRAG_TO_MOVE"];
 		cell.style.cursor = "move";
 	}
 	this.tooltips = cell;
 
-	div = Calendar.createElement("div", this.element);
+	div = JCalendar.createElement("div", this.element);
 	this.monthsCombo = div;
 	div.className = "combo";
-	for (i = 0; i < Calendar._MN.length; ++i) {
-		var mn = Calendar.createElement("div");
-		mn.className = Calendar.is_ie ? "label-IEfix" : "label";
+	for (i = 0; i < JCalendar._MN.length; ++i) {
+		var mn = JCalendar.createElement("div");
+		mn.className = JCalendar.is_ie ? "label-IEfix" : "label";
 		mn.month = i;
-		mn.innerHTML = (this.dateType == 'jalali' ? Calendar._JSMN[i] : Calendar._SMN[i]);
+		mn.innerHTML = (this.dateType == 'jalali' ? JCalendar._JSMN[i] : JCalendar._SMN[i]);
 		div.appendChild(mn);
 	}
 
-	div = Calendar.createElement("div", this.element);
+	div = JCalendar.createElement("div", this.element);
 	this.yearsCombo = div;
 	div.className = "combo";
 	for (i = 12; i > 0; --i) {
-		var yr = Calendar.createElement("div");
-		yr.className = Calendar.is_ie ? "label-IEfix" : "label";
+		var yr = JCalendar.createElement("div");
+		yr.className = JCalendar.is_ie ? "label-IEfix" : "label";
 		div.appendChild(yr);
 	}
 
@@ -1006,7 +1006,7 @@ Calendar.prototype.create = function (_par) {
 	parent.appendChild(this.element);
 };
 
-Calendar.prototype.recreate = function() {
+JCalendar.prototype.recreate = function() {
 	if (this.element) { 
 		var parent = this.element.parentNode;
 		parent.removeChild(this.element);
@@ -1022,7 +1022,7 @@ Calendar.prototype.recreate = function() {
  *  Toggles selection of one column which is specified in weekday (pass 0 for Sunday, 1 for Monday, etc.).
  *  This method works only in multiple mode
  */
-Calendar.prototype.toggleColumn = function(weekday) {
+JCalendar.prototype.toggleColumn = function(weekday) {
 	if (!this.multiple) return;
 	var col = (weekday+7 - this.firstDayOfWeek) % 7;
 	if (this.weekNumbers) col++;
@@ -1045,7 +1045,7 @@ Calendar.prototype.toggleColumn = function(weekday) {
  *  Toggles selection of one row which is specified in row (starts from 1).
  *  This method works only in multiple mode
  */
-Calendar.prototype.toggleRow = function(row) {
+JCalendar.prototype.toggleRow = function(row) {
 	if (!this.multiple) return;
 	var cells = this.table.rows[row+2].cells;
 	var selected = true, nodes = [];
@@ -1062,73 +1062,73 @@ Calendar.prototype.toggleRow = function(row) {
 }
 
 /** Dynamically changes weekNumbers property */
-Calendar.prototype.setWeekNumbers = function(weekNumbers) {
+JCalendar.prototype.setWeekNumbers = function(weekNumbers) {
 	this.weekNumbers = weekNumbers;
 	this.recreate();
 }
 
 /** Dynamically changes showsOtherMonths property */
-Calendar.prototype.setOtherMonths = function(showsOtherMonths) {
+JCalendar.prototype.setOtherMonths = function(showsOtherMonths) {
 	this.showsOtherMonths = showsOtherMonths;
 	this.refresh();
 }
 
 /** Dynamically changes langNumbers property */
-Calendar.prototype.setLangNumbers = function(langNumbers) {
+JCalendar.prototype.setLangNumbers = function(langNumbers) {
 	this.langNumbers = langNumbers;
 	this.refresh();
 }
 
 /** Dynamically changes dateType property */
-Calendar.prototype.setDateType = function(dateType) {
+JCalendar.prototype.setDateType = function(dateType) {
 	this.dateType = dateType;
 	this.recreate();
 }
 
 /** Dynamically changes showsTime property */
-Calendar.prototype.setShowsTime = function(showsTime) {
+JCalendar.prototype.setShowsTime = function(showsTime) {
 	this.showsTime = showsTime;
 	this.recreate();
 }
 
 /** Dynamically changes time24 property */
-Calendar.prototype.setTime24 = function(time24) {
+JCalendar.prototype.setTime24 = function(time24) {
 	this.time24 = time24;
 	this.recreate();
 }
 
 /** keyboard navigation, only for popup calendars */
-Calendar._keyEvent = function(ev) {
-	var cal = window._dynarch_popupCalendar;
+JCalendar._keyEvent = function(ev) {
+	var cal = window._dynarch_popupJCalendar;
 	if (!cal || cal.multiple)
 		return false;
-	(Calendar.is_ie) && (ev = window.event);
-	var act = (Calendar.is_ie || ev.type == "keypress"),
+	(JCalendar.is_ie) && (ev = window.event);
+	var act = (JCalendar.is_ie || ev.type == "keypress"),
 		K = ev.keyCode;
-	if (Calendar._DIR == 'rtl') {
+	if (JCalendar._DIR == 'rtl') {
 		if (K == 37) K = 39;
 		else if (K == 39) K = 37;
 	}
 	if (ev.ctrlKey) {
 		switch (K) {
 		    case 37: // KEY left
-			act && Calendar.cellClick(cal._nav_pm);
+			act && JCalendar.cellClick(cal._nav_pm);
 			break;
 		    case 38: // KEY up
-			act && Calendar.cellClick(cal._nav_py);
+			act && JCalendar.cellClick(cal._nav_py);
 			break;
 		    case 39: // KEY right
-			act && Calendar.cellClick(cal._nav_nm);
+			act && JCalendar.cellClick(cal._nav_nm);
 			break;
 		    case 40: // KEY down
-			act && Calendar.cellClick(cal._nav_ny);
+			act && JCalendar.cellClick(cal._nav_ny);
 			break;
 		    default:
 			return false;
 		}
 	} else switch (K) {
 	    case 32: // KEY space (now)
-		Calendar.cellClick(cal._nav_now);
+		JCalendar.cellClick(cal._nav_now);
 		break;
 	    case 27: // KEY esc
 		act && cal.callCloseHandler();
@@ -1199,7 +1199,7 @@ Calendar._keyEvent = function(ev) {
 			}
 			if (ne) {
 				if (!ne.disabled)
-					Calendar.cellClick(ne);
+					JCalendar.cellClick(ne);
 				else if (prev)
 					prevMonth();
 				else
@@ -1209,18 +1209,18 @@ Calendar._keyEvent = function(ev) {
 		break;
 	    case 13: // KEY enter
 		if (act)
-			Calendar.cellClick(cal.currentDateEl, ev);
+			JCalendar.cellClick(cal.currentDateEl, ev);
 		break;
 	    default:
 		return false;
 	}
-	return Calendar.stopEvent(ev);
+	return JCalendar.stopEvent(ev);
 };
 
 /**
  *  (RE)Initializes the calendar to the given date and firstDayOfWeek
  */
-Calendar.prototype._init = function (firstDayOfWeek, date) {
+JCalendar.prototype._init = function (firstDayOfWeek, date) {
 	var today = new Date(),
 		TY = today.getLocalFullYear(false, this.dateType),
 		TM = today.getLocalMonth(false, this.dateType),
@@ -1251,9 +1251,9 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 	date.setLocalDate(true, this.dateType, date.getLocalDate(true, this.dateType) + 1);
 
 	var row = this.tbody.firstChild;
-	var MN = (this.dateType == 'jalali' ? Calendar._JSMN[month] : Calendar._SMN[month]);
+	var MN = (this.dateType == 'jalali' ? JCalendar._JSMN[month] : JCalendar._SMN[month]);
 	var ar_days = this.ar_days = new Array();
-	var weekend = Calendar._TT["WEEKEND"];
+	var weekend = JCalendar._TT["WEEKEND"];
 	var dates = this.multiple ? (this.datesCells = {}) : null;
 	for (var i = 0; i < 6; ++i, row = row.nextSibling) {
 		var cell = row.firstChild;
@@ -1317,7 +1317,7 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 				    date.getLocalMonth(true, this.dateType) == TM &&
 				    iday == TD) {
 					cell.className += " today";
-					cell.ttip += Calendar._TT["PART_TODAY"];
+					cell.ttip += JCalendar._TT["PART_TODAY"];
 				}
 				if (weekend.indexOf(wday.toString()) != -1)
 					cell.className += cell.otherMonth ? " oweekend" : " weekend";
@@ -1326,7 +1326,7 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 		if (!(hasdays || this.showsOtherMonths))
 			row.className = "emptyrow";
 	}
-	this.title.innerHTML = (this.dateType == 'jalali' ? Calendar._JMN[month] : Calendar._MN[month]) + ", " + this.convertNumbers(year);
+	this.title.innerHTML = (this.dateType == 'jalali' ? JCalendar._JMN[month] : JCalendar._MN[month]) + ", " + this.convertNumbers(year);
 	this.onSetTime();
 	this.table.style.visibility = "visible";
 	this._initMultipleDates();
@@ -1334,7 +1334,7 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 	// this.tooltips.innerHTML = "Generated in " + ((new Date()) - today) + " ms";
 };
 
-Calendar.prototype._initMultipleDates = function() {
+JCalendar.prototype._initMultipleDates = function() {
 	if (this.multiple) {
 		for (var i in this.multiple) if (this.multiple[i] instanceof Date) {
 			var cell = this.datesCells[i];
@@ -1345,24 +1345,24 @@ Calendar.prototype._initMultipleDates = function() {
 	}
 };
 
-Calendar.prototype._toggleMultipleDate = function(date) {
+JCalendar.prototype._toggleMultipleDate = function(date) {
 	if (this.multiple) {
 		var ds = date.print("%Y%m%d", this.dateType, this.langNumbers);
 		var cell = this.datesCells[ds];
 		if (cell) {
 			var d = this.multiple[ds];
 			if (!d) {
-				Calendar.addClass(cell, "selected");
+				JCalendar.addClass(cell, "selected");
 				this.multiple[ds] = date;
 			} else {
-				Calendar.removeClass(cell, "selected");
+				JCalendar.removeClass(cell, "selected");
 				delete this.multiple[ds];
 			}
 		}
 	}
 };
 
-Calendar.prototype.setDateToolTipHandler = function (unaryFunction) {
+JCalendar.prototype.setDateToolTipHandler = function (unaryFunction) {
 	this.getDateToolTip = unaryFunction;
 };
 
@@ -1370,7 +1370,7 @@ Calendar.prototype.setDateToolTipHandler = function (unaryFunction) {
  *  Calls _init function above for going to a certain date (but only if the
  *  date is different than the currently selected one).
  */
-Calendar.prototype.setDate = function (date) {
+JCalendar.prototype.setDate = function (date) {
 	if (!date.equalsTo(this.date)) {
 		this.date = date;
 		this.refresh();
@@ -1383,14 +1383,14 @@ Calendar.prototype.setDate = function (date) {
  *  Just * call this function if you think that the list of disabled dates
  *  should * change.
  */
-Calendar.prototype.refresh = function () {
+JCalendar.prototype.refresh = function () {
 	if (this.element) {
 		this._init(this.firstDayOfWeek, this.date);
 	} else this.create(); 
 };
 
 /** Modifies the "firstDayOfWeek" parameter (pass 0 for Sunday, 1 for Monday, etc.). */
-Calendar.prototype.setFirstDayOfWeek = function (firstDayOfWeek) {
+JCalendar.prototype.setFirstDayOfWeek = function (firstDayOfWeek) {
 	this._init(firstDayOfWeek, this.date);
 	this._displayWeekdays();
 };
@@ -1401,25 +1401,25 @@ Calendar.prototype.setFirstDayOfWeek = function (firstDayOfWeek) {
  *  object) and returns a boolean value.  If the returned value is true then
  *  the passed date will be marked as disabled.
  */
-Calendar.prototype.setDateStatusHandler = Calendar.prototype.setDisabledHandler = function (unaryFunction) {
+JCalendar.prototype.setDateStatusHandler = JCalendar.prototype.setDisabledHandler = function (unaryFunction) {
 	this.getDateStatus = unaryFunction;
 };
 
 /** Customization of allowed year range for the calendar. */
-Calendar.prototype.setRange = function (a, z) {
+JCalendar.prototype.setRange = function (a, z) {
 	this.minYear = a;
 	this.maxYear = z;
 };
 
 /** Calls the first user handler (selectedHandler). */
-Calendar.prototype.callHandler = function () {
+JCalendar.prototype.callHandler = function () {
 	if (this.onSelected) {
 		this.onSelected(this, this.date.print(this.dateFormat, this.dateType, this.langNumbers));
 	}
 };
 
 /** Calls the second user handler (closeHandler). */
-Calendar.prototype.callCloseHandler = function () {
+JCalendar.prototype.callCloseHandler = function () {
 	if (this.onClose) {
 		this.onClose(this);
 	}
@@ -1427,18 +1427,18 @@ Calendar.prototype.callCloseHandler = function () {
 };
 
 /** Removes the calendar object from the DOM tree and destroys it. */
-Calendar.prototype.destroy = function () {
+JCalendar.prototype.destroy = function () {
 	var el = this.element.parentNode;
 	el.removeChild(this.element);
-	Calendar._C = null;
-	window._dynarch_popupCalendar = null;
+	JCalendar._C = null;
+	window._dynarch_popupJCalendar = null;
 };
 
 /**
  *  Moves the calendar element to a different section in the DOM tree (changes
  *  its parent).
  */
-Calendar.prototype.reparent = function (new_parent) {
+JCalendar.prototype.reparent = function (new_parent) {
 	var el = this.element;
 	el.parentNode.removeChild(el);
 	new_parent.appendChild(el);
@@ -1447,22 +1447,22 @@ Calendar.prototype.reparent = function (new_parent) {
 // This gets called when the user presses a mouse button anywhere in the
 // document, if the calendar is shown.  If the click was outside the open
 // calendar this function closes it.
-Calendar._checkCalendar = function(ev) {
-	var calendar = window._dynarch_popupCalendar;
+JCalendar._checkJCalendar = function(ev) {
+	var calendar = window._dynarch_popupJCalendar;
 	if (!calendar) {
 		return false;
 	}
-	var el = Calendar.is_ie ? Calendar.getElement(ev) : Calendar.getTargetElement(ev);
+	var el = JCalendar.is_ie ? JCalendar.getElement(ev) : JCalendar.getTargetElement(ev);
 	for (; el != null && el != calendar.element; el = el.parentNode);
 	if (el == null) {
 		// calls closeHandler which should hide the calendar.
-		window._dynarch_popupCalendar.callCloseHandler();
-		return Calendar.stopEvent(ev);
+		window._dynarch_popupJCalendar.callCloseHandler();
+		return JCalendar.stopEvent(ev);
 	}
 };
 
 /** Shows the calendar. */
-Calendar.prototype.show = function () {
+JCalendar.prototype.show = function () {
 	if (this.isPopup) {
 		//always keep calendar on top
 		this.element.parentNode.appendChild(this.element);
@@ -1470,21 +1470,21 @@ Calendar.prototype.show = function () {
 	var rows = this.table.getElementsByTagName("tr");
 	for (var i = rows.length; i > 0;) {
 		var row = rows[--i];
-		Calendar.removeClass(row, "rowhilite");
+		JCalendar.removeClass(row, "rowhilite");
 		var cells = row.getElementsByTagName("td");
 		for (var j = cells.length; j > 0;) {
 			var cell = cells[--j];
-			Calendar.removeClass(cell, "hilite");
-			Calendar.removeClass(cell, "active");
+			JCalendar.removeClass(cell, "hilite");
+			JCalendar.removeClass(cell, "active");
 		}
 	}
 	this.element.style.display = "block";
 	this.hidden = false;
 	if (this.isPopup) {
-		window._dynarch_popupCalendar = this;
-		Calendar.addEvent(document, "keydown", Calendar._keyEvent);
-		Calendar.addEvent(document, "keypress", Calendar._keyEvent);
-		Calendar.addEvent(document, "mousedown", Calendar._checkCalendar);
+		window._dynarch_popupJCalendar = this;
+		JCalendar.addEvent(document, "keydown", JCalendar._keyEvent);
+		JCalendar.addEvent(document, "keypress", JCalendar._keyEvent);
+		JCalendar.addEvent(document, "mousedown", JCalendar._checkJCalendar);
 	}
 	this.hideShowCovered();
 };
@@ -1493,11 +1493,11 @@ Calendar.prototype.show = function () {
  *  Hides the calendar.  Also removes any "hilite" from the class of any TD
  *  element.
  */
-Calendar.prototype.hide = function () {
+JCalendar.prototype.hide = function () {
 	if (this.isPopup) {
-		Calendar.removeEvent(document, "keydown", Calendar._keyEvent);
-		Calendar.removeEvent(document, "keypress", Calendar._keyEvent);
-		Calendar.removeEvent(document, "mousedown", Calendar._checkCalendar);
+		JCalendar.removeEvent(document, "keydown", JCalendar._keyEvent);
+		JCalendar.removeEvent(document, "keypress", JCalendar._keyEvent);
+		JCalendar.removeEvent(document, "mousedown", JCalendar._checkJCalendar);
 	}
 	this.element.style.display = "none";
 	this.hidden = true;
@@ -1509,7 +1509,7 @@ Calendar.prototype.hide = function () {
  *  the calendar element style -- position property -- this might be relative
  *  to the parent's containing rectangle).
  */
-Calendar.prototype.showAt = function (x, y) {
+JCalendar.prototype.showAt = function (x, y) {
 	var s = this.element.style;
 	s.left = x + "px";
 	s.top = y + "px";
@@ -1517,9 +1517,9 @@ Calendar.prototype.showAt = function (x, y) {
 };
 
 /** Shows the calendar near a given element. */
-Calendar.prototype.showAtElement = function (el, opts) {
+JCalendar.prototype.showAtElement = function (el, opts) {
 	var self = this;
-	var p = Calendar.getAbsolutePos(el);
+	var p = JCalendar.getAbsolutePos(el);
 	if (!opts || typeof opts != "string") {
 		this.showAt(p.x, p.y + el.offsetHeight);
 		return true;
@@ -1534,9 +1534,9 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		s.position = "absolute";
 		s.right = s.bottom = s.width = s.height = "0px";
 		document.body.appendChild(cp);
-		var br = Calendar.getAbsolutePos(cp);
+		var br = JCalendar.getAbsolutePos(cp);
 		document.body.removeChild(cp);
-		if (Calendar.is_ie) {
+		if (JCalendar.is_ie) {
 			br.y += typeof window.pageYOffset != 'undefined' ? window.pageYOffset : 
 				document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : 
 				document.body.scrollTop ? document.body.scrollTop : 0;
@@ -1551,7 +1551,7 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		if (tmp > 0) box.y -= tmp;
 	};
 	this.element.style.display = "block";
-	Calendar.continuation_for_the_fucking_khtml_browser = function() {
+	JCalendar.continuation_for_the_fucking_khtml_browser = function() {
 		var w = self.element.offsetWidth;
 		var h = self.element.offsetHeight;
 		self.element.style.display = "none";
@@ -1582,19 +1582,19 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		fixPosition(p);
 		self.showAt(p.x, p.y);
 	};
-	if (Calendar.is_khtml)
-		setTimeout("Calendar.continuation_for_the_fucking_khtml_browser()", 10);
+	if (JCalendar.is_khtml)
+		setTimeout("JCalendar.continuation_for_the_fucking_khtml_browser()", 10);
 	else
-		Calendar.continuation_for_the_fucking_khtml_browser();
+		JCalendar.continuation_for_the_fucking_khtml_browser();
 };
 
 /** Customizes the date format. */
-Calendar.prototype.setDateFormat = function (str) {
+JCalendar.prototype.setDateFormat = function (str) {
 	this.dateFormat = str;
 };
 
 /** Customizes the tooltip date format. */
-Calendar.prototype.setTtDateFormat = function (str) {
+JCalendar.prototype.setTtDateFormat = function (str) {
 	this.ttDateFormat = str;
 };
 
@@ -1602,20 +1602,20 @@ Calendar.prototype.setTtDateFormat = function (str) {
  *  Tries to identify the date represented in a string.  If successful it also
  *  calls this.setDate which moves the calendar to the given date.
  */
-Calendar.prototype.parseDate = function(str, fmt, dateType) {
+JCalendar.prototype.parseDate = function(str, fmt, dateType) {
 	if (!fmt) fmt = this.dateFormat;
 	if (!dateType) dateType = this.dateType;
 	this.setDate(Date.parseDate(str, fmt, dateType));
 };
 
-Calendar.prototype.hideShowCovered = function () {
-	if (!Calendar.is_ie && !Calendar.is_opera)
+JCalendar.prototype.hideShowCovered = function () {
+	if (!JCalendar.is_ie && !JCalendar.is_opera)
 		return;
 	function getVisib(obj){
 		var value = obj.style.visibility;
 		if (!value) {
 			if (document.defaultView && typeof (document.defaultView.getComputedStyle) == "function") { // Gecko, W3C
-				if (!Calendar.is_khtml)
+				if (!JCalendar.is_khtml)
 					value = document.defaultView.
 						getComputedStyle(obj, "").getPropertyValue("visibility");
 				else
@@ -1631,7 +1631,7 @@ Calendar.prototype.hideShowCovered = function () {
 	var tags = new Array("applet", "iframe", "select");
 	var el = this.element;
 
-	var p = Calendar.getAbsolutePos(el);
+	var p = JCalendar.getAbsolutePos(el);
 	var EX1 = p.x;
 	var EX2 = el.offsetWidth + EX1;
 	var EY1 = p.y;
@@ -1644,7 +1644,7 @@ Calendar.prototype.hideShowCovered = function () {
 		for (var i = ar.length; i > 0;) {
 			cc = ar[--i];
 
-			p = Calendar.getAbsolutePos(cc);
+			p = JCalendar.getAbsolutePos(cc);
 			var CX1 = p.x;
 			var CX2 = cc.offsetWidth + CX1;
 			var CY1 = p.y;
@@ -1666,43 +1666,43 @@ Calendar.prototype.hideShowCovered = function () {
 };
 
 /** Internal function; it displays the bar with the names of the weekday. */
-Calendar.prototype._displayWeekdays = function () {
+JCalendar.prototype._displayWeekdays = function () {
 	var fdow = this.firstDayOfWeek;
 	var cell = this.firstdayname;
-	var weekend = Calendar._TT["WEEKEND"];
+	var weekend = JCalendar._TT["WEEKEND"];
 	for (var i = 0; i < 7; ++i) {
 		cell.className = "day name";
 		var realday = (i + fdow) % 7;
 		if (i || this.multiple) {
-			cell.ttip = (this.multiple ? Calendar._TT["SELECT_COLUMN"] : Calendar._TT["DAY_FIRST"]).replace("%s", Calendar._DN[realday]);
+			cell.ttip = (this.multiple ? JCalendar._TT["SELECT_COLUMN"] : JCalendar._TT["DAY_FIRST"]).replace("%s", JCalendar._DN[realday]);
 			cell.navtype = this.multiple ? 500 : 100;
 			cell.calendar = this;
 			cell.fdow = realday;
-			Calendar._add_evs(cell);
+			JCalendar._add_evs(cell);
 		}
 		if (weekend.indexOf(realday.toString()) != -1) {
-			Calendar.addClass(cell, "weekend");
+			JCalendar.addClass(cell, "weekend");
 		}
-		cell.innerHTML = Calendar._SDN[(i + fdow) % 7];
+		cell.innerHTML = JCalendar._SDN[(i + fdow) % 7];
 		cell = cell.nextSibling;
 	}
 };
 
 /** Internal function.  Hides all combo boxes that might be displayed. */
-Calendar.prototype._hideCombos = function () {
+JCalendar.prototype._hideCombos = function () {
 	this.monthsCombo.style.display = "none";
 	this.yearsCombo.style.display = "none";
 };
 
 /** Internal function.  Starts dragging the element. */
-Calendar.prototype._dragStart = function (ev) {
+JCalendar.prototype._dragStart = function (ev) {
 	if (this.dragging) {
 		return;
 	}
 	this.dragging = true;
 	var posX;
 	var posY;
-	if (Calendar.is_ie) {
+	if (JCalendar.is_ie) {
 		posY = window.event.clientY + document.body.scrollTop;
 		posX = window.event.clientX + document.body.scrollLeft;
 	} else {
@@ -1712,7 +1712,7 @@ Calendar.prototype._dragStart = function (ev) {
 	var st = this.element.style;
 	this.xOffs = posX - parseInt(st.left);
 	this.yOffs = posY - parseInt(st.top);
-	with (Calendar) {
+	with (JCalendar) {
 		addEvent(document, "mousemove", calDragIt);
 		addEvent(document, "mouseup", calDragEnd);
 	}
@@ -1780,7 +1780,7 @@ Date.parseDate = function(str, format, dateType) {
 					
 				case '%A':
 				case '%a':
-			    	var weekdayNames = (a[i] == '%a') ? Calendar._SDN : Calendar._DN;
+			    	var weekdayNames = (a[i] == '%a') ? JCalendar._SDN : JCalendar._DN;
 					for (j = 0; j < 7; ++j) {
 						if (str.substr(0, weekdayNames[j].length).toLowerCase() == weekdayNames[j].toLowerCase()) {
 							str = str.substr(weekdayNames[j].length);
@@ -1819,9 +1819,9 @@ Date.parseDate = function(str, format, dateType) {
 			    case "%b":
 			    case "%B":
 			    	if (dateType == 'jalali') {
-			    		var monthNames = (a[i] == '%b') ? Calendar._JSMN : Calendar._JMN;
+			    		var monthNames = (a[i] == '%b') ? JCalendar._JSMN : JCalendar._JMN;
 			    	} else {
-			    		var monthNames = (a[i] == '%b') ? Calendar._SMN : Calendar._MN;
+			    		var monthNames = (a[i] == '%b') ? JCalendar._SMN : JCalendar._MN;
 			    	}
 					for (j = 0; j < 12; ++j) {
 						if (str.substr(0, monthNames[j].length).toLowerCase() == monthNames[j].toLowerCase()) {
@@ -1844,23 +1844,23 @@ Date.parseDate = function(str, format, dateType) {
 	
 			    case "%P":
 			    case "%p":
-			    	if (str.substr(0, Calendar._TT["LPM"].length) == Calendar._TT["LPM"]) {
-						str = str.substr(Calendar._TT["LPM"].length);
+			    	if (str.substr(0, JCalendar._TT["LPM"].length) == JCalendar._TT["LPM"]) {
+						str = str.substr(JCalendar._TT["LPM"].length);
 						if (hr < 12) hr += 12;
 			    	}
 			    	
-			    	if (str.substr(0, Calendar._TT["PM"].length) == Calendar._TT["PM"]) {
-			    		str = str.substr(Calendar._TT["PM"].length);
+			    	if (str.substr(0, JCalendar._TT["PM"].length) == JCalendar._TT["PM"]) {
+			    		str = str.substr(JCalendar._TT["PM"].length);
 						if (hr < 12) hr += 12;
 			    	}
 			    	
-			    	if (str.substr(0, Calendar._TT["LAM"].length) == Calendar._TT["LAM"]) {
-			    		str = str.substr(Calendar._TT["LAM"].length);
+			    	if (str.substr(0, JCalendar._TT["LAM"].length) == JCalendar._TT["LAM"]) {
+			    		str = str.substr(JCalendar._TT["LAM"].length);
 						if (hr >= 12) hr -= 12;
 			    	}
 			    	
-			    	if (str.substr(0, Calendar._TT["AM"].length) == Calendar._TT["AM"]) {
-			    		str = str.substr(Calendar._TT["AM"].length);
+			    	if (str.substr(0, JCalendar._TT["AM"].length) == JCalendar._TT["AM"]) {
+			    		str = str.substr(JCalendar._TT["AM"].length);
 						if (hr >= 12) hr -= 12;
 			    	}
 					break;
@@ -2047,10 +2047,10 @@ Date.prototype.print = function (str, dateType, useLangNumbers) {
 		ir = 12;
 	var min = this.getUTCMinutes();
 	var sec = this.getUTCSeconds();
-	s["%a"] = Calendar._SDN[w]; // abbreviated weekday name [FIXME: I18N]
-	s["%A"] = Calendar._DN[w]; // full weekday name
-	s["%b"] = (dateType == 'jalali' ? Calendar._JSMN[m] : Calendar._SMN[m]); // abbreviated month name [FIXME: I18N]
-	s["%B"] = (dateType == 'jalali' ? Calendar._JMN[m] : Calendar._MN[m]); // full month name
+	s["%a"] = JCalendar._SDN[w]; // abbreviated weekday name [FIXME: I18N]
+	s["%A"] = JCalendar._DN[w]; // full weekday name
+	s["%b"] = (dateType == 'jalali' ? JCalendar._JSMN[m] : JCalendar._SMN[m]); // abbreviated month name [FIXME: I18N]
+	s["%B"] = (dateType == 'jalali' ? JCalendar._JMN[m] : JCalendar._MN[m]); // full month name
 	// FIXME: %c : preferred date and time representation for the current locale
 	s["%C"] = 1 + Math.floor(y / 100); // the century number
 	s["%d"] = (d < 10) ? ("0" + d) : d; // the day of the month (range 01 to 31)
@@ -2065,8 +2065,8 @@ Date.prototype.print = function (str, dateType, useLangNumbers) {
 	s["%m"] = (m < 9) ? ("0" + (1+m)) : (1+m); // month, range 01 to 12
 	s["%M"] = (min < 10) ? ("0" + min) : min; // minute, range 00 to 59
 	s["%n"] = "\n";		// a newline character
-	s["%p"] = pm ? Calendar._TT["PM"] : Calendar._TT["AM"];
-	s["%P"] = pm ? Calendar._TT["LPM"] : Calendar._TT["LAM"];
+	s["%p"] = pm ? JCalendar._TT["PM"] : JCalendar._TT["AM"];
+	s["%P"] = pm ? JCalendar._TT["LPM"] : JCalendar._TT["LAM"];
 	
 	// FIXME: %r : the time in am/pm notation %I:%M:%S %p
 	// FIXME: %R : the time in 24-hour notation %H:%M
@@ -2084,7 +2084,7 @@ Date.prototype.print = function (str, dateType, useLangNumbers) {
 	s["%%"] = "%";		// a literal '%' character
 
 	var re = /%./g;
-	if (!Calendar.is_ie5 && !Calendar.is_khtml) {
+	if (!JCalendar.is_ie5 && !JCalendar.is_khtml) {
 		str = str.replace(re, function (par) { return s[par] || par; });
 	} else {
 		var a = str.match(re);

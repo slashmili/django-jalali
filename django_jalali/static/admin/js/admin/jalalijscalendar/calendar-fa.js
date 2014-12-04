@@ -10,7 +10,7 @@
 // include your contact information in the header, as can be seen above.
 
 // full day names
-Calendar._DN = new Array
+JCalendar._DN = new Array
 ("یکشنبه",
  "دوشنبه",
  "سه شنبه",
@@ -25,15 +25,15 @@ Calendar._DN = new Array
 // for exemplification on how one can customize the short day names, but if
 // they are simply the first N letters of the full name you can simply say:
 //
-//   Calendar._SDN_len = N; // short day name length
-//   Calendar._SMN_len = N; // short month name length
+//   JCalendar._SDN_len = N; // short day name length
+//   JCalendar._SMN_len = N; // short month name length
 //
 // If N = 3 then this is not needed either since we assume a value of 3 if not
 // present, to be compatible with translation files that were written before
 // this feature.
 
 // short day names
-Calendar._SDN = new Array
+JCalendar._SDN = new Array
 ("یک",
  "دو",
  "سه",
@@ -45,10 +45,10 @@ Calendar._SDN = new Array
 
 // First day of the week. "0" means display Sunday first, "1" means display
 // Monday first, etc.
-Calendar._FD = 6;
+JCalendar._FD = 6;
 
 // full month names
-Calendar._MN = new Array
+JCalendar._MN = new Array
 ("ژانویه",
  "فوریه",
  "مارس",
@@ -63,7 +63,7 @@ Calendar._MN = new Array
  "دسامبر");
 
 // short month names
-Calendar._SMN = new Array
+JCalendar._SMN = new Array
 ("Jan",
  "Feb",
  "Mar",
@@ -78,7 +78,7 @@ Calendar._SMN = new Array
  "Dec");
 
  // full month names
-Calendar._JMN = new Array
+JCalendar._JMN = new Array
 ("فروردین",
  "اردیبهشت",
  "خرداد",
@@ -93,7 +93,7 @@ Calendar._JMN = new Array
  "اسفند");
 
 // short month names
-Calendar._JSMN = new Array
+JCalendar._JSMN = new Array
 ("فروردین",
  "اردیبهشت",
  "خرداد",
@@ -109,10 +109,10 @@ Calendar._JSMN = new Array
 
 
 // tooltips
-Calendar._TT = {};
-Calendar._TT["INFO"] = "درباره تقویم";
+JCalendar._TT = {};
+JCalendar._TT["INFO"] = "درباره تقویم";
 
-Calendar._TT["ABOUT"] =
+JCalendar._TT["ABOUT"] =
 "JalaliJSCalendar\n" +
 "Copyright (c) 2008 Ali Farhadi (http://farhadi.ir/)\n" + // don't translate this this ;-)
 "Distributed under GNU GPL. See http://gnu.org/licenses/gpl.html for details.\n\n" +
@@ -125,49 +125,49 @@ Calendar._TT["ABOUT"] =
 "- Use the \xab, \xbb buttons to select year\n" +
 "- Use the " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " buttons to select month\n" +
 "- Hold mouse button on any of the above buttons for faster selection.";
-Calendar._TT["ABOUT_TIME"] = "\n\n" +
+JCalendar._TT["ABOUT_TIME"] = "\n\n" +
 "Time selection:\n" +
 "- Click on any of the time parts to increase it\n" +
 "- or Shift-click to decrease it\n" +
 "- or click and drag for faster selection.";
 
-Calendar._TT["PREV_YEAR"] = "سال قبل (hold for menu)";
-Calendar._TT["PREV_MONTH"] = "ماه قبل (hold for menu)";
-Calendar._TT["GO_TODAY"] = "رفتن به امروز";
-Calendar._TT["NEXT_MONTH"] = "ماه بعد (hold for menu)";
-Calendar._TT["NEXT_YEAR"] = "سال بعد (hold for menu)";
-Calendar._TT["SEL_DATE"] = "انتخاب تاریخ";
-Calendar._TT["DRAG_TO_MOVE"] = "Drag to move";
-Calendar._TT["PART_TODAY"] = " (امروز)";
+JCalendar._TT["PREV_YEAR"] = "سال قبل (hold for menu)";
+JCalendar._TT["PREV_MONTH"] = "ماه قبل (hold for menu)";
+JCalendar._TT["GO_TODAY"] = "رفتن به امروز";
+JCalendar._TT["NEXT_MONTH"] = "ماه بعد (hold for menu)";
+JCalendar._TT["NEXT_YEAR"] = "سال بعد (hold for menu)";
+JCalendar._TT["SEL_DATE"] = "انتخاب تاریخ";
+JCalendar._TT["DRAG_TO_MOVE"] = "Drag to move";
+JCalendar._TT["PART_TODAY"] = " (امروز)";
 
 // the following is to inform that "%s" is to be the first day of week
 // %s will be replaced with the day name.
-Calendar._TT["DAY_FIRST"] = "ابتدا %s نمایش داده شود";
+JCalendar._TT["DAY_FIRST"] = "ابتدا %s نمایش داده شود";
 
-Calendar._TT["SELECT_COLUMN"] = "انتخاب تمام %s‌های این ماه";
-Calendar._TT["SELECT_ROW"] = "انتخاب روزهای این هفته";
+JCalendar._TT["SELECT_COLUMN"] = "انتخاب تمام %s‌های این ماه";
+JCalendar._TT["SELECT_ROW"] = "انتخاب روزهای این هفته";
 
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
 // means Monday, etc.
-Calendar._TT["WEEKEND"] = "5";
+JCalendar._TT["WEEKEND"] = "5";
 
-Calendar._TT["CLOSE"] = "بستن";
-Calendar._TT["TODAY"] = "امروز";
-Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+JCalendar._TT["CLOSE"] = "بستن";
+JCalendar._TT["TODAY"] = "امروز";
+JCalendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
 
 // date formats
-Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
-Calendar._TT["TT_DATE_FORMAT"] = "%A, %e %b";
+JCalendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
+JCalendar._TT["TT_DATE_FORMAT"] = "%A, %e %b";
 
-Calendar._TT["WK"] = "هفته";
-Calendar._TT["TIME"] = "زمان :";
+JCalendar._TT["WK"] = "هفته";
+JCalendar._TT["TIME"] = "زمان :";
 
-Calendar._TT["LAM"] = "ق.ظ.";
-Calendar._TT["AM"] = "ق.ظ.";
-Calendar._TT["LPM"] = "ب.ظ.";
-Calendar._TT["PM"] = "ب.ظ.";
+JCalendar._TT["LAM"] = "ق.ظ.";
+JCalendar._TT["AM"] = "ق.ظ.";
+JCalendar._TT["LPM"] = "ب.ظ.";
+JCalendar._TT["PM"] = "ب.ظ.";
 
-Calendar._NUMBERS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+JCalendar._NUMBERS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
-Calendar._DIR = 'rtl';
+JCalendar._DIR = 'rtl';

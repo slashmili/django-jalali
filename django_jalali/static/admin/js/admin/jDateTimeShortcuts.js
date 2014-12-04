@@ -75,11 +75,11 @@ var jDateTimeShortcuts = {
     addCalendar: function (inp) {
         // Shortcut links (calendar icon and "Today" link)
         var shortcuts_span = document.createElement('a');
-        shortcuts_span.setAttribute('href', 'return false;');
+        shortcuts_span.setAttribute('href', 'javascript:void(0)');
         inp.parentNode.insertBefore(shortcuts_span, inp.nextSibling);
         img_id = inp.id + '_calendar';
         quickElement('img', shortcuts_span, '', 'id', img_id, 'src', jDateTimeShortcuts.admin_media_prefix + 'img/icon_calendar.gif', 'alt', gettext('Calendar'));
-        Calendar.setup({
+        JCalendar.setup({
             inputField: inp.id,
             button: img_id,
             ifFormat: '%Y-%m-%d',

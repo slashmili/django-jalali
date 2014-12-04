@@ -60,7 +60,7 @@
  *  pass none of "inputField", "displayArea" or "button" you'll get a warning
  *  saying "nothing to setup".
  */
-Calendar.setup = function (params) {
+JCalendar.setup = function (params) {
 	function param_default(pname, def) { if (typeof params[pname] == "undefined") { params[pname] = def; } };
 
 	param_default("inputField",      null);
@@ -103,7 +103,7 @@ Calendar.setup = function (params) {
 		}
 	}
 	if (!(params.flat || params.multiple || params.inputField || params.displayArea || params.button)) {
-		alert("Calendar.setup:\n  Nothing to setup (no fields found).  Please check your code");
+		alert("JCalendar.setup:\n  Nothing to setup (no fields found).  Please check your code");
 		return false;
 	}
 
@@ -135,7 +135,7 @@ Calendar.setup = function (params) {
 	};
 
 	if (!params.flat) {
-		var cal = new Calendar(params.firstDay,
+		var cal = new JCalendar(params.firstDay,
 									params.date,
 									params.onSelect || onSelect,
 									params.onClose || function(cal) { cal.hide(); });
@@ -144,10 +144,10 @@ Calendar.setup = function (params) {
 		if (typeof params.flat == "string")
 			params.flat = document.getElementById(params.flat);
 		if (!params.flat) {
-			alert("Calendar.setup:\n  Flat specified but can't find parent.");
+			alert("JCalendar.setup:\n  Flat specified but can't find parent.");
 			return false;
 		}
-		var cal = new Calendar(params.firstDay, params.date, params.onSelect || onSelect);
+		var cal = new JCalendar(params.firstDay, params.date, params.onSelect || onSelect);
 
 		if (params.inputField && typeof params.inputField.value == "string" && params.inputField.value) {
 			cal.parseDate(params.inputField.value, null, params.ifDateType || cal.dateType);
