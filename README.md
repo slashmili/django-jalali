@@ -4,8 +4,8 @@ This module gives you a DateField same as Django's DateField but you can get and
 
 Dependencies
 ------------
-* [.jdatetime](http://pypi.python.org/pypi/jdatetime/) -- `easy_install jdatetime`
-* [.Django](https://www.djangoproject.com/) -- `easy_install django`
+* [jdatetime](http://pypi.python.org/pypi/jdatetime/)
+* [Django](https://www.djangoproject.com/)
 
 Install
 -------
