@@ -10,5 +10,4 @@ install:
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
-  - echo $PYTHONPATH
   - cd jalali_test/ && python manage.py test
