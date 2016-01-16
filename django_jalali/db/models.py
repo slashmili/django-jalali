@@ -77,7 +77,7 @@ class jDateField(models.Field):
                 return jdatetime.date.fromgregorian(date=datetime.date(year, month, day))
             else:
                 return jdatetime.date(year,month,day)
-        except ValueError, e:
+        except ValueError as e:
             msg = self.error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
 
