@@ -9,4 +9,4 @@ install:
   - pip install jdatetime
 script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)/django-jalali
-  - python jalali_test/manage.py test
+  - cd cd jalali_test/ && python manage.py test
