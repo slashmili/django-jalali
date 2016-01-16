@@ -4,7 +4,7 @@ import time
 import re
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.utils.encoding import smart_unicode, force_unicode, smart_str
+from django.utils.encoding import smart_text, force_text, smart_str
 from django_jalali import forms
 from django import forms as mainforms
 from django.utils.functional import curry
