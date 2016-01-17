@@ -2,9 +2,11 @@ Django Jalali
 =============
 This module gives you a DateField same as Django's DateField but you can get and query data based on Jalali Date
 
-Build Status
+Status
 ------------
 [![Build Status](https://travis-ci.org/slashmili/django-jalali.svg?branch=master)](https://travis-ci.org/slashmili/django-jalali)
+[![PyPi] (https://img.shields.io/pypi/v/django_jalali.svg)](https://pypi.python.org/pypi/django_jalali)
+[![PyPi Downloads] (https://img.shields.io/pypi/dm/django_jalali.svg)](https://pypi.python.org/pypi/django_jalali)
 
 Dependencies
 ------------
