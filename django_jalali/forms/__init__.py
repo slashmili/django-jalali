@@ -2,11 +2,11 @@ from django_jalali.forms.widgets import jDateInput, jDateTimeInput
 from django import forms
 import time
 import datetime
-import jdatetime 
+import jdatetime
 from django.core import validators, exceptions
 from django.utils import datetime_safe, formats
 from django.utils.translation import ugettext as _
-from widgets import *
+from .widgets import *
 class jDateField(forms.Field):
     widget = jDateInput
     default_error_messages = {
