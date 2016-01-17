@@ -6,7 +6,8 @@ import jdatetime
 from django.core import validators, exceptions
 from django.utils import datetime_safe, formats
 from django.utils.translation import ugettext as _
-from .widgets import *
+from .widgets import jDateInput, jDateTimeInput
+
 class jDateField(forms.Field):
     widget = jDateInput
     default_error_messages = {
