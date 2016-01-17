@@ -4,6 +4,7 @@ env:
   - DJANGO=1.8.8
 python:
   - "2.7"
+  - "3.4"
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime

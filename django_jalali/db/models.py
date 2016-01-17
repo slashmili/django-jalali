@@ -4,7 +4,7 @@ import time
 import re
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.utils.encoding import smart_unicode, force_unicode, smart_str
+from django.utils.encoding import smart_text, force_text, smart_str
 from django_jalali import forms
 from django import forms as mainforms
 from django.utils.functional import curry
@@ -77,7 +77,7 @@ class jDateField(models.Field):
                 return jdatetime.date.fromgregorian(date=datetime.date(year, month, day))
             else:
                 return jdatetime.date(year,month,day)
-        except ValueError, e:
+        except ValueError as e:
             msg = self.error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
 
