@@ -9,6 +9,8 @@ from django_jalali import forms
 from django import forms as mainforms
 from django.utils.functional import curry
 from django.core import exceptions
+import django
+from distutils.version import StrictVersion
 
 ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
 class jManager(models.Manager):
@@ -135,7 +137,10 @@ class jDateField(models.Field):
         if isinstance(value, jdatetime.date):
             value = value.togregorian()
 
-        return connection.ops.value_to_db_date(value)
+        if StrictVersion(django.get_version()) > StrictVersion('1.9'):
+            return connection.ops.adapt_datefield_value(value)
+        else :
+            return connection.ops.value_to_db_date(value)
 
     def value_to_string(self, obj):
         val = self._get_val_from_obj(obj)
@@ -251,7 +256,12 @@ class jDateTimeField(jDateField):
         if isinstance(value, jdatetime.datetime):
             value = value.togregorian()
 
-        return connection.ops.value_to_db_datetime(value)
+        if StrictVersion(django.get_version()) > StrictVersion('1.9'):
+            return connection.ops.adapt_datefield_value(value)
+        else :
+            return connection.ops.value_to_db_datetime(value)
+
+
 
     def value_to_string(self, obj):
         val = self._get_val_from_obj(obj)

@@ -3,6 +3,7 @@ language: python
 env:
   - DJANGO=1.8.8
   - DJANGO=1.9.1
+  - DJANGO=1.7.11
 python:
   - "2.7"
 install:
