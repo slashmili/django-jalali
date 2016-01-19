@@ -137,7 +137,7 @@ class jDateField(models.Field):
         if isinstance(value, jdatetime.date):
             value = value.togregorian()
 
-        if StrictVersion(django.get_version()) > StrictVersion('1.9'):
+        if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
             return connection.ops.adapt_datefield_value(value)
         else :
             return connection.ops.value_to_db_date(value)
