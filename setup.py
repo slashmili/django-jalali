@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
         name='django-jalali',
-        version='2.2',
+        version='2.3.1',
         packages=find_packages(),
         include_package_data=True,
         zip_safe=False,
@@ -15,5 +15,5 @@ setup(
         license='Python Software Foundation License',
         platforms='any',
         install_requires = ["jdatetime>=1.5","django>=1.7"],
-        long_description=open('README.md').read()
+        long_description=open('README').read()
 )
