@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
         name='django-jalali',
-        version='2.3.2',
+        version='2.3.3',
         packages=find_packages(),
         include_package_data=True,
         zip_safe=False,
