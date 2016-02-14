@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from foo.models import Bar, BarTime
 import jdatetime
+from django_jalali.templatetags import jformat
 
 class BarTestCase(TestCase):
 
@@ -41,3 +42,10 @@ class BarTimeTestCase(TestCase):
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
         self.assertEqual(len(bar_times), 1)
+
+
+class  JformatTestCase(TestCase):
+
+    def test_jformat(self):
+        value = jdatetime.date(1394, 11, 25)
+        self.assertEqual(jformat.jformat(value, '%c'), 'Yek Bah 25 00:00:00 1394')
