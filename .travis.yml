@@ -15,3 +15,5 @@ before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
   - cd jalali_test/ && python manage.py test
+  - python setup.py sdist
+  - pip install dist/django-jalali*
