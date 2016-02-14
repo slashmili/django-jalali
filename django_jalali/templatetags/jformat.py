@@ -1,4 +1,10 @@
-from django.template.base import Library
+from distutils.version import StrictVersion
+import django
+
+if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
+    from django.template import Library
+else:
+    from django.template.base import Library
 
 register = Library()
 
