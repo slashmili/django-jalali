@@ -8,6 +8,7 @@ Status
 ------
 
 .. image:: https://travis-ci.org/slashmili/django-jalali.svg?branch=master
+   :target: https://travis-ci.org/slashmili/django-jalali
 
 .. image:: https://img.shields.io/pypi/v/django_jalali.svg
    :target: https://pypi.python.org/pypi/django_jalali
