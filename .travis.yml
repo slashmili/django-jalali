@@ -5,6 +5,7 @@ env:
   - DJANGO=1.8.8
   - DJANGO=1.9.0
   - DJANGO=1.9.1
+  - DJANGO=1.9.5
 python:
   - "2.7"
   - "3.4"
