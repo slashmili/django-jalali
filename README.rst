@@ -19,8 +19,8 @@ Status
 Dependencies
 ------------
 
--  jdatetime
--  Django
+-  jdatetime_
+-  Django_ > 1.7
 
 
 Install
@@ -147,3 +147,6 @@ Admin Interface
     admin.site.register(BarTime, BarTimeAdmin)
 
 2. Config admin interface and fire up your django and enjoy using jalali date !
+
+.. _jdatetime: https://github.com/slashmili/python-jalali
+.. _Django: https://www.djangoproject.com/
