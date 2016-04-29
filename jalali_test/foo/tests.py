@@ -48,4 +48,4 @@ class  JformatTestCase(TestCase):
 
     def test_jformat(self):
         value = jdatetime.date(1394, 11, 25)
-        self.assertEqual(jformat.jformat(value, '%c'), 'Yek Bah 25 00:00:00 1394')
+        self.assertEqual(jformat.jformat(value, '%c'), 'Sun Bah 25 00:00:00 1394')
