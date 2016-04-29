@@ -129,10 +129,6 @@ Admin Interface
     from foo.models import Bar,BarTime
     from django.contrib import admin
 
-    #You need to import this for adding filter in admin interface
-    #However it works for django <= 1.7. Read more https://goo.gl/FxLrbQ
-    import django_jalali.admin.filterspecs
-
     #you need import this for adding jalali calander widget
     import django_jalali.admin as jadmin
 
