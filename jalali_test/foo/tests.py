@@ -7,7 +7,7 @@ from foo.models import Bar, BarTime
 import jdatetime
 from django_jalali.templatetags import jformat
 
-from admin import BarAdmin
+from foo.admin import BarAdmin
 
 class BarTestCase(TestCase):
 
