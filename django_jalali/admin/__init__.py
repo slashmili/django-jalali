@@ -3,6 +3,8 @@ from django.contrib.admin import options
 from django_jalali.admin import widgets
 from django import forms
 
+from .filters import JDateFieldListFilter
+
 options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateField]     = {'widget': widgets.AdminjDateWidget }
 options.FORMFIELD_FOR_DBFIELD_DEFAULTS[jDateTimeField] = {'form_class':  forms.SplitDateTimeField, 'widget': widgets.AdminSplitjDateTime}
 #maybe we can use same time
