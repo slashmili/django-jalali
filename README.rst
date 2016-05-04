@@ -151,5 +151,29 @@ Admin Interface
 
 2. Config admin interface and fire up your django and enjoy using jalali date !
 
+
+Locale
+------
+In order to get the date string in farsi you need to set the locale to fa_IR
+
+There are two ways to do achieve that, you can use of the approaches based on your nedd 
+
+* Run server with LC_ALL env:
+
+.. code:: shell
+
+    $ LC_ALL=fa_IR python manage.py runserver
+ 
+* Set the locale in settings.py
+
+.. code:: python
+
+    from foo.models import Bar,BarTime
+    from django.contrib import admin
+    LANGUAGE_CODE = 'fa-ir'
+    import locale
+    locale.setlocale(locale.LC_ALL, "fa_IR")
+   
+
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
