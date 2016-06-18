@@ -168,8 +168,6 @@ There are two ways to do achieve that, you can use of the approaches based on yo
 
 .. code:: python
 
-    from foo.models import Bar,BarTime
-    from django.contrib import admin
     LANGUAGE_CODE = 'fa-ir'
     import locale
     locale.setlocale(locale.LC_ALL, "fa_IR")
