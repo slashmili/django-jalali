@@ -35,7 +35,6 @@ class jManager(models.Manager):
 
 class jDateField(models.Field):
     description = _("Date (without time)")
-    __metaclass__ = models.SubfieldBase
     empty_strings_allowed = False
     default_error_messages = {
         'invalid': _('Enter a valid date in YYYY-MM-DD format.'),
