@@ -1,36 +1,41 @@
-import jdatetime
 import datetime
-import time
 import re
-from django.db import models
-from django.utils.translation import ugettext as _
-from django.utils.encoding import smart_text, force_text, smart_str
-from django_jalali import forms
-from django import forms as mainforms
-from django.utils.functional import curry
-from django.core import exceptions
-import django
+import time
 from distutils.version import StrictVersion
 
+import django
+import jdatetime
+from django.core import exceptions
+from django.db import models
+from django.utils.encoding import smart_str
+from django.utils.functional import curry
+from django.utils.translation import ugettext as _
+
+from django_jalali import forms
+
 ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
+
+
 class jManager(models.Manager):
     """we need to rewrite this class to handle year filter"""
+
     def filter(self, *args, **kwargs):
         """if filter is year we divide to __gte and __lte"""
         new_kwargs = {}
         for k in kwargs:
-            if '__year' in k :
+            if '__year' in k:
                 filed_name = k.split('__year')
-                first_year = jdatetime.datetime(int(kwargs[k]),1 ,1)
-                new_kwargs['%s__gte'%filed_name[0]] = jdatetime.datetime(int(kwargs[k]),1 ,1)
+                first_year = jdatetime.datetime(int(kwargs[k]), 1, 1)
+                new_kwargs['%s__gte' % filed_name[0]] = jdatetime.datetime(
+                    int(kwargs[k]), 1, 1)
                 last_day = 29
-                if first_year.isleap() :
+                if first_year.isleap():
                     last_day = 30
-                new_kwargs['%s__lte'%filed_name[0]] = jdatetime.datetime(int(kwargs[k]),12, last_day, 23, 59, 59)
-            else :
+                new_kwargs['%s__lte' % filed_name[0]] = jdatetime.datetime(
+                    int(kwargs[k]), 12, last_day, 23, 59, 59)
+            else:
                 new_kwargs[k] = kwargs[k]
-        return models.Manager.filter(self, *args, **new_kwargs )
-
+        return models.Manager.filter(self, *args, **new_kwargs)
 
 
 class jDateField(models.Field):
@@ -41,10 +46,12 @@ class jDateField(models.Field):
         'invalid_date': _('Invalid date: %s'),
     }
 
-    def __init__(self, verbose_name=None, name=None, auto_now=False, auto_now_add=False, **kwargs):
+    def __init__(self, verbose_name=None, name=None, auto_now=False,
+                 auto_now_add=False, **kwargs):
 
         self.auto_now, self.auto_now_add = auto_now, auto_now_add
-        #HACKs : auto_now_add/auto_now should be done as a default or a pre_save.
+        # HACKs : auto_now_add/auto_now should be
+        # done as a default or a pre_save.
         if auto_now or auto_now_add:
             kwargs['editable'] = False
             kwargs['blank'] = True
@@ -53,34 +60,45 @@ class jDateField(models.Field):
     def get_internal_type(self):
         return "DateField"
 
-    def to_python(self, value):
-        if value is None:
-            return value
-        if isinstance(value, datetime.datetime):
-            return jdatetime.date.fromgregorian(date=value.date())
-        if isinstance(value, datetime.date):
-            return jdatetime.date.fromgregorian(date=value)
+    def parse_date(self, date_obj):
+        "Take a datetime object and convert it to jalali date"
 
-        if isinstance(value, jdatetime.datetime):
-            return value.date()
-        if isinstance(value, jdatetime.date):
-            return value
+        if isinstance(date_obj, datetime.datetime):
+            return jdatetime.date.fromgregorian(date=date_obj.date())
+        if isinstance(date_obj, datetime.date):
+            return jdatetime.date.fromgregorian(date=date_obj)
 
-        if not ansi_date_re.search(value):
+        if not ansi_date_re.search(date_obj):
             raise exceptions.ValidationError(self.error_messages['invalid'])
         # Now that we have the date string in YYYY-MM-DD format, check to make
         # sure it's a valid date.
         # We could use time.strptime here and catch errors, but datetime.date
         # produces much friendlier error messages.
-        year, month, day = map(int, value.split('-'))
+        year, month, day = map(int, date_obj.split('-'))
         try:
-            if year > 1500 :
-                return jdatetime.date.fromgregorian(date=datetime.date(year, month, day))
+            if year > 1500:
+                return jdatetime.date.fromgregorian(
+                    date=datetime.date(year, month, day))
             else:
-                return jdatetime.date(year,month,day)
+                return jdatetime.date(year, month, day)
         except ValueError as e:
             msg = self.error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
+
+    def from_db_value(self, value, expression, connection, context):
+        if value is None:
+            return value
+        return self.parse_date(value)
+
+    def to_python(self, value):
+        if value is None:
+            return value
+
+        if isinstance(value, jdatetime.datetime):
+            return value.date()
+        if isinstance(value, jdatetime.date):
+            return value
+        return self.parse_date(value)
 
     def pre_save(self, model_instance, add):
         if self.auto_now or (self.auto_now_add and add):
@@ -91,12 +109,14 @@ class jDateField(models.Field):
             return super(jDateField, self).pre_save(model_instance, add)
 
     def contribute_to_class(self, cls, name):
-        super(jDateField,self).contribute_to_class(cls, name)
+        super(jDateField, self).contribute_to_class(cls, name)
         if not self.null:
             setattr(cls, 'get_next_by_%s' % self.name,
-                curry(cls._get_next_or_previous_by_FIELD, field=self, is_next=True))
+                    curry(cls._get_next_or_previous_by_FIELD, field=self,
+                          is_next=True))
             setattr(cls, 'get_previous_by_%s' % self.name,
-                curry(cls._get_next_or_previous_by_FIELD, field=self, is_next=False))
+                    curry(cls._get_next_or_previous_by_FIELD, field=self,
+                          is_next=False))
 
     def get_prep_lookup(self, lookup_type, value):
         """this class dosn't work in month and day searh !"""
@@ -104,7 +124,7 @@ class jDateField(models.Field):
         # to an int so the database backend always sees a consistent type.
 
         if lookup_type in ('exact', 'gt', 'gte', 'lt', 'lte'):
-            prep  = self.get_prep_value(value)
+            prep = self.get_prep_value(value)
             if type(prep) == datetime.datetime or type(prep) == datetime.date:
                 return prep
             return prep.togregorian()
@@ -112,14 +132,16 @@ class jDateField(models.Field):
         elif lookup_type in ('range', 'in'):
             return [self.get_prep_value(v) for v in value]
         elif lookup_type == 'year':
-            #this else never happen !
+            # this else never happen !
             try:
                 return int(value)
             except ValueError:
-                raise ValueError("The __year lookup type requires an integer argument")
+                raise ValueError(
+                    "The __year lookup type requires an integer argument")
 
         if lookup_type in ('month', 'day', 'week_day'):
-            raise ValueError("jDateField dosn't work with month, day and week_day !")
+            raise ValueError(
+                "jDateField dosn't work with month, day and week_day !")
 
         return super(jDateField, self).get_prep_lookup(lookup_type, value)
 
@@ -138,7 +160,7 @@ class jDateField(models.Field):
 
         if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
             return connection.ops.adapt_datefield_value(value)
-        else :
+        else:
             return connection.ops.value_to_db_date(value)
 
     def value_to_string(self, obj):
@@ -146,7 +168,7 @@ class jDateField(models.Field):
         if val is None:
             data = ''
         else:
-            data = "te" #datetime_safe.new_date(val).strftime("%Y-%m-%d")
+            data = "te"  # datetime_safe.new_date(val).strftime("%Y-%m-%d")
         return data
 
     def formfield(self, **kwargs):
@@ -157,84 +179,115 @@ class jDateField(models.Field):
 
 class jDateTimeField(jDateField):
     default_error_messages = {
-        'invalid': _(u'Enter a valid date/time in YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.'),
+        'invalid': _(
+            u'Enter a valid date/time in '
+            u'YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.'),
     }
     description = _("Date (with time)")
 
     def get_internal_type(self):
         return "DateTimeField"
 
-    def to_python(self, value):
-        if value is None:
-            return value
-        if isinstance(value, datetime.datetime):
-            try :
-                if value.year < 1700 :
-                    return jdatetime.datetime(value.year, value.month, value.day, value.hour, value.minute, value.second, value.microsecond, value.tzinfo)
-                else :
-                    return jdatetime.datetime.fromgregorian(datetime=value)
-            except ValueError :
-                raise exceptions.ValidationError(self.error_messages['invalid'])
-        if isinstance(value, datetime.date):
-            try :
-                if value.year < 1700 :
-                    return jdatetime.datetime(value.year, value.month, value.day)
-                else :
-                    return jdatetime.datetime.fromgregorian(date=value)
-            except ValueError :
-                raise exceptions.ValidationError(self.error_messages['invalid'])
-        if isinstance(value, jdatetime.datetime):
-            return value
-        if isinstance(value, jdatetime.date):
-            try :
-                d = jdatetime.datetime(value.year, value.month, value.day)
-            except ValueError :
-                raise exceptions.ValidationError(self.error_messages['invalid'])
-            return d
+    def parse_date(self, datetime_obj):
+        "Take a datetime object and convert it to jalali date"
 
+        if isinstance(datetime_obj, datetime.datetime):
+            try:
+                if datetime_obj.year < 1700:
+                    return jdatetime.datetime(
+                        datetime_obj.year, datetime_obj.month,
+                        datetime_obj.day, datetime_obj.hour,
+                        datetime_obj.minute, datetime_obj.second,
+                        datetime_obj.microsecond, datetime_obj.tzinfo)
+                else:
+                    return jdatetime.datetime.fromgregorian(
+                        datetime=datetime_obj)
+            except ValueError:
+                raise exceptions.ValidationError(
+                    self.error_messages['invalid'])
+        if isinstance(datetime_obj, datetime.date):
+            try:
+                if datetime_obj.year < 1700:
+                    return jdatetime.datetime(datetime_obj.year,
+                                              datetime_obj.month,
+                                              datetime_obj.day)
+                else:
+                    return jdatetime.datetime.fromgregorian(date=datetime_obj)
+            except ValueError:
+                raise exceptions.ValidationError(
+                    self.error_messages['invalid'])
 
         # Attempt to parse a datetime:
-        value = smart_str(value)
+        datetime_obj = smart_str(datetime_obj)
         # split usecs, because they are not recognized by strptime.
-        if '.' in value:
+        if '.' in datetime_obj:
             try:
-                value, usecs = value.split('.')
+                datetime_obj, usecs = datetime_obj.split('.')
                 usecs = int(usecs)
             except ValueError:
-                raise exceptions.ValidationError(self.error_messages['invalid'])
+                raise exceptions.ValidationError(
+                    self.error_messages['invalid'])
         else:
             usecs = 0
         kwargs = {'microsecond': usecs}
-        try: # Seconds are optional, so try converting seconds first.
-            t = time.strptime(value, '%Y-%m-%d %H:%M:%S')
-            if t.tm_year > 1700 :
-                return datetime.datetime(*time.strptime(value, '%Y-%m-%d %H:%M:%S')[:6],
-                                     **kwargs)
-            else :
-                return jdatetime.datetime(*time.strptime(value, '%Y-%m-%d %H:%M:%S')[:6],
-                                    **kwargs)
+        try:  # Seconds are optional, so try converting seconds first.
+            t = time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')
+            if t.tm_year > 1700:
+                return datetime.datetime(
+                    *time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')[:6],
+                    **kwargs)
+            else:
+                return jdatetime.datetime(
+                    *time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')[:6],
+                    **kwargs)
 
         except ValueError:
-            try: # Try without seconds.
-                t = time.strptime(value, '%Y-%m-%d %H:%M')
+            try:  # Try without seconds.
+                t = time.strptime(datetime_obj, '%Y-%m-%d %H:%M')
                 if t.tm_year > 1700:
-                    return  datetime.datetime(*time.strptime(value, '%Y-%m-%d %H:%M')[:5],
-                                     **kwargs)
-                else :
-                    return  jdatetime.datetime(*time.strptime(value, '%Y-%m-%d %H:%M')[:5],
-                                     **kwargs)
+                    return datetime.datetime(
+                        *time.strptime(datetime_obj, '%Y-%m-%d %H:%M')[:5],
+                        **kwargs)
+                else:
+                    return jdatetime.datetime(
+                        *time.strptime(datetime_obj, '%Y-%m-%d %H:%M')[:5],
+                        **kwargs)
 
-            except ValueError: # Try without hour/minutes/seconds.
+            except ValueError:  # Try without hour/minutes/seconds.
                 try:
-                    t = time.strptime(value, '%Y-%m-%d')[:3]
-                    if t[0] > 1700 :
-                        return datetime.datetime(*time.strptime(value, '%Y-%m-%d')[:3],
-                                             **kwargs)
-                    else :
-                        return jdatetime.datetime(*time.strptime(value, '%Y-%m-%d')[:3],
-                                             **kwargs)
+                    t = time.strptime(datetime_obj, '%Y-%m-%d')[:3]
+                    if t[0] > 1700:
+                        return datetime.datetime(
+                            *time.strptime(datetime_obj, '%Y-%m-%d')[:3],
+                            **kwargs)
+                    else:
+                        return jdatetime.datetime(
+                            *time.strptime(datetime_obj, '%Y-%m-%d')[:3],
+                            **kwargs)
                 except ValueError:
-                    raise exceptions.ValidationError(self.error_messages['invalid'])
+                    raise exceptions.ValidationError(
+                        self.error_messages['invalid'])
+
+    def from_db_value(self, value, expression, connection, context):
+        if value is None:
+            return value
+        return self.parse_date(value)
+
+    def to_python(self, value):
+        if value is None:
+            return value
+
+        if isinstance(value, jdatetime.datetime):
+            return value
+        if isinstance(value, jdatetime.date):
+            try:
+                d = jdatetime.datetime(value.year, value.month,
+                                       value.day)
+            except ValueError:
+                raise exceptions.ValidationError(
+                    self.error_messages['invalid'])
+            return d
+        return self.parse_date(value)
 
     def pre_save(self, model_instance, add):
         if self.auto_now or (self.auto_now_add and add):
@@ -257,10 +310,8 @@ class jDateTimeField(jDateField):
 
         if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
             return connection.ops.adapt_datefield_value(value)
-        else :
+        else:
             return connection.ops.value_to_db_datetime(value)
-
-
 
     def value_to_string(self, obj):
         val = self._get_val_from_obj(obj)
