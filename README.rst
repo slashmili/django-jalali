@@ -156,7 +156,7 @@ Locale
 ------
 In order to get the date string in farsi you need to set the locale to fa_IR
 
-There are two ways to do achieve that, you can use of the approaches based on your nedd 
+There are two ways to do achieve that, you can use of the approaches based on your needs 
 
 * Run server with LC_ALL env:
 
