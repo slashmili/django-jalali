@@ -168,7 +168,7 @@ class jDateField(models.Field):
         if val is None:
             data = ''
         else:
-            data = "te"  # datetime_safe.new_date(val).strftime("%Y-%m-%d")
+            data = str(value)
         return data
 
     def formfield(self, **kwargs):
@@ -318,8 +318,7 @@ class jDateTimeField(jDateField):
         if val is None:
             data = ''
         else:
-            d = datetime_safe.new_datetime(val)
-            data = d.strftime('%Y-%m-%d %H:%M:%S')
+            data = str(val)
         return data
 
     def formfield(self, **kwargs):
