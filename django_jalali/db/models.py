@@ -7,7 +7,7 @@ import django
 import jdatetime
 from django.core import exceptions
 from django.db import models
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_str, smart_text
 from django.utils.functional import curry
 from django.utils.translation import ugettext as _
 
@@ -164,12 +164,12 @@ class jDateField(models.Field):
             return connection.ops.value_to_db_date(value)
 
     def value_to_string(self, obj):
-        val = self._get_val_from_obj(obj)
-        if val is None:
-            data = ''
+        value = self._get_val_from_obj(obj)
+        if value is None:
+            date_string = ''
         else:
-            data = str(value)
-        return data
+            date_string = smart_text(value)
+        return date_string
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateField}
@@ -314,12 +314,12 @@ class jDateTimeField(jDateField):
             return connection.ops.value_to_db_datetime(value)
 
     def value_to_string(self, obj):
-        val = self._get_val_from_obj(obj)
-        if val is None:
-            data = ''
+        value = self._get_val_from_obj(obj)
+        if value is None:
+            dat_string = ''
         else:
-            data = str(val)
-        return data
+            date_string = smart_text(val)
+        return date_string
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateTimeField}
