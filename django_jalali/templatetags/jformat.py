@@ -17,9 +17,6 @@ def jformat(value, arg=None):
     if arg is None:
         arg = "%c"
     try:
-        # this should be force_text but because jdatetime module didn't handle
-        # unicode strings correctly it's not possible to change it at the moment
-        arg = str(arg)
         return value.strftime(arg)
     except AttributeError:
         return ''
