@@ -19,7 +19,7 @@ def jformat(value, arg=None):
     try:
         # this should be force_text but because jdatetime module didn't handle
         # unicode strings correctly it's not possible to change it at the moment
-        arg = str(arg)
+        #arg = str(arg)
         return value.strftime(arg)
     except AttributeError:
         return ''
