@@ -47,6 +47,7 @@ Usage
     django_jalali should be added **before** your apps in order to work properly
     
 .. code:: bash
+
       DATE_INPUT_FORMATS = ['%Y/%m/%d', '%Y-%m-%d']
       DATETIME_INPUT_FORMATS = ['%Y/%m/%d %H:%M:%S', '%Y-%m-%d %H:%M:%S']
 
