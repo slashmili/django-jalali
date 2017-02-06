@@ -43,13 +43,13 @@ Usage
   $ python manage.py startapp foo
 
 3. Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting) and set the date and time format settings.
+
+    django_jalali should be added **before** your apps in order to work properly
     
-.. code:: bash
+.. code:: python
 
       DATE_INPUT_FORMATS = ['%Y/%m/%d', '%Y-%m-%d']
       DATETIME_INPUT_FORMATS = ['%Y/%m/%d %H:%M:%S', '%Y-%m-%d %H:%M:%S']
-
-    django_jalali should be added **before** your apps in order to work properly
     
 .. code:: python
 
