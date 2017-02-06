@@ -31,7 +31,8 @@ class jDateField(forms.Field):
             return value
         for format in self.input_formats or formats.get_format('DATE_INPUT_FORMATS'):
             try:
-                return jdatetime.date(*time.strptime(value, format)[:3])
+                parsed_datetime = jdatetime.datetime.strptime(value, format)
+                return jdatetime.date(parsed_datetime.year, parsed_datetime.month, parsed_datetime.day)
             except ValueError:
                 continue
         raise exceptions.ValidationError(self.error_messages['invalid'])
@@ -68,7 +69,7 @@ class jDateTimeField(forms.Field):
             value = '%s %s' % tuple(value)
         for format in self.input_formats or formats.get_format('DATETIME_INPUT_FORMATS'):
             try:
-                return jdatetime.datetime(*time.strptime(value, format)[:6])
+                return jdatetime.datetime.strptime(value, format)
             except ValueError:
                 continue
         raise exceptions.ValidationError(self.error_messages['invalid'])
