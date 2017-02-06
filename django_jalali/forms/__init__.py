@@ -71,5 +71,5 @@ class jDateTimeField(forms.Field):
                 return jdatetime.datetime(*time.strptime(value, format)[:6])
             except ValueError:
                 continue
-        raise ValidationError(self.error_messages['invalid'])
+        raise exceptions.ValidationError(self.error_messages['invalid'])
 
