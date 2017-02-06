@@ -50,11 +50,6 @@ Usage
 
       DATE_INPUT_FORMATS = ['%Y/%m/%d', '%Y-%m-%d']
       DATETIME_INPUT_FORMATS = ['%Y/%m/%d %H:%M:%S', '%Y-%m-%d %H:%M:%S']
-    
-.. code:: python
-
-      DATE_INPUT_FORMATS = ['%Y/%m/%d', '%Y-%m-%d']
-      DATETIME_INPUT_FORMATS = ['%Y/%m/%d %H:%M:%S', '%Y-%m-%d %H:%M:%S']
 
 4. Edit foo/models.py
 
