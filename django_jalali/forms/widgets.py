@@ -1,6 +1,6 @@
 from django.forms import widgets
 from django.utils.encoding import smart_str
-from django.utils import formats, datetime_safe
+from django.utils import formats
 import time
 import datetime
 import jdatetime
@@ -55,7 +55,11 @@ class jDateTimeInput(widgets.Input):
         if self.is_localized and not self.manual_format:
             return formats.localize_input(value)
         elif hasattr(value, 'strftime'):
-            value = datetime_safe.new_datetime(value)
+            
+            # TODO: this gregorian validation cause `day out of range error`.
+            # please validate the `value` for jalali input with another solution.
+            
+            # value = datetime_safe.new_datetime(value)
             return value.strftime(self.format)
         return value
 
