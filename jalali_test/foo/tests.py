@@ -2,6 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
+from django.template import Context, Template
 
 from foo.models import Bar, BarTime
 import jdatetime
@@ -52,10 +53,10 @@ class BarTimeTestCase(TestCase):
 class  JformatTestCase(TestCase):
 
     def test_jformat(self):
-        value = jdatetime.date(1394, 11, 25)
-        self.assertEqual(jformat.jformat(value, '%c'), 'Sun Bah 25 00:00:00 1394')
-
-
+        date_time = jdatetime.date(1394, 11, 25)
+        t = Template('{% load jformat %}{{ date_time|jformat:"%c" }}')
+        c = Context({'date_time': date_time})
+        self.assertEqual(t.render(c), 'Sun Bah 25 00:00:00 1394')
 
 
 def select_by(dictlist, key, value):
