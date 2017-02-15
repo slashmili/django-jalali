@@ -1,6 +1,8 @@
 from distutils.version import StrictVersion
 import django
 import sys
+from datetime import datetime, date
+import jdatetime
 
 django_version = django.get_version()
 if StrictVersion(django_version) >= StrictVersion('1.9'):
@@ -19,12 +21,10 @@ def jformat(value, arg=None):
     if arg is None:
         arg = "%c"
     try:
-        if StrictVersion(django_version) < StrictVersion('1.8'):
-            if sys.version_info >= (3, ): # python 3
-                arg = str(arg)
-            else: # python2
-                arg = arg.encode('utf-8')
-
+        if isinstance(value, datetime):
+            value = jdatetime.datetime.fromgregorian(datetime=value)
+        elif isinstance(value, date):
+            value = jdatetime.date.fromgregorian(date=value)
         return value.strftime(arg)
     except AttributeError:
         return ''
