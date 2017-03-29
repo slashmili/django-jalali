@@ -70,8 +70,14 @@ Usage
 
 .. code:: bash
 
-    $ python manage.py syncdb
-
+    $ python manage.py makemigrations
+    Migrations for 'foo':
+      foo/migrations/0001_initial.py:
+         - Create model Bar
+         - Create model BarTime
+    $ python manage.py migrate
+    Running migrations:
+        Applying foo.0001_initial... OK
 6. Test it
 
 .. code:: shell
