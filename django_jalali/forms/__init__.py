@@ -1,3 +1,5 @@
+import re
+
 from django_jalali.forms.widgets import jDateInput, jDateTimeInput
 from django import forms
 import time
@@ -29,11 +31,19 @@ class jDateField(forms.Field):
             return value.date()
         if isinstance(value, jdatetime.date):
             return value
-        for format in self.input_formats or formats.get_format('DATE_INPUT_FORMATS'):
-            try:
-                return jdatetime.date(*time.strptime(value, format)[:3])
-            except ValueError:
-                continue
+
+        groups = re.search(
+            r'(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2})',
+            value
+        )
+        try:
+            return jdatetime.date(year=int(groups.group(1)),
+                                  month=int(groups.group(2)),
+                                  day=int(groups.group(3)))
+
+        except (ValueError, AttributeError):
+            pass
+
         raise exceptions.ValidationError(self.error_messages['invalid'])
 
 
@@ -62,14 +72,27 @@ class jDateTimeField(forms.Field):
             # Input comes from a SplitDateTimeWidget, for example. So, it's two
             # components: date and time.
             if len(value) != 2:
-                raise ValidationError(self.error_messages['invalid'])
+                raise exceptions.ValidationError(self.error_messages['invalid'])
             if value[0] in validators.EMPTY_VALUES and value[1] in validators.EMPTY_VALUES:
                 return None
             value = '%s %s' % tuple(value)
-        for format in self.input_formats or formats.get_format('DATETIME_INPUT_FORMATS'):
-            try:
-                return jdatetime.datetime(*time.strptime(value, format)[:6])
-            except ValueError:
-                continue
-        raise ValidationError(self.error_messages['invalid'])
+
+        groups = re.search(
+            r'(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2}) '
+            r'(?P<hour>[\d]{1,2}):(?P<minute>[\d]{1,2})'
+            r'(:(?P<second>[\d]{1,2}))?(.(?P<microsecond>[\d]{1,5}))?',
+            value
+        )
+        try:
+            return jdatetime.datetime(year=int(groups.group(1)),
+                                      month=int(groups.group(2)),
+                                      day=int(groups.group(3)),
+                                      hour=int(groups.group(4)),
+                                      minute=int(groups.group(5)),
+                                      second=int(groups.group(6)))
+
+        except (ValueError, AttributeError):
+            pass
+
+        raise exceptions.ValidationError(self.error_messages['invalid'])
 
