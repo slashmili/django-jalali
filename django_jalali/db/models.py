@@ -230,6 +230,8 @@ class jDateTimeField(models.Field):
 
         # Attempt to parse a datetime:
         datetime_obj = smart_str(datetime_obj)
+        if not datetime_obj:
+            return None
         # split usecs, because they are not recognized by strptime.
         if '.' in datetime_obj:
             try:
