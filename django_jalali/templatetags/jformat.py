@@ -1,7 +1,11 @@
 from distutils.version import StrictVersion
 import django
+import sys
+from datetime import datetime, date
+import jdatetime
 
-if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
+django_version = django.get_version()
+if StrictVersion(django_version) >= StrictVersion('1.9'):
     from django.template import Library
 else:
     from django.template.base import Library
@@ -17,9 +21,10 @@ def jformat(value, arg=None):
     if arg is None:
         arg = "%c"
     try:
-        # this should be force_text but because jdatetime module didn't handle
-        # unicode strings correctly it's not possible to change it at the moment
-        arg = str(arg)
+        if isinstance(value, datetime):
+            value = jdatetime.datetime.fromgregorian(datetime=value)
+        elif isinstance(value, date):
+            value = jdatetime.date.fromgregorian(date=value)
         return value.strftime(arg)
     except AttributeError:
         return ''
