@@ -173,17 +173,28 @@ class jDateField(models.Field):
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateField}
-        defaults.update(kwargs)
-        return super(jDateField, self).formfield(**defaults)
+        kwargs.update(defaults)
+        return super(jDateField, self).formfield(**kwargs)
 
 
-class jDateTimeField(jDateField):
+class jDateTimeField(models.Field):
     default_error_messages = {
         'invalid': _(
             u'Enter a valid date/time in '
             u'YYYY-MM-DD HH:MM[:ss[.uuuuuu]] format.'),
     }
     description = _("Date (with time)")
+
+    def __init__(self, verbose_name=None, name=None, auto_now=False,
+                 auto_now_add=False, **kwargs):
+
+        self.auto_now, self.auto_now_add = auto_now, auto_now_add
+        # HACKs : auto_now_add/auto_now should be
+        # done as a default or a pre_save.
+        if auto_now or auto_now_add:
+            kwargs['editable'] = False
+            kwargs['blank'] = True
+        models.Field.__init__(self, verbose_name, name, **kwargs)
 
     def get_internal_type(self):
         return "DateTimeField"
@@ -219,6 +230,8 @@ class jDateTimeField(jDateField):
 
         # Attempt to parse a datetime:
         datetime_obj = smart_str(datetime_obj)
+        if not datetime_obj:
+            return None
         # split usecs, because they are not recognized by strptime.
         if '.' in datetime_obj:
             try:
@@ -318,10 +331,47 @@ class jDateTimeField(jDateField):
         if value is None:
             dat_string = ''
         else:
-            date_string = smart_text(val)
+            date_string = smart_text(value)
         return date_string
+
+    def contribute_to_class(self, cls, name):
+        super(jDateTimeField, self).contribute_to_class(cls, name)
+        if not self.null:
+            setattr(cls, 'get_next_by_%s' % self.name,
+                    curry(cls._get_next_or_previous_by_FIELD, field=self,
+                          is_next=True))
+            setattr(cls, 'get_previous_by_%s' % self.name,
+                    curry(cls._get_next_or_previous_by_FIELD, field=self,
+                          is_next=False))
+
+    def get_prep_lookup(self, lookup_type, value):
+        """this class dosn't work in month and day searh !"""
+        # For "__month", "__day", and "__week_day" lookups, convert the value
+        # to an int so the database backend always sees a consistent type.
+
+        if lookup_type in ('exact', 'gt', 'gte', 'lt', 'lte'):
+            prep = self.get_prep_value(value)
+            if type(prep) == datetime.datetime or type(prep) == datetime.date:
+                return prep
+            return prep.togregorian()
+
+        elif lookup_type in ('range', 'in'):
+            return [self.get_prep_value(v) for v in value]
+        elif lookup_type == 'year':
+            # this else never happen !
+            try:
+                return int(value)
+            except ValueError:
+                raise ValueError(
+                    "The __year lookup type requires an integer argument")
+
+        if lookup_type in ('month', 'day', 'week_day'):
+            raise ValueError(
+                "jDateField dosn't work with month, day and week_day !")
+
+        return super(jDateTimeField, self).get_prep_lookup(lookup_type, value)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateTimeField}
-        defaults.update(kwargs)
-        return super(jDateTimeField, self).formfield(**defaults)
+        kwargs.update(defaults)
+        return super(jDateTimeField, self).formfield(**kwargs)
