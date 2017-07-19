@@ -24,3 +24,9 @@ script:
   - cd ..
   - python setup.py sdist
   - pip install dist/django-jalali*
+matrix:
+  exclude:
+  - env: DJANGO=1.7.11
+    python: "3.6"
+  - env: DJANGO=1.7.11
+    python: "3.5"
