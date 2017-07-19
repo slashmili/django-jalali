@@ -7,8 +7,8 @@ get and query data based on Jalali Date
 Status
 ------
 
-.. image:: https://travis-ci.org/slashmili/django-jalali.svg?branch=master
-   :target: https://travis-ci.org/slashmili/django-jalali
+.. image:: https://travis-ci.org/pooyamb/django-jalali.svg?branch=master
+   :target: https://travis-ci.org/pooyamb/django-jalali
 
 .. image:: https://img.shields.io/pypi/v/django_jalali.svg
    :target: https://pypi.python.org/pypi/django_jalali
