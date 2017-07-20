@@ -23,7 +23,7 @@ class AdminjDateWidget(jforms.jDateInput):
 
 
 
-class AdminSplitjDateTime(forms.SplitDateTimeWidget):
+class AdminSplitjDateTime(jforms.widgets.jSplitDateTimeWidget):
     """
     A SplitDateTime Widget that has some admin-specific styling.
     """
@@ -36,3 +36,5 @@ class AdminSplitjDateTime(forms.SplitDateTimeWidget):
     def format_output(self, rendered_widgets):
         return mark_safe(u'<p class="datetime">%s %s<br />%s %s</p>' % \
             (_('Date:'), rendered_widgets[0], _('Time:'), rendered_widgets[1]))
+
+

@@ -1,6 +1,7 @@
 from django.forms import widgets
 from django.utils.encoding import smart_str
 from django.utils import formats, datetime_safe
+
 import time
 import datetime
 import jdatetime
@@ -69,4 +70,12 @@ class jDateTimeInput(widgets.Input):
         except (TypeError, ValueError):
             pass
         return super(jDateTimeInput, self)._has_changed(self._format_value(initial), data)
+
+
+class jSplitDateTimeWidget(widgets.SplitDateTimeWidget):
+
+    def decompress(self, value):
+        gregorian_dt = value.togregorian()
+        gregorian_dt = super(jSplitDateTimeWidget, self).decompress(gregorian_dt)
+        return [jdatetime.datetime.fromgregorian(date=gregorian_dt[0]), gregorian_dt[1]]
 

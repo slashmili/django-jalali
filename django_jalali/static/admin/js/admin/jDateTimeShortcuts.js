@@ -12,8 +12,10 @@ var jDateTimeShortcuts = {
         // value in the hopes that someone will examine HTTP requests and see it.
         if (window.__admin_media_prefix__ != undefined) {
             jDateTimeShortcuts.admin_media_prefix = window.__admin_media_prefix__;
-        } else {
+        } else if(!window.django){
             jDateTimeShortcuts.admin_media_prefix = '/missing-admin-media-prefix/';
+        } else {
+            jDateTimeShortcuts.admin_media_prefix = undefined;
         }
 
         if (window.__admin_utc_offset__ != undefined) {
@@ -76,9 +78,14 @@ var jDateTimeShortcuts = {
         // Shortcut links (calendar icon and "Today" link)
         var shortcuts_span = document.createElement('a');
         shortcuts_span.setAttribute('href', 'javascript:void(0)');
+        shortcuts_span.className = "datetimeshortcuts"
         inp.parentNode.insertBefore(shortcuts_span, inp.nextSibling);
         img_id = inp.id + '_calendar';
-        quickElement('img', shortcuts_span, '', 'id', img_id, 'src', jDateTimeShortcuts.admin_media_prefix + 'img/icon_calendar.gif', 'alt', gettext('Calendar'));
+        if(jDateTimeShortcuts.admin_media_prefix) {
+            quickElement('img', shortcuts_span, '', 'id', img_id, 'src', jDateTimeShortcuts.admin_media_prefix + 'img/icon_calendar.gif', 'alt', gettext('Calendar'));
+        } else {
+            quickElement('span', shortcuts_span, '', 'id', img_id, 'alt', gettext('Calendar'), 'class', 'date-icon');
+        }
         JCalendar.setup({
             inputField: inp.id,
             button: img_id,

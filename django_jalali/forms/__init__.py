@@ -5,6 +5,7 @@ import jdatetime
 from django.core import validators, exceptions
 from django.utils.translation import ugettext as _
 from .widgets import jDateInput, jDateTimeInput
+from django.forms.utils import from_current_timezone, to_current_timezone
 
 
 class jDateField(forms.Field):
@@ -54,6 +55,11 @@ class jDateTimeField(forms.Field):
         super(jDateTimeField, self).__init__(*args, **kwargs)
         self.input_formats = input_formats
 
+    def prepare_value(self, value):
+        if isinstance(value, jdatetime.datetime):
+            value = j_to_current_timezone(value)
+        return value
+
     def to_python(self, value):
         """
         Validates that the input can be converted to a datetime. Returns a
@@ -62,9 +68,9 @@ class jDateTimeField(forms.Field):
         if value in validators.EMPTY_VALUES:
             return None
         if isinstance(value, jdatetime.datetime):
-            return value
+            return j_from_current_timezone(value)
         if isinstance(value, jdatetime.date):
-            return jdatetime.datetime(value.year, value.month, value.day)
+            return j_from_current_timezone(jdatetime.datetime(value.year, value.month, value.day))
         if isinstance(value, list):
             # Input comes from a SplitDateTimeWidget, for example. So, it's two
             # components: date and time.
@@ -73,6 +79,7 @@ class jDateTimeField(forms.Field):
             if value[0] in validators.EMPTY_VALUES and value[1] in validators.EMPTY_VALUES:
                 return None
             value = '%s %s' % tuple(value)
+
 
         groups = re.search(
             r'(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2}) '
@@ -83,15 +90,27 @@ class jDateTimeField(forms.Field):
         try:
             microsecond = int(groups.group('microsecond') or 0)
             second = int(groups.group('second') or 0)
-            return jdatetime.datetime(year=int(groups.group('year')),
+            jdt = jdatetime.datetime(year=int(groups.group('year')),
                                       month=int(groups.group('month')),
                                       day=int(groups.group('day')),
                                       hour=int(groups.group('hour')),
                                       minute=int(groups.group('minute')),
                                       second=second,
                                       microsecond=microsecond)
+            return j_from_current_timezone(jdt)
 
         except (ValueError, AttributeError):
             pass
 
         raise exceptions.ValidationError(self.error_messages['invalid'])
+
+
+def j_from_current_timezone(jdt):
+    jdt = jdt.togregorian()
+    jdt = from_current_timezone(jdt)
+    return jdatetime.datetime.fromgregorian(datetime = jdt)
+
+def j_to_current_timezone(jdt):
+    jdt = jdt.togregorian()
+    jdt = to_current_timezone(jdt)
+    return jdatetime.datetime.fromgregorian(datetime = jdt)

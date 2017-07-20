@@ -10,6 +10,8 @@ from django.db import models
 from django.utils.encoding import smart_str, smart_text
 from django.utils.functional import curry
 from django.utils.translation import ugettext as _
+from django.conf import settings
+from django.utils import timezone
 
 from django_jalali import forms
 
@@ -311,7 +313,21 @@ class jDateTimeField(models.Field):
             return super(jDateTimeField, self).pre_save(model_instance, add)
 
     def get_prep_value(self, value):
-        return self.to_python(value)
+        value = super(jDateTimeField, self).get_prep_value(value)
+        value = self.to_python(value)
+        if value is not None and settings.USE_TZ and timezone.is_naive(value):
+            # For backwards compatibility, interpret naive datetimes in local
+            # time. This won't work during DST change, but we can't do much
+            # about it, so we let the exceptions percolate up the call stack.
+            try:
+                name = '%s.%s' % (self.model.__name__, self.name)
+            except AttributeError:
+                name = '(unbound)'
+            default_timezone = timezone.get_default_timezone()
+            value = value.togregorian()
+            value = timezone.make_aware(value, default_timezone)
+            value = jdatetime.datetime.fromgregorian(datetime=value)
+        return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
         # Casts dates into the format expected by the backend
