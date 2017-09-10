@@ -8,12 +8,24 @@ from django.utils.safestring import mark_safe
 class AdminjDateWidget(jforms.jDateInput):
     @property
     def media(self):
-        js = ["admin/jalalijscalendar/jalali.js", "admin/jalalijscalendar/calendar.js",
-              "admin/jalalijscalendar/calendar-setup.js",
-              "admin/jalalijscalendar/calendar-fa.js", "admin/jDateTimeShortcuts.js"]
-        # css = ["calendar-green.css"]
-        return forms.Media(js=[static("admin/js/%s" % path) for path in js],
-                           css={'all': ('admin/css/calendar-green.css',)})
+        js = [
+            "jquery.ui.datepicker.jalali/scripts/jquery-1.10.2.min.js",
+            "jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js",
+            "jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js",
+            "jquery.ui.datepicker.jalali/scripts/calendar.js",
+            "jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js",
+            "main.js"
+        ]
+
+        css = {
+            'all': [
+                "admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css",
+                "admin/css/main.css"
+                ]
+        }
+
+        return forms.Media(js=[static("admin/%s" % path) for path in js],
+                           css=css)
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {'class': 'vjDateField', 'size': '10'}
