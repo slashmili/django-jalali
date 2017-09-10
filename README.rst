@@ -118,9 +118,9 @@ Using Templatetags
 
 .. code:: python
 
-    {% load jformat %}
-    {{ my_date|jformat }} {# default formatting #}
-    {{ my_date|jformat:"%A %d %B %Y %H:%M" }} {# specific formatting #}
+    {% load jalali_tags %}
+    {{ my_date|to_jalali }} {# default formatting #}
+    {{ my_date|to_jalali:"%A %d %B %Y %H:%M" }} {# specific formatting #}
 
 Admin Interface
 ---------------
