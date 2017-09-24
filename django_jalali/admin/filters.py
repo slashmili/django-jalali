@@ -38,20 +38,20 @@ class JDateFieldListFilter(admin.FieldListFilter):
         self.links = (
             (_('Any date'), {}),
             (_('Today'), {
-                self.lookup_kwarg_since: str(today),
-                self.lookup_kwarg_until: str(tomorrow),
+                self.lookup_kwarg_since: today.strftime('%Y-%m-%d %H:%M:%S'),
+                self.lookup_kwarg_until: tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
             }),
             (_('Past 7 days'), {
-                self.lookup_kwarg_since: str(today - jdatetime.timedelta(days=7)),
-                self.lookup_kwarg_until: str(tomorrow),
+                self.lookup_kwarg_since: (today - jdatetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S'),
+                self.lookup_kwarg_until: tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
             }),
             (_('This month'), {
-                self.lookup_kwarg_since: str(today.replace(day=1)),
-                self.lookup_kwarg_until: str(next_month),
+                self.lookup_kwarg_since: (today.replace(day=1)).strftime('%Y-%m-%d %H:%M:%S'),
+                self.lookup_kwarg_until: next_month.strftime('%Y-%m-%d %H:%M:%S'),
             }),
             (_('This year'), {
-                self.lookup_kwarg_since: str(today.replace(month=1, day=1)),
-                self.lookup_kwarg_until: str(next_year),
+                self.lookup_kwarg_since: (today.replace(month=1, day=1)).strftime('%Y-%m-%d %H:%M:%S'),
+                self.lookup_kwarg_until: next_year.strftime('%Y-%m-%d %H:%M:%S'),
             }),
         )
 
