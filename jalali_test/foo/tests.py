@@ -8,8 +8,12 @@ from django.template import Context, Template
 from foo.models import Bar, BarTime
 import jdatetime
 from django_jalali.templatetags import jformat
+try:
+    from urllib import unquote  # Python 2.X
+except ImportError:
+    from urllib.parse import unquote  # Python 3+
 
-from foo.admin import BarAdmin
+from foo.admin import BarTimeAdmin
 
 class BarTestCase(TestCase):
 
@@ -88,41 +92,41 @@ class ListFiltersTests(TestCase):
         self.next_year = self.today.replace(year=self.today.year + 1, month=1, day=1)
 
         #Bars
-        self.mybar = Bar.objects.create(name="foo", date=self.today)
+        self.mybartime = BarTime.objects.create(name="foo", datetime=self.today)
 
 
     def test_jdatefieldlistfilter(self):
-        modeladmin = BarAdmin(Bar, site)
+        modeladmin = BarTimeAdmin(BarTime, site)
 
         request = self.request_factory.get('/')
-        changelist = self.get_changelist(request, Bar, modeladmin)
-        request = self.request_factory.get('/', {'date__gte': self.today,
-                                                 'date__lt': self.tomorrow})
+        changelist = self.get_changelist(request, BarTime, modeladmin)
+        request = self.request_factory.get('/', {'datetime__gte': self.today.strftime('%Y-%m-%d %H:%M:%S'),
+                                                 'datetime__lt': self.tomorrow.strftime('%Y-%m-%d %H:%M:%S')})
 
-        changelist = self.get_changelist(request, Bar, modeladmin)
+        changelist = self.get_changelist(request, BarTime, modeladmin)
 
         # Make sure the correct queryset is returned
         queryset = changelist.get_queryset(request)
-        self.assertEqual(list(queryset), [self.mybar])
+        self.assertEqual(list(queryset), [self.mybartime])
 
 
         # Make sure the correct choice is selected
         filterspec = changelist.get_filters(request)[0][0]
-        self.assertEqual(force_text(filterspec.title), 'date')
+        self.assertEqual(force_text(filterspec.title), 'datetime')
         choice = select_by(filterspec.choices(changelist), "display", "Today")
         self.assertEqual(choice['selected'], True)
 
         self.assertEqual(
-            choice['query_string'],
-            '?date__gte=%s&date__lt=%s' % (
-                self.today,
-                self.tomorrow,
+            unquote(choice['query_string']).replace('+', ' '),
+            '?datetime__gte=%s&datetime__lt=%s' % (
+                self.today.strftime('%Y-%m-%d %H:%M:%S'),
+                self.tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
             )
         )
 
-        request = self.request_factory.get('/', {'date__gte': self.today.replace(day=1),
-                                                 'date__lt': self.next_month})
-        changelist = self.get_changelist(request, Bar, modeladmin)
+        request = self.request_factory.get('/', {'datetime__gte': self.today.replace(day=1),
+                                                 'datetime__lt': self.next_month})
+        changelist = self.get_changelist(request, BarTime, modeladmin)
 
     def get_changelist(self, request, model, modeladmin):
         return ChangeList(
