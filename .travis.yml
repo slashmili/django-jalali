@@ -15,9 +15,9 @@ python:
 matrix:
   allow_failures:
     - python: 3.6
-      env: DJANGO=1.7.11
+      env: DJANGO=1.7.11 TEST_DIR=jalali_test
     - python: 2.7
-      env: DJANGO=2.0
+      env: DJANGO=2.0 TEST_DIR=jalali_test_2_0
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime
