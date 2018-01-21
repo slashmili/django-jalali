@@ -1,22 +1,30 @@
 sudo: false
 language: python
 env:
-  - DJANGO=1.7.11
-  - DJANGO=1.8.8
-  - DJANGO=1.9.0
-  - DJANGO=1.9.1
-  - DJANGO=1.9.5
-  - DJANGO=1.10
+  - DJANGO=1.7.11 TEST_DIR=jalali_test
+  - DJANGO=1.8.8 TEST_DIR=jalali_test
+  - DJANGO=1.9.0 TEST_DIR=jalali_test
+  - DJANGO=1.9.1 TEST_DIR=jalali_test
+  - DJANGO=1.9.5 TEST_DIR=jalali_test
+  - DJANGO=1.10 TEST_DIR=jalali_test
+  - DJANGO=2.0 TEST_DIR=jalali_test_2_0
 python:
-  - "2.7"
-  - "3.4"
+  - 2.7
+  - 3.4
+  - 3.6
+matrix:
+  allow_failures:
+    - python: 3.6
+      env: DJANGO=1.7.11 TEST_DIR=jalali_test
+    - python: 2.7
+      env: DJANGO=2.0 TEST_DIR=jalali_test_2_0
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
-  - cd jalali_test
+  - cd $TEST_DIR
   - python manage.py test
   - cd ..
   - python setup.py sdist

@@ -25,3 +25,5 @@ pip-log.txt
 
 #PyCharm
 .idea
+
+db.sqlite3
