@@ -11,14 +11,11 @@ env:
 python:
   - "2.7"
   - "3.4"
+  - "3.6"
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
-  - cd jalali_test
-  - python manage.py test
-  - cd ..
-  - python setup.py sdist
-  - pip install dist/django-jalali*
+  - ./run_tests.bash
