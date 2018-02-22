@@ -4,6 +4,7 @@ from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
 from django.template import Context, Template
+from django.db.models.functions import Extract
 
 from foo.models import Bar, BarTime
 import jdatetime
@@ -34,10 +35,10 @@ class BarTestCase(TestCase):
         bars = Bar.objects.filter(date="1390-5-11")
         self.assertEqual(len(bars), 0)
 
-
     def test_filter_by_gte_date(self):
         bars = Bar.objects.filter(date__gte=self.today_string)
         self.assertEqual(len(bars), 1)
+
 
 class BarTimeTestCase(TestCase):
 
@@ -94,7 +95,6 @@ class ListFiltersTests(TestCase):
         #Bars
         self.mybartime = BarTime.objects.create(name="foo", datetime=self.today)
 
-
     def test_jdatefieldlistfilter(self):
         modeladmin = BarTimeAdmin(BarTime, site)
 
@@ -137,3 +137,23 @@ class ListFiltersTests(TestCase):
             modeladmin.list_max_show_all, modeladmin.list_editable, modeladmin,
         )
 
+
+class ExtractTestCase(TestCase):
+
+    def setUp(self):
+        self.date_string = "1380-08-02"
+        self.datetime = jdatetime.datetime(1380,8,2,12,12,12)
+        self.bar_time = BarTime(name="foo time", datetime=self.datetime)
+        self.bar_time.save()
+
+    def test_extract_month(self):
+        output = "08"
+        item = {'BarMonth': False}
+        try:
+            item = Bar.objects.filter(date="1380-08-02").annotate(
+                BarMonth=Extract('date', 'month')
+            ).values('BarMonth')[0]
+        except Exception as e:
+            self.assertEqual(e, None)
+
+        self.assertEqual(item['BarMonth'], output)
