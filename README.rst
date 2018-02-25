@@ -40,11 +40,11 @@ Usage
 
   $ python manage.py startapp foo
 
-3. Edit settings.py and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
+3. Edit settings.py_ and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
 
     django_jalali should be added **before** your apps in order to work properly
 
-4. Edit foo/models.py
+4. Edit foo/models.py_
 
 .. code:: python
 
@@ -126,7 +126,7 @@ Admin Interface
 ---------------
 
 
-1. Create foo/admin.py
+1. Create foo/admin.py_
 
 .. code:: python
 
@@ -179,3 +179,6 @@ There are two ways to do achieve that, you can use of the approaches based on yo
 
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
+.. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
+.. _models.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/models.py
+.. _admin.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/admin.py
