@@ -20,7 +20,7 @@ matrix:
       env: DJANGO=2.0 TEST_DIR=jalali_test_2_0
 install:
   - pip install -q Django==$DJANGO
-  - pip install jdatetime
+  - pip install jdatetime pytz
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
