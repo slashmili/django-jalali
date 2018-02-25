@@ -14,6 +14,6 @@ setup(
     keywords="django jalali",
     license='Python Software Foundation License',
     platforms='any',
-    install_requires=["jdatetime>=2.0", "django>=1.7"],
+    install_requires=["jdatetime>=2.0", "django>=2.0"],
     long_description=open('README.rst').read()
 )
