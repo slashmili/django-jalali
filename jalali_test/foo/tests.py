@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, override_settings, skipUnlessDBFeature
+from django.test.utils import requires_tz_support
 from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
 from django.template import Context, Template
+
+from django.utils import timezone
 
 from foo.models import Bar, BarTime
 import jdatetime
@@ -53,6 +56,16 @@ class BarTimeTestCase(TestCase):
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
         self.assertEqual(len(bar_times), 1)
+
+    @requires_tz_support
+    @skipUnlessDBFeature('has_zoneinfo_database')
+    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    def test_lookup_date_with_use_tz(self):
+        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=timezone.get_current_timezone())
+        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        k = BarTime.objects.filter(datetime=jdt1)
+        self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
+
 
 
 class  JformatTestCase(TestCase):
