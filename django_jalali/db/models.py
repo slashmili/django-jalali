@@ -7,6 +7,9 @@ import django
 import jdatetime
 from django.core import exceptions
 from django.db import models
+from django.conf import settings
+import warnings
+from django.utils import timezone
 from django.utils.encoding import smart_str, smart_text
 from django.utils.functional import curry
 from django.utils.translation import ugettext as _
@@ -294,24 +297,34 @@ class jDateTimeField(models.Field):
             return value
         if isinstance(value, jdatetime.date):
             try:
-                d = jdatetime.datetime(value.year, value.month,
-                                       value.day)
+                return jdatetime.datetime(value.year, value.month, value.day)
             except ValueError:
                 raise exceptions.ValidationError(
                     self.error_messages['invalid'])
-            return d
         return self.parse_date(value)
 
     def pre_save(self, model_instance, add):
         if self.auto_now or (self.auto_now_add and add):
-            value = jdatetime.datetime.now()
+            value = jdatetime.datetime.fromgregorian(datetime=timezone.now())
             setattr(model_instance, self.attname, value)
             return value
         else:
             return super(jDateTimeField, self).pre_save(model_instance, add)
 
     def get_prep_value(self, value):
-        return self.to_python(value)
+        value = self.to_python(value)
+        if value is not None and settings.USE_TZ and timezone.is_naive(value):
+            try:
+                name = '%s.%s' % (self.model.__name__, self.name)
+            except AttributeError:
+                name = '(unbound)'
+            warnings.warn("DateTimeField %s received a naive datetime (%s)"
+                    " while time zone support is active." %
+                    (name, value),
+                    RuntimeWarning)
+            default_timezone = timezone.get_default_timezone()
+            value = timezone.make_aware(value, default_timezone)
+        return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
         # Casts dates into the format expected by the backend
