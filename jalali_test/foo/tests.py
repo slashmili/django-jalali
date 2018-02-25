@@ -5,6 +5,8 @@ from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
 from django.template import Context, Template
 
+from django.utils import timezone
+
 from foo.models import Bar, BarTime
 import jdatetime
 from django_jalali.templatetags import jformat
@@ -53,7 +55,6 @@ class BarTimeTestCase(TestCase):
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
         self.assertEqual(len(bar_times), 1)
-
 
 class  JformatTestCase(TestCase):
 

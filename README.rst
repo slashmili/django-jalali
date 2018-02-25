@@ -18,8 +18,9 @@ Dependencies
 ------------
 
 -  jdatetime_
--  Django_ > 1.7
+-  Django_ > 2.0
 
+    Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
 
 Install
 -------
@@ -177,8 +178,13 @@ There are two ways to do achieve that, you can use of the approaches based on yo
     locale.setlocale(locale.LC_ALL, "fa_IR")
    
 
+Timezone Settings
+------
+From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``USE_TZ`` settings_ to save datetime with project timezone
+
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
 .. _models.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/models.py
 .. _admin.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/admin.py
+.. _settings: https://github.com/slashmili/django-jalali/blob/master/jalali_test_2_0/jalali_test_2_0/settings.py#L110
