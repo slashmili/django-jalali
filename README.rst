@@ -18,8 +18,9 @@ Dependencies
 ------------
 
 -  jdatetime_
--  Django_ > 1.7
+-  Django_ > 2.0
 
+    Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
 
 Install
 -------
