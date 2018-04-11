@@ -167,7 +167,7 @@ class jDateField(models.Field):
             return connection.ops.value_to_db_date(value)
 
     def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
+        value = self.value_from_object(obj)
         if value is None:
             date_string = ''
         else:
@@ -340,7 +340,7 @@ class jDateTimeField(models.Field):
             return connection.ops.value_to_db_datetime(value)
 
     def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
+        value = self.value_from_object(obj)
         if value is None:
             dat_string = ''
         else:
