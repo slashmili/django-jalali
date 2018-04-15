@@ -239,8 +239,6 @@ class jDateTimeField(models.Field):
         if '.' in datetime_obj:
             try:
                 datetime_obj, usecs = datetime_obj.split('.')
-                if '+' in usecs:
-                    usecs, tz = usecs.split('+')
                 usecs = int(usecs)
             except ValueError:
                 raise exceptions.ValidationError(
