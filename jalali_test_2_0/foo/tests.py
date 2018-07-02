@@ -68,6 +68,22 @@ class BarTimeTestCase(TestCase):
         k = BarTime.objects.filter(datetime=jdt1)
         self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
 
+    @requires_tz_support
+    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    def test_lookup_date_with_use_tz_without_explicit_tzinfo(self):
+        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        k = BarTime.objects.filter(datetime=jdt1)
+        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
+
+    @requires_tz_support
+    @override_settings(USE_TZ=False, TIME_ZONE='Asia/Tehran')
+    def test_lookup_date_with_no_tz(self):
+        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        k = BarTime.objects.filter(datetime=jdt1)
+        self.assertEqual(k[0].datetime.strftime('%z'), '')
+
 class  JformatTestCase(TestCase):
 
     def setUp(self):
