@@ -23,7 +23,7 @@ class jDateInput(widgets.Input):
 
         return value
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         value = self._format_value(value)
         return super(jDateInput, self).render(name, value, attrs)
 
