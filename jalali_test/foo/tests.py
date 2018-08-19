@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase, RequestFactory
 from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
@@ -100,9 +101,11 @@ class ListFiltersTests(TestCase):
         modeladmin = BarTimeAdmin(BarTime, site)
 
         request = self.request_factory.get('/')
+        request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
         request = self.request_factory.get('/', {'datetime__gte': self.today.strftime('%Y-%m-%d %H:%M:%S'),
                                                  'datetime__lt': self.tomorrow.strftime('%Y-%m-%d %H:%M:%S')})
+        request.user = AnonymousUser()
 
         changelist = self.get_changelist(request, BarTime, modeladmin)
 
@@ -127,6 +130,7 @@ class ListFiltersTests(TestCase):
 
         request = self.request_factory.get('/', {'datetime__gte': self.today.replace(day=1),
                                                  'datetime__lt': self.next_month})
+        request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
 
     def get_changelist(self, request, model, modeladmin):
@@ -136,4 +140,5 @@ class ListFiltersTests(TestCase):
             modeladmin.date_hierarchy, modeladmin.search_fields,
             modeladmin.list_select_related, modeladmin.list_per_page,
             modeladmin.list_max_show_all, modeladmin.list_editable, modeladmin,
+            modeladmin.sortable_by,
         )
