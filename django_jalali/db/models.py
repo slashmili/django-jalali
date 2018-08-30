@@ -41,7 +41,7 @@ class jManager(models.Manager):
         return models.Manager.filter(self, *args, **new_kwargs)
 
 
-class jDateField(models.Field):
+class jDateField(models.DateField):
     description = _("Date (without time)")
     empty_strings_allowed = False
     default_error_messages = {
@@ -180,7 +180,7 @@ class jDateField(models.Field):
         return super(jDateField, self).formfield(**kwargs)
 
 
-class jDateTimeField(models.Field):
+class jDateTimeField(models.DateTimeField):
     default_error_messages = {
         'invalid': _(
             u'Enter a valid date/time in '
