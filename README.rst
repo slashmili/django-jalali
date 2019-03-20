@@ -175,7 +175,7 @@ There are two ways to do achieve that, you can use of the approaches based on yo
 
     LANGUAGE_CODE = 'fa-ir'
     import locale
-    locale.setlocale(locale.LC_ALL, "fa_IR")
+    locale.setlocale(locale.LC_ALL, "fa_IR.UTF-8")
    
 
 Timezone Settings
