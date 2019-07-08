@@ -3,6 +3,7 @@ language: python
 env:
   - DJANGO=2.0 TEST_DIR=jalali_test_2_0
   - DJANGO=2.0.2 TEST_DIR=jalali_test_2_0
+  - DJANGO=2.2.3 TEST_DIR=jalali_test_2_0
 python:
   - 3.4
   - 3.6
