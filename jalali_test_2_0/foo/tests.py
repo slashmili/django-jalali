@@ -13,10 +13,7 @@ from foo.models import Bar, BarTime
 import jdatetime
 import datetime
 from django_jalali.templatetags import jformat
-try:
-    from urllib import unquote  # Python 2.X
-except ImportError:
-    from urllib.parse import unquote  # Python 3+
+from urllib.parse import unquote
 
 from foo.admin import BarTimeAdmin
 
