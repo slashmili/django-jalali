@@ -1,4 +1,4 @@
-from foo.models import Bar, BarTime
+from foo.models import Bar,BarTime
 from django.contrib import admin
 
 from django_jalali.admin.filters import JDateFieldListFilter
@@ -10,7 +10,7 @@ class BarAdmin(admin.ModelAdmin):
     list_filter = (
         ('date', JDateFieldListFilter),
     )
-    pass
+
 
 admin.site.register(Bar, BarAdmin)
 
