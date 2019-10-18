@@ -13,3 +13,4 @@ class BarTime(models.Model):
     datetime = jmodels.jDateTimeField()
     def __str__(self):
         return "%s, %s" %(self.name, self.datetime)
+
