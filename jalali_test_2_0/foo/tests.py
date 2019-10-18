@@ -4,8 +4,10 @@ from django.test.utils import requires_tz_support
 from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
+from django.contrib.auth.models import AnonymousUser
 from django.template import Context, Template
 
+from django import get_version
 from django.utils import timezone
 
 
@@ -61,17 +63,23 @@ class BarTimeTestCase(TestCase):
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_use_tz(self):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=timezone.get_current_timezone())
-        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
+        if get_version() >= '2.1':
+            self.assertEqual(str(k[0].datetime.tzinfo), '+0326')
+        else:
+            self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
 
     @requires_tz_support
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_use_tz_without_explicit_tzinfo(self):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
+        if get_version() >= '2.1':
+            self.assertEqual(str(k[0].datetime.tzinfo), '+0430')
+        else:
+            self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
 
     @requires_tz_support
     @override_settings(USE_TZ=False, TIME_ZONE='Asia/Tehran')
@@ -125,10 +133,11 @@ class ListFiltersTests(TestCase):
         modeladmin = BarTimeAdmin(BarTime, site)
 
         request = self.request_factory.get('/')
+        request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
         request = self.request_factory.get('/', {'datetime__gte': self.today.strftime('%Y-%m-%d %H:%M:%S'),
                                                  'datetime__lt': self.tomorrow.strftime('%Y-%m-%d %H:%M:%S')})
-
+        request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
 
         # Make sure the correct queryset is returned
@@ -152,13 +161,17 @@ class ListFiltersTests(TestCase):
 
         request = self.request_factory.get('/', {'datetime__gte': self.today.replace(day=1),
                                                  'datetime__lt': self.next_month})
+        request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
 
     def get_changelist(self, request, model, modeladmin):
-        return ChangeList(
+        args = [
             request, model, modeladmin.list_display,
             modeladmin.list_display_links, modeladmin.list_filter,
             modeladmin.date_hierarchy, modeladmin.search_fields,
             modeladmin.list_select_related, modeladmin.list_per_page,
             modeladmin.list_max_show_all, modeladmin.list_editable, modeladmin,
-        )
+        ]
+        if get_version() >= '2.1':
+            args.append(modeladmin.sortable_by)
+        return ChangeList(*args)
