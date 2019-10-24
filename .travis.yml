@@ -7,6 +7,7 @@ env:
 python:
   - 3.4
   - 3.6
+  - 3.7
 jobs:
   exclude:
   - python: 3.4
