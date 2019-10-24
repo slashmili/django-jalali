@@ -4,6 +4,7 @@ env:
   - DJANGO=2.0 TEST_DIR=jalali_test
   - DJANGO=2.0.2 TEST_DIR=jalali_test
   - DJANGO=2.2.3 TEST_DIR=jalali_test
+  - DJANGO=2.2.6 TEST_DIR=jalali_test
 python:
   - 3.4
   - 3.6
@@ -12,6 +13,8 @@ jobs:
   exclude:
   - python: 3.4
     env: DJANGO=2.2.3 TEST_DIR=jalali_test
+  - python: 3.4
+    env: DJANGO=2.2.6 TEST_DIR=jalali_test
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime pytz
