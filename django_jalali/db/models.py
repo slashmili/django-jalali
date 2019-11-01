@@ -248,43 +248,33 @@ class jDateTimeField(models.DateTimeField):
         else:
             usecs = 0
         kwargs = {'microsecond': usecs}
-        try:  # Seconds are optional, so try converting seconds first.
-            t = time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')
-            if t.tm_year > 1700:
-                return datetime.datetime(
-                    *time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')[:6],
-                    **kwargs)
-            else:
-                return jdatetime.datetime(
-                    *time.strptime(datetime_obj, '%Y-%m-%d %H:%M:%S')[:6],
-                    **kwargs)
 
-        except ValueError:
-            try:  # Try without seconds.
-                t = time.strptime(datetime_obj, '%Y-%m-%d %H:%M')
+        formats = [
+            ('%Y-%m-%d %H:%M:%S', 6),
+            ('%Y-%m-%d %H:%M', 5),
+            ('%Y-%m-%d', 3),
+        ]
+        for format, c in formats:
+            try:  # Seconds are optional, so try converting seconds first.
+                t = time.strptime(datetime_obj, format)
                 if t.tm_year > 1700:
                     return datetime.datetime(
-                        *time.strptime(datetime_obj, '%Y-%m-%d %H:%M')[:5],
+                        *time.strptime(datetime_obj, format)[:c],
                         **kwargs)
                 else:
                     return jdatetime.datetime(
-                        *time.strptime(datetime_obj, '%Y-%m-%d %H:%M')[:5],
+                        *time.strptime(datetime_obj, format)[:c],
                         **kwargs)
-
-            except ValueError:  # Try without hour/minutes/seconds.
+            except ValueError:
                 try:
-                    t = time.strptime(datetime_obj, '%Y-%m-%d')[:3]
-                    if t[0] > 1700:
-                        return datetime.datetime(
-                            *time.strptime(datetime_obj, '%Y-%m-%d')[:3],
-                            **kwargs)
-                    else:
-                        return jdatetime.datetime(
-                            *time.strptime(datetime_obj, '%Y-%m-%d')[:3],
-                            **kwargs)
+                    return jdatetime.datetime.strptime(
+                        datetime_obj,
+                        '%Y-%m-%d %H:%M'
+                    ).replace(**kwargs)
                 except ValueError:
-                    raise exceptions.ValidationError(
-                        self.error_messages['invalid'])
+                    pass
+
+        raise exceptions.ValidationError(self.error_messages['invalid'])
 
     def from_db_value(self, value, expression, connection, context):
         if value is None:

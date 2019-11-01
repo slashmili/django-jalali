@@ -30,6 +30,11 @@ class BarTestCase(TestCase):
     def test_save_date(self):
         self.assertEqual(self.mybar.date, self.today)
 
+    def test_save_specific_datetime(self):
+        Bar.objects.create(name='Test', date='1398-04-31')
+        k = Bar.objects.filter(date='1398-04-31')
+        self.assertEqual(k[0].date.day, 31)
+
     def test_filter_by_exact_date(self):
         bars = Bar.objects.filter(date=self.today_string)
         self.assertEqual(len(bars), 1)
@@ -53,6 +58,11 @@ class BarTimeTestCase(TestCase):
 
     def test_save_date(self):
         self.assertEqual(self.bar_time.datetime, self.datetime)
+
+    def test_save_specific_datetime(self):
+        BarTime.objects.create(name='Test', datetime='1398-04-31 12:12:12')
+        k = BarTime.objects.filter(datetime='1398-04-31 12:12:12')
+        self.assertEqual(k[0].datetime.day, 31)
 
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
