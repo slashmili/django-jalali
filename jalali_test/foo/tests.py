@@ -13,11 +13,10 @@ from django.utils import timezone
 
 from foo.models import Bar, BarTime
 import jdatetime
-import datetime
-from django_jalali.templatetags import jformat
 from urllib.parse import unquote
 
 from foo.admin import BarTimeAdmin
+
 
 class BarTestCase(TestCase):
 
@@ -38,10 +37,10 @@ class BarTestCase(TestCase):
         bars = Bar.objects.filter(date="1390-5-11")
         self.assertEqual(len(bars), 0)
 
-
     def test_filter_by_gte_date(self):
         bars = Bar.objects.filter(date__gte=self.today_string)
         self.assertEqual(len(bars), 1)
+
 
 class BarTimeTestCase(TestCase):
 
@@ -65,10 +64,7 @@ class BarTimeTestCase(TestCase):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=timezone.get_current_timezone())
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        if get_version() >= '2.1':
-            self.assertEqual(str(k[0].datetime.tzinfo), '+0326')
-        else:
-            self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
+        self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
 
     @requires_tz_support
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
@@ -76,17 +72,16 @@ class BarTimeTestCase(TestCase):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        if get_version() >= '2.1':
-            self.assertEqual(str(k[0].datetime.tzinfo), '+0430')
-        else:
-            self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
+        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000+0430')
+        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
 
     @requires_tz_support
     @override_settings(USE_TZ=False, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_no_tz(self):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-        m1 = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
+        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000')
         self.assertEqual(k[0].datetime.strftime('%z'), '')
 
 class  JformatTestCase(TestCase):
