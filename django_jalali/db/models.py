@@ -310,10 +310,12 @@ class jDateTimeField(models.DateTimeField):
                 name = '%s.%s' % (self.model.__name__, self.name)
             except AttributeError:
                 name = '(unbound)'
-            warnings.warn("DateTimeField %s received a naive datetime (%s)"
-                    " while time zone support is active." %
-                    (name, value),
-                    RuntimeWarning)
+            warnings.warn(
+                "DateTimeField %s received a naive datetime (%s)"
+                " while time zone support is active." %
+                (name, value),
+                RuntimeWarning
+            )
             default_timezone = timezone.get_default_timezone()
             value = timezone.make_aware(value, default_timezone)
         return value

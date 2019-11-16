@@ -5,6 +5,7 @@ from django.contrib.admin.widgets import AdminTimeWidget
 from django.contrib.admin.templatetags.admin_static import static
 from django.utils.safestring import mark_safe
 
+
 class AdminjDateWidget(jforms.jDateInput):
     @property
     def media(self):
@@ -34,7 +35,6 @@ class AdminjDateWidget(jforms.jDateInput):
         super(AdminjDateWidget, self).__init__(attrs=final_attrs, format=format)
 
 
-
 class AdminSplitjDateTime(forms.SplitDateTimeWidget):
     """
     A SplitDateTime Widget that has some admin-specific styling.
@@ -46,5 +46,7 @@ class AdminSplitjDateTime(forms.SplitDateTimeWidget):
         forms.MultiWidget.__init__(self, widgets, attrs)
 
     def format_output(self, rendered_widgets):
-        return mark_safe(u'<p class="datetime">%s %s<br />%s %s</p>' % \
-            (_('Date:'), rendered_widgets[0], _('Time:'), rendered_widgets[1]))
+        return mark_safe(u'<p class="datetime">%s %s<br />%s %s</p>' % (
+            _('Date:'), rendered_widgets[0], _('Time:'),
+            rendered_widgets[1],
+        ))

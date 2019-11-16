@@ -32,12 +32,14 @@ class jDateField(forms.Field):
 
         groups = re.search(
             r'(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2})',
-            value
+            value,
         )
         try:
-            return jdatetime.date(year=int(groups.group(1)),
-                                  month=int(groups.group(2)),
-                                  day=int(groups.group(3)))
+            return jdatetime.date(
+                year=int(groups.group(1)),
+                month=int(groups.group(2)),
+                day=int(groups.group(3)),
+            )
 
         except (ValueError, AttributeError):
             pass
@@ -90,13 +92,15 @@ class jDateTimeField(forms.Field):
         try:
             microsecond = int(groups.group('microsecond') or 0)
             second = int(groups.group('second') or 0)
-            result = jdatetime.datetime(year=int(groups.group('year')),
-                                      month=int(groups.group('month')),
-                                      day=int(groups.group('day')),
-                                      hour=int(groups.group('hour')),
-                                      minute=int(groups.group('minute')),
-                                      second=second,
-                                      microsecond=microsecond)
+            result = jdatetime.datetime(
+                year=int(groups.group('year')),
+                month=int(groups.group('month')),
+                day=int(groups.group('day')),
+                hour=int(groups.group('hour')),
+                minute=int(groups.group('minute')),
+                second=second,
+                microsecond=microsecond,
+            )
             return from_current_timezone(result)
 
         except (ValueError, AttributeError):

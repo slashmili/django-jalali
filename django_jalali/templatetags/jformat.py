@@ -1,6 +1,5 @@
 from distutils.version import StrictVersion
 import django
-import sys
 from datetime import datetime, date
 import jdatetime
 
