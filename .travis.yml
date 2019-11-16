@@ -15,6 +15,12 @@ jobs:
     env: DJANGO=2.2.3 TEST_DIR=jalali_test
   - python: 3.4
     env: DJANGO=2.2.6 TEST_DIR=jalali_test
+  include:
+  - stage: Flake8
+    env:
+    python: 3.7
+    install: pip install flake8
+    script: flake8
 install:
   - pip install -q Django==$DJANGO
   - pip install jdatetime pytz
