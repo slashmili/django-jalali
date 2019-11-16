@@ -334,7 +334,7 @@ class jDateTimeField(models.DateTimeField):
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
         if value is None:
-            dat_string = ''
+            date_string = ''
         else:
             date_string = smart_text(value)
         return date_string
