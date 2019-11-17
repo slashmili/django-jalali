@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase, RequestFactory, override_settings, skipUnlessDBFeature
+from django.test import (
+    TestCase, RequestFactory, override_settings, skipUnlessDBFeature,
+)
 from django.test.utils import requires_tz_support
 from django.utils.encoding import force_text
 from django.contrib.admin.views.main import ChangeList
@@ -9,7 +11,6 @@ from django.template import Context, Template
 
 from django import get_version
 from django.utils import timezone
-
 
 from foo.models import Bar, BarTime
 import jdatetime
@@ -51,7 +52,7 @@ class BarTimeTestCase(TestCase):
 
     def setUp(self):
         self.date_string = "1380-08-02"
-        self.datetime = jdatetime.datetime(1380,8,2,12,12,12)
+        self.datetime = jdatetime.datetime(1380, 8, 2, 12, 12, 12)
         self.bar_time = BarTime(name="foo time", datetime=self.datetime)
         self.bar_time.save()
 
@@ -71,7 +72,10 @@ class BarTimeTestCase(TestCase):
     @skipUnlessDBFeature('has_zoneinfo_database')
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_use_tz(self):
-        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=timezone.get_current_timezone())
+        jdt1 = jdatetime.datetime(
+            1392, 3, 12, 10, 22, 23, 240000,
+            tzinfo=timezone.get_current_timezone()
+        )
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
         self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
@@ -94,7 +98,8 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000')
         self.assertEqual(k[0].datetime.strftime('%z'), '')
 
-class  JformatTestCase(TestCase):
+
+class JformatTestCase(TestCase):
 
     def setUp(self):
         date_time = jdatetime.date(1394, 11, 25)
@@ -117,6 +122,7 @@ class  JformatTestCase(TestCase):
 def select_by(dictlist, key, value):
     return [x for x in dictlist if x[key] == value][0]
 
+
 class ListFiltersTests(TestCase):
 
     def setUp(self):
@@ -130,9 +136,8 @@ class ListFiltersTests(TestCase):
             self.next_month = self.today.replace(month=self.today.month + 1, day=1)
         self.next_year = self.today.replace(year=self.today.year + 1, month=1, day=1)
 
-        #Bars
+        # Bars
         self.mybartime = BarTime.objects.create(name="foo", datetime=self.today)
-
 
     def test_jdatefieldlistfilter(self):
         modeladmin = BarTimeAdmin(BarTime, site)
@@ -140,15 +145,19 @@ class ListFiltersTests(TestCase):
         request = self.request_factory.get('/')
         request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
-        request = self.request_factory.get('/', {'datetime__gte': self.today.strftime('%Y-%m-%d %H:%M:%S'),
-                                                 'datetime__lt': self.tomorrow.strftime('%Y-%m-%d %H:%M:%S')})
+        request = self.request_factory.get(
+            '/',
+            {
+                'datetime__gte': self.today.strftime('%Y-%m-%d %H:%M:%S'),
+                'datetime__lt': self.tomorrow.strftime('%Y-%m-%d %H:%M:%S')
+            },
+        )
         request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
 
         # Make sure the correct queryset is returned
         queryset = changelist.get_queryset(request)
         self.assertEqual(list(queryset), [self.mybartime])
-
 
         # Make sure the correct choice is selected
         filterspec = changelist.get_filters(request)[0][0]
@@ -164,8 +173,13 @@ class ListFiltersTests(TestCase):
             )
         )
 
-        request = self.request_factory.get('/', {'datetime__gte': self.today.replace(day=1),
-                                                 'datetime__lt': self.next_month})
+        request = self.request_factory.get(
+            '/',
+            {
+                'datetime__gte': self.today.replace(day=1),
+                'datetime__lt': self.next_month
+            },
+        )
         request.user = AnonymousUser()
         changelist = self.get_changelist(request, BarTime, modeladmin)
 

@@ -1,0 +1,3 @@
+[flake8]
+max-line-length = 110
+exclude = jalali_test/foo/migrations, django_jalali/tests

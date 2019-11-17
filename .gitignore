@@ -1,5 +1,6 @@
 *.py[co]
 *.swp
+__pycache__/
 # Packages
 *.egg
 *.egg-info
