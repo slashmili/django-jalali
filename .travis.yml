@@ -5,6 +5,7 @@ env:
   - DJANGO=2.0.2 TEST_DIR=jalali_test
   - DJANGO=2.2.3 TEST_DIR=jalali_test
   - DJANGO=2.2.6 TEST_DIR=jalali_test
+  - DJANGO=3.0 TEST_DIR=jalali_test
 python:
   - 3.4
   - 3.6
@@ -15,6 +16,8 @@ jobs:
     env: DJANGO=2.2.3 TEST_DIR=jalali_test
   - python: 3.4
     env: DJANGO=2.2.6 TEST_DIR=jalali_test
+  - python: 3.4
+    env: DJANGO=3.0 TEST_DIR=jalali_test
   include:
   - stage: Flake8
     env:

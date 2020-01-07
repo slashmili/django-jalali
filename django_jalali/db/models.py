@@ -2,6 +2,7 @@ import datetime
 import re
 import time
 from distutils.version import StrictVersion
+from functools import partialmethod
 
 import django
 import jdatetime
@@ -11,7 +12,6 @@ from django.conf import settings
 import warnings
 from django.utils import timezone
 from django.utils.encoding import smart_str, smart_text
-from django.utils.functional import curry
 from django.utils.translation import ugettext as _
 
 from django_jalali import forms
@@ -88,7 +88,7 @@ class jDateField(models.DateField):
             msg = self.error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return value
         return self.parse_date(value)
@@ -114,12 +114,16 @@ class jDateField(models.DateField):
     def contribute_to_class(self, cls, name):
         super(jDateField, self).contribute_to_class(cls, name)
         if not self.null:
-            setattr(cls, 'get_next_by_%s' % self.name,
-                    curry(cls._get_next_or_previous_by_FIELD, field=self,
-                          is_next=True))
-            setattr(cls, 'get_previous_by_%s' % self.name,
-                    curry(cls._get_next_or_previous_by_FIELD, field=self,
-                          is_next=False))
+            setattr(
+                cls,
+                'get_next_by_%s' % self.name,
+                partialmethod(cls._get_next_or_previous_by_FIELD, field=self, is_next=True)
+            )
+            setattr(
+                cls,
+                'get_previous_by_%s' % self.name,
+                partialmethod(cls._get_next_or_previous_by_FIELD, field=self, is_next=False)
+            )
 
     def get_prep_lookup(self, lookup_type, value):
         """this class dosn't work in month and day searh !"""
@@ -276,7 +280,7 @@ class jDateTimeField(models.DateTimeField):
 
         raise exceptions.ValidationError(self.error_messages['invalid'])
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return value
         return self.parse_date(value)
@@ -344,12 +348,16 @@ class jDateTimeField(models.DateTimeField):
     def contribute_to_class(self, cls, name):
         super(jDateTimeField, self).contribute_to_class(cls, name)
         if not self.null:
-            setattr(cls, 'get_next_by_%s' % self.name,
-                    curry(cls._get_next_or_previous_by_FIELD, field=self,
-                          is_next=True))
-            setattr(cls, 'get_previous_by_%s' % self.name,
-                    curry(cls._get_next_or_previous_by_FIELD, field=self,
-                          is_next=False))
+            setattr(
+                cls,
+                'get_next_by_%s' % self.name,
+                partialmethod(cls._get_next_or_previous_by_FIELD, field=self, is_next=True)
+            )
+            setattr(
+                cls,
+                'get_previous_by_%s' % self.name,
+                partialmethod(cls._get_next_or_previous_by_FIELD, field=self, is_next=False)
+            )
 
     def get_prep_lookup(self, lookup_type, value):
         """this class dosn't work in month and day searh !"""
