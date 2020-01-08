@@ -15,5 +15,17 @@ setup(
     license='Python Software Foundation License',
     platforms='any',
     install_requires=["jdatetime>=2.0", "django>=2.0"],
-    long_description=open('README.rst', encoding="utf-8").read()
+    long_description=open('README.rst', encoding="utf-8").read(),
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD 3-Clause License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: Implementation :: CPython",
+    ],
 )
