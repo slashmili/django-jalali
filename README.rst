@@ -77,6 +77,7 @@ Usage
     $ python manage.py migrate
     Running migrations:
         Applying foo.0001_initial... OK
+
 6. Test it
 
 .. code:: shell
@@ -179,7 +180,7 @@ There are two ways to do achieve that, you can use of the approaches based on yo
    
 
 Timezone Settings
-------
+-----------------
 From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``USE_TZ`` settings_ to save datetime with project timezone
 
 .. _jdatetime: https://github.com/slashmili/python-jalali
