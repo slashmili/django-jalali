@@ -13,6 +13,8 @@ Status
 .. image:: https://img.shields.io/pypi/v/django_jalali.svg
    :target: https://pypi.python.org/pypi/django_jalali
 
+.. image:: https://img.shields.io/pypi/pyversions/django-jalali.svg
+   :target: https://pypi.org/project/django_jalali
 
 Dependencies
 ------------
