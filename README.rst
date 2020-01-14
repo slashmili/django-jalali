@@ -85,8 +85,8 @@ Usage
 .. code:: shell
 
     $ python manage.py shell
-    Python 2.6.6 (r266:84292, Sep 15 2010, 15:52:39)
-    [GCC 4.4.5] on linux2
+    Python 3.7.0 (default, Nov 26 2018, 15:26:54)
+    [GCC 6.3.0 20170516] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     (InteractiveConsole)
     >>> from foo.models import Bar
