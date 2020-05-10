@@ -10,9 +10,6 @@ class Bar(models.Model):
     name = models.CharField(max_length=200)
     date = jmodels.jDateField()
 
-    def __str__(self):
-        return "%s, %s" % (self.name, self.date)
-
 
 class DateWithDefault(models.Model):
     objects = jmodels.jManager()
@@ -24,9 +21,6 @@ class BarTime(models.Model):
     objects = jmodels.jManager()
     name = models.CharField(max_length=200)
     datetime = jmodels.jDateTimeField()
-
-    def __str__(self):
-        return "%s, %s" % (self.name, self.datetime)
 
 
 class DateTimeWithDefault(models.Model):
