@@ -316,6 +316,13 @@ class jDateTimeField(models.DateTimeField):
     def from_db_value(self, value, expression, connection):
         if value is None:
             return value
+
+        if value is not None and settings.USE_TZ:
+            # Remove and set timezone information
+            default_timezone = timezone.get_default_timezone()
+            value = timezone.make_naive(value, default_timezone)
+            value = timezone.make_aware(value, default_timezone)
+
         return self.parse_date(value)
 
     def to_python(self, value):
