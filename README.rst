@@ -187,7 +187,7 @@ From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``US
 
 Default Value
 -----------------
-Since ``jdatetime`` is not an instance of a ``datetime``. in other to use ``jdatetime``, the following code can be used:
+Since ``jdatetime`` is not an instance of a ``datetime``, in other to use ``jdatetime``, the following code can be used:
 
 .. code:: python
 
