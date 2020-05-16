@@ -185,6 +185,9 @@ Timezone Settings
 -----------------
 From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``USE_TZ`` settings_ to save datetime with project timezone
 
+Defualt Value
+-----------------
+Since ''jdatetime''
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
