@@ -185,7 +185,7 @@ Timezone Settings
 -----------------
 From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``USE_TZ`` settings_ to save datetime with project timezone
 
-Defualt Value
+Default Value
 -----------------
 Since ``jdatetime`` is not an instance of a ``datetime``. in other to use ``jdatetime``, the following code can be used.
 
