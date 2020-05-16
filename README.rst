@@ -187,7 +187,15 @@ From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``US
 
 Defualt Value
 -----------------
-Since ''jdatetime''
+Since ``jdatetime`` is not an instance of a ``datetime``. in other to use ``jdatetime``, the following code can be used.
+
+.. code:: python
+
+    import jdatetime
+    from django_jalali.db import models as jmodels
+    persian_date_feild = jmodels.jDateTimeField(default=datetime.fromisoformat(jdatetime.datetime.now().isoformat()))
+    
+    
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
