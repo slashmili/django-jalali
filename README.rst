@@ -193,7 +193,7 @@ Since ``jdatetime`` is not an instance of a ``datetime``, in other to use ``jdat
 
     import jdatetime
     from django_jalali.db import models as jmodels
-    persian_date_feild = jmodels.jDateTimeField(default=datetime.fromisoformat(jdatetime.datetime.now().isoformat()))
+    persian_date_field = jmodels.jDateTimeField(default=datetime.fromisoformat(jdatetime.datetime.now().isoformat()))
     
     
 .. _jdatetime: https://github.com/slashmili/python-jalali
