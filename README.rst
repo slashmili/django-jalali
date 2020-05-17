@@ -203,7 +203,7 @@ This code will get the start time of the server it may be usable for development
     from django_jalali.db import models as jmodels
     persian_date_field = jmodels.jDateTimeField(default=jdatetime.datetime.now)
     
-by refreshing the page the date and time field will get updated.
+By refreshing the page the date and time field will get updated.
     
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
