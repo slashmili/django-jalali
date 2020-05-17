@@ -194,7 +194,16 @@ Since ``jdatetime`` is not an instance of a ``datetime``, in other to use ``jdat
     import jdatetime
     from django_jalali.db import models as jmodels
     persian_date_field = jmodels.jDateTimeField(default=datetime.fromisoformat(jdatetime.datetime.now().isoformat()))
+
+This code will get the start time of the server it may be usable for development but rather i suggest to use the following code to get dynamic date result:
+
+.. code:: python
+
+    import jdatetime
+    from django_jalali.db import models as jmodels
+    persian_date_field = jmodels.jDateTimeField(default=jdatetime.datetime.now)
     
+by refreshing the page the date and time field will get updated.
     
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
