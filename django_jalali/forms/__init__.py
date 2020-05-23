@@ -15,7 +15,7 @@ class jDateField(forms.Field):
     }
 
     def __init__(self, input_formats=None, *args, **kwargs):
-        super(jDateField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.input_formats = input_formats
 
     def to_python(self, value):
@@ -54,7 +54,7 @@ class jDateTimeField(forms.Field):
     }
 
     def __init__(self, input_formats=None, *args, **kwargs):
-        super(jDateTimeField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.input_formats = input_formats
 
     def prepare_value(self, value):

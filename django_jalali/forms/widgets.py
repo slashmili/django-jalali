@@ -11,7 +11,7 @@ class jDateInput(widgets.Input):
     format = None
 
     def __init__(self, attrs=None, format=None):
-        super(jDateInput, self).__init__(attrs)
+        super().__init__(attrs)
         if format:
             self.format = format
 
@@ -26,7 +26,7 @@ class jDateInput(widgets.Input):
 
     def render(self, name, value, attrs=None, renderer=None):
         value = self._format_value(value)
-        return super(jDateInput, self).render(name, value, attrs)
+        return super().render(name, value, attrs)
 
     def _has_changed(self, initial, data):
         # If our field has show_hidden_initial=True, initial will be a string
@@ -37,7 +37,7 @@ class jDateInput(widgets.Input):
             initial = jdatetime.date(*time.strptime(initial, input_format)[:3])
         except (TypeError, ValueError):
             pass
-        return super(jDateInput, self)._has_changed(self._format_value(initial), data)
+        return super()._has_changed(self._format_value(initial), data)
 
 
 class jDateTimeInput(widgets.Input):
@@ -45,7 +45,7 @@ class jDateTimeInput(widgets.Input):
     format = '%Y-%m-%d %H:%M:%S'     # '2006-10-25 14:30:59'
 
     def __init__(self, attrs=None, format=None):
-        super(jDateTimeInput, self).__init__(attrs)
+        super().__init__(attrs)
         if format:
             self.format = format
             self.manual_format = True
@@ -70,4 +70,4 @@ class jDateTimeInput(widgets.Input):
             initial = datetime.datetime(*time.strptime(initial, input_format)[:6])
         except (TypeError, ValueError):
             pass
-        return super(jDateTimeInput, self)._has_changed(self._format_value(initial), data)
+        return super()._has_changed(self._format_value(initial), data)

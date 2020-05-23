@@ -109,10 +109,10 @@ class jDateField(models.DateField):
             setattr(model_instance, self.attname, value)
             return value
         else:
-            return super(jDateField, self).pre_save(model_instance, add)
+            return super().pre_save(model_instance, add)
 
     def contribute_to_class(self, cls, name):
-        super(jDateField, self).contribute_to_class(cls, name)
+        super().contribute_to_class(cls, name)
         if not self.null:
             setattr(
                 cls,
@@ -150,7 +150,7 @@ class jDateField(models.DateField):
             raise ValueError(
                 "jDateField dosn't work with month, day and week_day !")
 
-        return super(jDateField, self).get_prep_lookup(lookup_type, value)
+        return super().get_prep_lookup(lookup_type, value)
 
     def get_prep_value(self, value):
         return self.to_python(value)
@@ -181,7 +181,7 @@ class jDateField(models.DateField):
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateField}
         kwargs.update(defaults)
-        return super(jDateField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)
 
 
 class jDateTimeField(models.DateTimeField):
@@ -305,7 +305,7 @@ class jDateTimeField(models.DateTimeField):
             setattr(model_instance, self.attname, value)
             return value
         else:
-            return super(jDateTimeField, self).pre_save(model_instance, add)
+            return super().pre_save(model_instance, add)
 
     def get_prep_value(self, value):
         value = self.to_python(value)
@@ -346,7 +346,7 @@ class jDateTimeField(models.DateTimeField):
         return date_string
 
     def contribute_to_class(self, cls, name):
-        super(jDateTimeField, self).contribute_to_class(cls, name)
+        super().contribute_to_class(cls, name)
         if not self.null:
             setattr(
                 cls,
@@ -384,9 +384,9 @@ class jDateTimeField(models.DateTimeField):
             raise ValueError(
                 "jDateField dosn't work with month, day and week_day !")
 
-        return super(jDateTimeField, self).get_prep_lookup(lookup_type, value)
+        return super().get_prep_lookup(lookup_type, value)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.jDateTimeField}
         kwargs.update(defaults)
-        return super(jDateTimeField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)

@@ -55,8 +55,7 @@ class JDateFieldListFilter(admin.FieldListFilter):
             }),
         )
 
-        super(JDateFieldListFilter, self).__init__(
-            field, request, params, model, model_admin, field_path)
+        super().__init__(field, request, params, model, model_admin, field_path)
 
     def queryset(self, request, queryset):
         try:

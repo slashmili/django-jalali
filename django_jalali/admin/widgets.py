@@ -32,7 +32,7 @@ class AdminjDateWidget(jforms.jDateInput):
         final_attrs = {'class': 'vjDateField', 'size': '10'}
         if attrs is not None:
             final_attrs.update(attrs)
-        super(AdminjDateWidget, self).__init__(attrs=final_attrs, format=format)
+        super().__init__(attrs=final_attrs, format=format)
 
 
 class AdminSplitjDateTime(forms.SplitDateTimeWidget):
