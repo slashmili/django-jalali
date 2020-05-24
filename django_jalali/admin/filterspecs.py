@@ -11,9 +11,7 @@ from django_jalali.db.models import jDateField
 class jDateFieldFilterSpec(FilterSpec):
     def __init__(self, f, request, params, model, model_admin,
                  field_path=None):
-        super(jDateFieldFilterSpec, self).__init__(
-            f, request, params, model, model_admin, field_path=field_path
-        )
+        super().__init__(f, request, params, model, model_admin, field_path=field_path)
         self.field_generic = '%s__' % self.field_path
 
         self.date_params = dict([(k, v) for k, v in params.items() if k.startswith(self.field_generic)])
