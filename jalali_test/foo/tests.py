@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import datetime
+
+from django.db.migrations.writer import MigrationWriter
 from django.test import (
     TestCase, RequestFactory, override_settings, skipUnlessDBFeature,
 )
@@ -8,11 +11,12 @@ from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import site
 from django.contrib.auth.models import AnonymousUser
 from django.template import Context, Template
+from django_jalali.db import models as jmodels
 
 from django import get_version
 from django.utils import timezone
 
-from foo.models import Bar, BarTime
+from foo.models import Bar, BarTime, DateWithDefault, DateTimeWithDefault
 import jdatetime
 from urllib.parse import unquote
 
@@ -29,6 +33,11 @@ class BarTestCase(TestCase):
 
     def test_save_date(self):
         self.assertEqual(self.mybar.date, self.today)
+
+    def test_default_value(self):
+        obj = DateWithDefault.objects.create()
+        self.assertEqual(obj.date1, jdatetime.datetime(1390, 6, 31))
+        self.assertEqual(obj.date2, jdatetime.datetime(1390, 6, 31))
 
     def test_save_specific_datetime(self):
         Bar.objects.create(name='Test', date='1398-04-31')
@@ -47,6 +56,28 @@ class BarTestCase(TestCase):
         bars = Bar.objects.filter(date__gte=self.today_string)
         self.assertEqual(len(bars), 1)
 
+    def test_serialize_default_jdatetime_value(self):
+        jd1 = jdatetime.date(1390, 6, 31)
+        field = jmodels.jDateField(default=jd1)
+        self.assertEqual(
+            MigrationWriter.serialize(field),
+            (
+                'django_jalali.db.models.jDateField(default=datetime.date(2011, 9, 22))',
+                {'import django_jalali.db.models', 'import datetime'}
+            )
+        )
+
+    def test_serialize_default_datetime_value(self):
+        dt1 = datetime.date(2013, 6, 2)
+        field = jmodels.jDateField(default=dt1)
+        self.assertEqual(
+            MigrationWriter.serialize(field),
+            (
+                'django_jalali.db.models.jDateField(default=datetime.date(2013, 6, 2))',
+                {'import django_jalali.db.models', 'import datetime'}
+            )
+        )
+
 
 class BarTimeTestCase(TestCase):
 
@@ -58,6 +89,11 @@ class BarTimeTestCase(TestCase):
 
     def test_save_date(self):
         self.assertEqual(self.bar_time.datetime, self.datetime)
+
+    def test_default_value(self):
+        obj = DateTimeWithDefault.objects.create()
+        self.assertEqual(obj.datetime1, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000))
+        self.assertEqual(obj.datetime2, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000))
 
     def test_save_specific_datetime(self):
         BarTime.objects.create(name='Test', datetime='1398-04-31 12:12:12')
@@ -97,6 +133,30 @@ class BarTimeTestCase(TestCase):
         k = BarTime.objects.filter(datetime=jdt1)
         self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000')
         self.assertEqual(k[0].datetime.strftime('%z'), '')
+
+    def test_serialize_default_jdatetime_value(self):
+        jdt1 = jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000)
+        field = jmodels.jDateTimeField(default=jdt1)
+        self.assertEqual(
+            MigrationWriter.serialize(field),
+            (
+                'django_jalali.db.models.jDateTimeField('
+                'default=datetime.datetime(2011, 9, 22, 10, 22, 23, 240000))',
+                {'import django_jalali.db.models', 'import datetime'}
+            )
+        )
+
+    def test_serialize_default_datetime_value(self):
+        dt1 = datetime.datetime(2013, 6, 2, 10, 22, 23, 240000)
+        field = jmodels.jDateTimeField(default=dt1)
+        self.assertEqual(
+            MigrationWriter.serialize(field),
+            (
+                'django_jalali.db.models.jDateTimeField('
+                'default=datetime.datetime(2013, 6, 2, 10, 22, 23, 240000))',
+                {'import django_jalali.db.models', 'import datetime'}
+            )
+        )
 
 
 class JformatTestCase(TestCase):

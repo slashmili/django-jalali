@@ -49,8 +49,10 @@ class jDateField(models.DateField):
         'invalid_date': _('Invalid date: %s'),
     }
 
-    def __init__(self, verbose_name=None, name=None, auto_now=False,
-                 auto_now_add=False, **kwargs):
+    def __init__(
+        self, verbose_name=None, name=None, auto_now=False,
+        auto_now_add=False, default=models.NOT_PROVIDED, **kwargs
+    ):
 
         self.auto_now, self.auto_now_add = auto_now, auto_now_add
         # HACKs : auto_now_add/auto_now should be
@@ -58,7 +60,21 @@ class jDateField(models.DateField):
         if auto_now or auto_now_add:
             kwargs['editable'] = False
             kwargs['blank'] = True
-        models.Field.__init__(self, verbose_name, name, **kwargs)
+
+        # Convert datetime.date default value to jdatetime.date
+        if isinstance(default, datetime.date):
+            default = jdatetime.date.fromgregorian(date=default)
+
+        models.Field.__init__(self, verbose_name, name, default=default, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+
+        # Convert jdatetime.date default value to datetime.date
+        if 'default' in kwargs and isinstance(kwargs['default'], jdatetime.date):
+            kwargs['default'] = kwargs['default'].togregorian()
+
+        return name, path, args, kwargs
 
     def get_internal_type(self):
         return "DateField"
@@ -192,8 +208,10 @@ class jDateTimeField(models.DateTimeField):
     }
     description = _("Date (with time)")
 
-    def __init__(self, verbose_name=None, name=None, auto_now=False,
-                 auto_now_add=False, **kwargs):
+    def __init__(
+        self, verbose_name=None, name=None, auto_now=False,
+        auto_now_add=False, default=models.NOT_PROVIDED, **kwargs
+    ):
 
         self.auto_now, self.auto_now_add = auto_now, auto_now_add
         # HACKs : auto_now_add/auto_now should be
@@ -201,7 +219,22 @@ class jDateTimeField(models.DateTimeField):
         if auto_now or auto_now_add:
             kwargs['editable'] = False
             kwargs['blank'] = True
-        models.Field.__init__(self, verbose_name, name, **kwargs)
+
+        # Convert datetime.datetime default value to jdatetime.datetime
+        if isinstance(default, datetime.date):
+            default = jdatetime.datetime.fromgregorian(datetime=default)
+
+        models.Field.__init__(self, verbose_name, name, default=default, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+
+        # Convert jdatetime.datetime default value to datetime.datetime
+        default = kwargs.get('default')
+        if default and isinstance(default, (jdatetime.datetime)):
+            kwargs['default'] = default.togregorian()
+
+        return name, path, args, kwargs
 
     def get_internal_type(self):
         return "DateTimeField"
