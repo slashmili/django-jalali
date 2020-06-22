@@ -84,10 +84,9 @@ class BarTimeTestCase(TestCase):
     def setUp(self):
         self.date_string = "1380-08-02"
         self.datetime = jdatetime.datetime(1380, 8, 2, 12, 12, 12)
-        self.bar_time = BarTime(name="foo time", datetime=self.datetime)
-        self.bar_time.save()
+        self.bar_time = BarTime.objects.create(name="bar time", datetime=self.datetime)
 
-    def test_save_date(self):
+    def test_save_datetime(self):
         self.assertEqual(self.bar_time.datetime, self.datetime)
 
     def test_default_value(self):
@@ -108,13 +107,13 @@ class BarTimeTestCase(TestCase):
     @skipUnlessDBFeature('has_zoneinfo_database')
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_use_tz(self):
-        jdt1 = jdatetime.datetime(
-            1392, 3, 12, 10, 22, 23, 240000,
-            tzinfo=timezone.get_current_timezone()
-        )
+        current_timezone = timezone.get_current_timezone()
+        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+        jdt1 = current_timezone.localize(jdt1)
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(k[0].datetime.strftime('%z'), '+0326')
+        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000+0430')
+        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
 
     @requires_tz_support
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
@@ -156,6 +155,27 @@ class BarTimeTestCase(TestCase):
                 'default=datetime.datetime(2013, 6, 2, 10, 22, 23, 240000))',
                 {'import django_jalali.db.models', 'import datetime'}
             )
+        )
+
+    @requires_tz_support
+    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    def test_timezone(self):
+        current_timezone = timezone.get_current_timezone()
+        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+        jdt1 = current_timezone.localize(jdt1)
+
+        new_bartime = BarTime.objects.create(name="with timezone", datetime=jdt1)
+        self.assertTrue(hasattr(new_bartime.datetime.tzinfo, 'localize'))
+        self.assertEqual(
+            new_bartime.datetime.tzinfo.utcoffset(new_bartime.datetime),
+            datetime.timedelta(seconds=16200),
+        )
+
+        k = BarTime.objects.filter(datetime=jdt1)
+        self.assertTrue(hasattr(k[0].datetime.tzinfo, 'localize'))
+        self.assertEqual(
+            k[0].datetime.tzinfo.utcoffset(k[0].datetime),
+            datetime.timedelta(seconds=16200),
         )
 
 
