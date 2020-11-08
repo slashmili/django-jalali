@@ -1,10 +1,8 @@
 import datetime
 import re
 import time
-from distutils.version import StrictVersion
 from functools import partialmethod
 
-import django
 import jdatetime
 from django.core import exceptions
 from django.db import models
@@ -181,10 +179,7 @@ class jDateField(models.DateField):
         if isinstance(value, jdatetime.date):
             value = value.togregorian()
 
-        if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
-            return connection.ops.adapt_datefield_value(value)
-        else:
-            return connection.ops.value_to_db_date(value)
+        return connection.ops.adapt_datefield_value(value)
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
@@ -372,10 +367,7 @@ class jDateTimeField(models.DateTimeField):
         if isinstance(value, jdatetime.datetime):
             value = value.togregorian()
 
-        if StrictVersion(django.get_version()) >= StrictVersion('1.9'):
-            return connection.ops.adapt_datefield_value(value)
-        else:
-            return connection.ops.value_to_db_datetime(value)
+        return connection.ops.adapt_datefield_value(value)
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
