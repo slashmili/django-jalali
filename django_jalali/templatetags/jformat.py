@@ -1,13 +1,7 @@
-from distutils.version import StrictVersion
-import django
 from datetime import datetime, date
-import jdatetime
 
-django_version = django.get_version()
-if StrictVersion(django_version) >= StrictVersion('1.9'):
-    from django.template import Library
-else:
-    from django.template.base import Library
+import jdatetime
+from django.template import Library
 
 register = Library()
 
