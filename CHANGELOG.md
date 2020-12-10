@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+### Fixed
+- Fix Django Jalali javascipt files loading when Django Jquery file loaded first
+
 ### Changed
 - Add Python 3.9 support
 - Drop Python 3.4 support

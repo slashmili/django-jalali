@@ -1,4 +1,5 @@
 $(function () {
+    if (!$.datepicker){$ = django.jQuery;}
     $('.vjDateField').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
