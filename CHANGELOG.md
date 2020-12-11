@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [4.1.0] - 2020-12-11
 ### Fixed
 - Fix Django Jalali javascipt files loading when Django Jquery file loaded first
 
