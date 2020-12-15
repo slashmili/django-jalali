@@ -336,7 +336,10 @@ class jDateTimeField(models.DateTimeField):
 
     def pre_save(self, model_instance, add):
         if self.auto_now or (self.auto_now_add and add):
-            value = jdatetime.datetime.fromgregorian(datetime=timezone.now())
+            value = jdatetime.datetime.now()
+            if value is not None and settings.USE_TZ and timezone.is_naive(value):
+                default_timezone = timezone.get_default_timezone()
+                value = timezone.make_aware(value, default_timezone)
             setattr(model_instance, self.attname, value)
             return value
         else:

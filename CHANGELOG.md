@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Fixed `jDateTimeField` problem with `auto_now_add` when tz enable (#124)
+
 ## [4.1.0] - 2020-12-11
 ### Fixed
 - Fix Django Jalali javascipt files loading when Django Jquery file loaded first

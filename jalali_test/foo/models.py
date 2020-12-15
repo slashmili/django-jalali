@@ -27,3 +27,8 @@ class DateTimeWithDefault(models.Model):
     objects = jmodels.jManager()
     datetime1 = jmodels.jDateTimeField(default=jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000))
     datetime2 = jmodels.jDateTimeField(default=datetime.datetime(2011, 9, 22, 10, 22, 23, 240000))
+
+
+class ModelWithAutoNowAdd(models.Model):
+    objects = jmodels.jManager()
+    datetimefield = jmodels.jDateTimeField(auto_now_add=True)

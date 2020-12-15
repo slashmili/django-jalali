@@ -16,7 +16,13 @@ from django_jalali.db import models as jmodels
 from django import get_version
 from django.utils import timezone
 
-from foo.models import Bar, BarTime, DateWithDefault, DateTimeWithDefault
+from foo.models import (
+    Bar,
+    BarTime,
+    DateWithDefault,
+    DateTimeWithDefault,
+    ModelWithAutoNowAdd,
+)
 import jdatetime
 from urllib.parse import unquote
 
@@ -132,6 +138,20 @@ class BarTimeTestCase(TestCase):
         k = BarTime.objects.filter(datetime=jdt1)
         self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000')
         self.assertEqual(k[0].datetime.strftime('%z'), '')
+
+    def test_lookup_auto_now_add(self):
+        ModelWithAutoNowAdd.objects.create()
+        dt = ModelWithAutoNowAdd.objects.all()[0].datetimefield
+        objects = ModelWithAutoNowAdd.objects.filter(datetimefield=dt)
+        self.assertEqual(objects[0].datetimefield, dt)
+
+    @requires_tz_support
+    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    def test_lookup_auto_now_add_datetime_with_tz(self):
+        ModelWithAutoNowAdd.objects.create()
+        dt = ModelWithAutoNowAdd.objects.all()[0].datetimefield
+        objects = ModelWithAutoNowAdd.objects.filter(datetimefield=dt)
+        self.assertEqual(objects[0].datetimefield, dt)
 
     def test_serialize_default_jdatetime_value(self):
         jdt1 = jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000)
