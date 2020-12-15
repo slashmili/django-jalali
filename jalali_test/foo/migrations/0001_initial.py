@@ -46,4 +46,11 @@ class Migration(migrations.Migration):
                 ('datetime2', django_jalali.db.models.jDateTimeField(default=datetime.datetime(2011, 9, 22, 10, 22, 23, 240000))),
             ],
         ),
+        migrations.CreateModel(
+            name='ModelWithAutoNowAdd',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('datetimefield', django_jalali.db.models.jDateTimeField(auto_now_add=True)),
+            ],
+        ),
     ]
