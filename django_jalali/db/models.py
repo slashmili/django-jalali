@@ -17,7 +17,7 @@ from django_jalali import forms
 ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
 
 
-class jManager(models.Manager):
+class jQuerySet(models.QuerySet):
     """we need to rewrite this class to handle year filter"""
 
     def filter(self, *args, **kwargs):
@@ -36,7 +36,10 @@ class jManager(models.Manager):
                     int(kwargs[k]), 12, last_day, 23, 59, 59)
             else:
                 new_kwargs[k] = kwargs[k]
-        return models.Manager.filter(self, *args, **new_kwargs)
+        return super().filter(*args, **new_kwargs)
+
+
+jManager = models.Manager.from_queryset(jQuerySet)
 
 
 class jDateField(models.DateField):

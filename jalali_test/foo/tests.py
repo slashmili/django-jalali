@@ -198,6 +198,10 @@ class BarTimeTestCase(TestCase):
             datetime.timedelta(seconds=16200),
         )
 
+    def test_chain_filters(self):
+        qs = BarTime.objects.filter(name=self.bar_time.name).filter(datetime__year=self.datetime.year)
+        self.assertEqual(qs.count(), 1)
+
 
 class JformatTestCase(TestCase):
 
