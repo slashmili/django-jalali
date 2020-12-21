@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.2] - 2020-12-21
+### Fixed
+- Fix chaining filters problem
+
 ## [4.1.1] - 2020-12-16
 ### Fixed
 - Fixed `jDateTimeField` problem with `auto_now_add` when tz enable (#124)
