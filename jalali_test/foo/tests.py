@@ -2,6 +2,7 @@
 import datetime
 
 from django.db.migrations.writer import MigrationWriter
+from django.core.exceptions import ValidationError
 from django.test import (
     TestCase, RequestFactory, override_settings, skipUnlessDBFeature,
 )
@@ -83,6 +84,49 @@ class BarTestCase(TestCase):
                 {'import django_jalali.db.models', 'import datetime'}
             )
         )
+
+    def test_filtering(self):
+        today = jdatetime.date.today()
+        Bar.objects.create(date=today, name='test name')
+
+        # search by year
+        jdm_date = Bar.objects.filter(date__year=today.year)
+        self.assertEqual(len(jdm_date), 1)
+        self.assertEqual(jdm_date[0].date.year, today.year)
+
+        # search by string
+        jdm_date = Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, today.day))
+        self.assertEqual(len(jdm_date), 1)
+        self.assertEqual(jdm_date[0].date, today)
+
+        # save by geregorian date and retrive by jalali date
+        g_2009 = datetime.date(2009, 9, 9)
+        jd_model = Bar(date=g_2009)
+        jd_model.save()
+
+        jdm_date = Bar.objects.filter(date=g_2009)
+        self.assertEqual(len(jdm_date), 1)
+        self.assertEqual(jdm_date[0].date, jdatetime.date.fromgregorian(date=g_2009))
+
+        jdm_date = Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, today.day))
+        self.assertEqual(len(jdm_date), 1)
+        self.assertEqual(jdm_date[0].date, today)
+
+        jdm_date = Bar.objects.filter(date__in=['%s-%s-%s' % (today.year, today.month, today.day)])
+        self.assertEqual(len(jdm_date), 1)
+        self.assertEqual(jdm_date[0].date, today)
+
+        # wrong day value
+        with self.assertRaises(ValidationError):
+            Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, 35))
+
+        # invalid format
+        with self.assertRaises(ValidationError):
+            Bar.objects.filter(date='%s%s/%s' % (today.year, today.month, 35))
+
+        # invalid search
+        with self.assertRaises(ValueError):
+            Bar.objects.filter(date__month="test")
 
 
 class BarTimeTestCase(TestCase):
