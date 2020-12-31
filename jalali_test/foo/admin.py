@@ -1,10 +1,9 @@
-from foo.models import Bar, BarTime
 from django.contrib import admin
-
-from django_jalali.admin.filters import JDateFieldListFilter
+from foo.models import Bar, BarTime
 
 # you need import this for adding jalali calander widget
 import django_jalali.admin as jadmin  # noqa
+from django_jalali.admin.filters import JDateFieldListFilter
 
 
 class BarAdmin(admin.ModelAdmin):

@@ -1,13 +1,13 @@
 import datetime
 import re
 import time
+import warnings
 from functools import partialmethod
 
 import jdatetime
+from django.conf import settings
 from django.core import exceptions
 from django.db import models
-from django.conf import settings
-import warnings
 from django.utils import timezone
 from django.utils.encoding import smart_str, smart_text
 from django.utils.translation import ugettext as _

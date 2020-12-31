@@ -1,33 +1,26 @@
-# -*- coding: utf-8 -*-
 import datetime
-
-from django.db.migrations.writer import MigrationWriter
-from django.core.exceptions import ValidationError
-from django.test import (
-    TestCase, RequestFactory, override_settings, skipUnlessDBFeature,
-)
-from django.test.utils import requires_tz_support
-from django.utils.encoding import force_text
-from django.contrib.admin.views.main import ChangeList
-from django.contrib.admin import site
-from django.contrib.auth.models import AnonymousUser
-from django.template import Context, Template
-from django_jalali.db import models as jmodels
-
-from django import get_version
-from django.utils import timezone
-
-from foo.models import (
-    Bar,
-    BarTime,
-    DateWithDefault,
-    DateTimeWithDefault,
-    ModelWithAutoNowAdd,
-)
-import jdatetime
 from urllib.parse import unquote
 
+import jdatetime
+from django import get_version
+from django.contrib.admin import site
+from django.contrib.admin.views.main import ChangeList
+from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import ValidationError
+from django.db.migrations.writer import MigrationWriter
+from django.template import Context, Template
+from django.test import (
+    RequestFactory, TestCase, override_settings, skipUnlessDBFeature,
+)
+from django.test.utils import requires_tz_support
+from django.utils import timezone
+from django.utils.encoding import force_text
 from foo.admin import BarTimeAdmin
+from foo.models import (
+    Bar, BarTime, DateTimeWithDefault, DateWithDefault, ModelWithAutoNowAdd,
+)
+
+from django_jalali.db import models as jmodels
 
 
 class BarTestCase(TestCase):

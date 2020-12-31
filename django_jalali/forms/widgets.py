@@ -1,9 +1,10 @@
-from django.forms import widgets
-from django.utils.encoding import smart_str
-from django.utils import formats, datetime_safe
-import time
 import datetime
+import time
+
 import jdatetime
+from django.forms import widgets
+from django.utils import datetime_safe, formats
+from django.utils.encoding import smart_str
 
 
 class jDateInput(widgets.Input):
