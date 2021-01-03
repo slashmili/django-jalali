@@ -38,7 +38,7 @@ Usage
 
 .. code:: bash
 
-  $ django-admin.py startproject jalali_test
+  $ django-admin startproject jalali_test
 
 2. Start your app :
 
@@ -57,18 +57,23 @@ Usage
     from django.db import models
     from django_jalali.db import models as jmodels
 
+
     class Bar(models.Model):
         objects = jmodels.jManager()
-        name =  models.CharField(max_length=200)
-        date =  jmodels.jDateField()
+        name = models.CharField(max_length=200)
+        date = jmodels.jDateField()
+
         def __str__(self):
-            return "%s, %s"%(self.name, self.date)
+            return "%s, %s" % (self.name, self.date)
+
+
     class BarTime(models.Model):
         objects = jmodels.jManager()
-        name =  models.CharField(max_length=200)
+        name = models.CharField(max_length=200)
         datetime = jmodels.jDateTimeField()
+
         def __str__(self):
-            return "%s, %s" %(self.name, self.datetime)
+            return "%s, %s" % (self.name, self.datetime)
 
 5. Run
 
@@ -137,13 +142,14 @@ Admin Interface
 
 .. code:: python
 
-    from foo.models import Bar,BarTime
+    from foo.models import Bar, BarTime
     from django.contrib import admin
 
     from django_jalali.admin.filters import JDateFieldListFilter
 
-    #you need import this for adding jalali calander widget
+    # you need import this for adding jalali calander widget
     import django_jalali.admin as jadmin
+
 
     class BarAdmin(admin.ModelAdmin):
         list_filter = (
@@ -153,10 +159,12 @@ Admin Interface
 
     admin.site.register(Bar, BarAdmin)
 
+
     class BarTimeAdmin(admin.ModelAdmin):
         list_filter = (
             ('datetime', JDateFieldListFilter),
         )
+
 
     admin.site.register(BarTime, BarTimeAdmin)
 
