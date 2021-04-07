@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Drop Django 3.0 support
+
 ## [4.1.2] - 2020-12-21
 ### Fixed
 - Fix chaining filters problem
