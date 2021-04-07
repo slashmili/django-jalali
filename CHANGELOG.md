@@ -2,6 +2,7 @@
 
 ### Changed
 - Drop Django 3.0 support
+- Add Django 3.2 support
 
 ## [4.1.2] - 2020-12-21
 ### Fixed
