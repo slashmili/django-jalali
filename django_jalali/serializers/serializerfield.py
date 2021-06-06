@@ -1,8 +1,8 @@
-import serializers
+from rest_framework import serializers
 import re
 import datetime
 import jdatetime
-from django.Exception import validationError
+from django.core import exceptions 
 
 class JDateField(serializers.DateField):
 
@@ -17,7 +17,7 @@ class JDateField(serializers.DateField):
             return jdatetime.date.fromgregorian(date=date_obj)
 
         if not ansi_date_re.search(date_obj):
-            raise ValidationError(self.error_messages['invalid'])
+            raise exceptions.ValidationError(self.error_messages['invalid'])
         # Now that we have the date string in YYYY-MM-DD format, check to make
         # sure it's a valid date.
         # We could use time.strptime here and catch errors, but datetime.date
@@ -32,7 +32,7 @@ class JDateField(serializers.DateField):
                 return jdatetime.date(year, month, day)
         except ValueError as e:
             msg = "invalid date %s" % str(e)
-            raise ValidationError(msg)
+            raise exceptions.ValidationError(msg)
 
 
     def to_python(self, value):

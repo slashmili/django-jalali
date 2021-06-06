@@ -143,7 +143,7 @@ class jDateField(models.DateField):
             )
 
     def get_prep_lookup(self, lookup_type, value):
-        """this class dosn't work in month and day searh !"""
+        """this class dosn't work in month and day search !"""
         # For "__month", "__day", and "__week_day" lookups, convert the value
         # to an int so the database backend always sees a consistent type.
 
@@ -398,7 +398,7 @@ class jDateTimeField(models.DateTimeField):
             )
 
     def get_prep_lookup(self, lookup_type, value):
-        """this class dosn't work in month and day searh !"""
+        """this class dosn't work in month and day search !"""
         # For "__month", "__day", and "__week_day" lookups, convert the value
         # to an int so the database backend always sees a consistent type.
 
