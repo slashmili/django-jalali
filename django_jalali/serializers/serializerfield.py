@@ -2,12 +2,14 @@ from rest_framework import serializers
 import re
 import datetime
 import jdatetime
-from django.core import exceptions 
+
+from django.core import exceptions
+from django_jalali.db.models import ansi_date_re
 
 class JDateField(serializers.DateField):
 
     def parse_date(self, date_obj):
-        ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
+        #ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
 
         "Take a datetime object and convert it to jalali date"
 
@@ -45,6 +47,6 @@ class JDateField(serializers.DateField):
             return value
         return self.parse_date(value)
 
-
+    # this method is used by DRF to bringing value back to python form
     def to_internal_value(self, value):
         return self.to_python(value)
