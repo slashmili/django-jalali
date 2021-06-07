@@ -1,16 +1,15 @@
-from rest_framework import serializers
-import re
 import datetime
-import jdatetime
 
+import jdatetime
 from django.core import exceptions
+from rest_framework import serializers
+
 from django_jalali.db.models import ansi_date_re
+
 
 class JDateField(serializers.DateField):
 
     def parse_date(self, date_obj):
-        #ansi_date_re = re.compile(r'^\d{4}-\d{1,2}-\d{1,2}$')
-
         "Take a datetime object and convert it to jalali date"
 
         if isinstance(date_obj, datetime.datetime):
@@ -35,7 +34,6 @@ class JDateField(serializers.DateField):
         except ValueError as e:
             msg = "invalid date %s" % str(e)
             raise exceptions.ValidationError(msg)
-
 
     def to_python(self, value):
         if value is None:
