@@ -347,8 +347,6 @@ class SerializerTests(TestCase):
 
         # Bars
         self.mybar = Bar.objects.create(name="foo", date=self.today)
-        # self.leap_date = jdatetime.date(year=1400, month=12, day=30)
-        # self.leap_yaer = Bar.objects.create(name='leap_year', date=self.leap_date)
 
     def test_serializers_works_correctly_on_valid_date(self):
         serializer = JDateFieldSerialializer(self.mybar)
