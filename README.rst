@@ -171,6 +171,27 @@ Admin Interface
 2. Config admin interface and fire up your django and enjoy using jalali date !
 
 
+Django rest framework
+---------------------
+
+there is a serializer field corresponding to jmodels.JDateField for DRF, to use it:
+
+1. Create foo/serializers.py
+
+
+.. code:: python
+
+    from foo.models import Bar
+    from django_jalali.serializers.serializerfield import JDateField as JDateFieldSerializer
+
+
+    class JDateFieldSerialializer(ModelSerializer):
+    date = JDateFieldSerializer()
+    class Meta:
+        model = Bar
+        exclude = []
+
+
 Locale
 ------
 In order to get the date string in farsi you need to set the locale to fa_IR
