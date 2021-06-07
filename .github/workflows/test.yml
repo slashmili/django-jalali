@@ -28,7 +28,7 @@ jobs:
           architecture: x64
       - run: |
           pip install -q Django==${{ matrix.django-version }}
-          pip install jdatetime pytz
+          pip install jdatetime pytz djangorestframework
           export PYTHONPATH=$PYTHONPATH:$(pwd)
           cd jalali_test
           python manage.py test
