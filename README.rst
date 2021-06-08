@@ -135,7 +135,7 @@ Usage
 Using Templatetags
 ------------------
 
-1. You can use `jformat` filter to format your dates in templates:
+1. You can use ``jformat`` filter to format your dates in templates:
 
 .. code:: python
 
