@@ -1,4 +1,3 @@
-
 import jdatetime
 from rest_framework import serializers
 
