@@ -26,10 +26,19 @@ Dependencies
 -  Django_ > 2.2
 
     Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
+- `Django REST Framework`_ > 3.12 (If install with ``drf`` dependency)
 
 Install
 -------
-``pip install django_jalali``
+.. code:: bash
+
+   pip install django_jalali
+
+To use DRF serializer field:
+
+.. code:: bash
+
+   pip install django_jalali[drf]
 
 Usage
 -----
@@ -171,6 +180,28 @@ Admin Interface
 2. Config admin interface and fire up your django and enjoy using jalali date !
 
 
+Django rest framework
+---------------------
+
+There is a serializer field corresponding to ``jmodels.JDateField`` for DRF:
+
+
+.. code:: python
+
+    from django_jalali.serializers.serializerfield import JDateField as JDateFieldSerializer
+    from rest_framework.serializers import ModelSerializer
+
+    from foo.models import Bar
+
+
+    class JDateFieldSerialializer(ModelSerializer):
+        date = JDateFieldSerializer()
+
+        class Meta:
+            model = Bar
+            exclude = []
+
+
 Locale
 ------
 In order to get the date string in farsi you need to set the locale to fa_IR
@@ -202,3 +233,4 @@ From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``US
 .. _models.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/models.py
 .. _admin.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/admin.py
 .. _settings: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L110
+.. _Django REST Framework: https://www.django-rest-framework.org/
