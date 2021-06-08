@@ -1,5 +1,7 @@
 # Changelog
 
+## [4.1.2] - 2020-12-21
+- Add DRF serializer field for JDateField
 ### Changed
 - Drop Django 3.0 support
 - Add Django 3.2 support
