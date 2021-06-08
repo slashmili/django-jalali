@@ -22,6 +22,8 @@ from foo.models import (
 
 from django_jalali.db import models as jmodels
 
+from .serializers import JDateFieldSerialializer
+
 
 class BarTestCase(TestCase):
 
@@ -335,3 +337,42 @@ class ListFiltersTests(TestCase):
         if get_version() >= '2.1':
             args.append(modeladmin.sortable_by)
         return ChangeList(*args)
+
+
+class SerializerTests(TestCase):
+
+    def setUp(self):
+        self.request_factory = RequestFactory()
+        self.today = jdatetime.date.today()
+
+        # Bars
+        self.mybar = Bar.objects.create(name="foo", date=self.today)
+
+    def test_serializers_works_correctly_on_valid_date(self):
+        serializer = JDateFieldSerialializer(self.mybar)
+        self.assertEqual(serializer.data['date'], str(self.today))
+
+    def test_serializers_works_correctly_on_leap_year(self):
+        """
+        Make sure JDateFieldSerializer work's correctly on leap and normal year
+        """
+        # Date is not a leap yaer, So this is not acceptable
+        serializer = JDateFieldSerialializer(
+            data={'name': 'leap-year', 'date': '1400-12-30'}
+        )
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('date', serializer.errors)
+
+        # Date is a leap year and is acceptable
+        serializer = JDateFieldSerialializer(
+            data={'name': 'leap-year', 'date': '1399-12-30'}
+        )
+        self.assertTrue(serializer.is_valid())
+
+    def test_serializer_save_date_correctly(self):
+        data = {'name': 'fooo', 'date': '1400-12-29'}
+        serializer = JDateFieldSerialializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        bar = Bar.objects.get(name='fooo')
+        self.assertEqual(str(bar.date), data['date'])

@@ -29,6 +29,7 @@ jobs:
       - run: |
           pip install -q Django==${{ matrix.django-version }}
           pip install jdatetime pytz
+          pip install djangorestframework>=3.12
           export PYTHONPATH=$PYTHONPATH:$(pwd)
           cd jalali_test
           python manage.py test

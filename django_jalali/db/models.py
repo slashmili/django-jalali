@@ -80,7 +80,8 @@ class jDateField(models.DateField):
     def get_internal_type(self):
         return "DateField"
 
-    def parse_date(self, date_obj):
+    @classmethod
+    def parse_date(cls, date_obj):
         "Take a datetime object and convert it to jalali date"
 
         if isinstance(date_obj, datetime.datetime):
@@ -89,7 +90,7 @@ class jDateField(models.DateField):
             return jdatetime.date.fromgregorian(date=date_obj)
 
         if not ansi_date_re.search(date_obj):
-            raise exceptions.ValidationError(self.error_messages['invalid'])
+            raise exceptions.ValidationError(cls.default_error_messages['invalid'])
         # Now that we have the date string in YYYY-MM-DD format, check to make
         # sure it's a valid date.
         # We could use time.strptime here and catch errors, but datetime.date
@@ -102,7 +103,7 @@ class jDateField(models.DateField):
             else:
                 return jdatetime.date(year, month, day)
         except ValueError as e:
-            msg = self.error_messages['invalid_date'] % _(str(e))
+            msg = cls.default_error_messages['invalid_date'] % _(str(e))
             raise exceptions.ValidationError(msg)
 
     def from_db_value(self, value, expression, connection):
