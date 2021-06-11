@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Drop Python 3.5 support
+
 ## [4.1.2] - 2020-12-21
 - Add DRF serializer field for JDateField
 ### Changed
