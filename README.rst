@@ -232,5 +232,5 @@ From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``US
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
 .. _models.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/models.py
 .. _admin.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/admin.py
-.. _settings: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L110
+.. _settings: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L116
 .. _Django REST Framework: https://www.django-rest-framework.org/
