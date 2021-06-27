@@ -22,7 +22,7 @@ from foo.models import (
 
 from django_jalali.db import models as jmodels
 
-from .serializers import JDateFieldSerialializer
+from .serializers import JDateFieldSerialilizer, JDateTimeFieldSerializer
 
 
 class BarTestCase(TestCase):
@@ -344,12 +344,14 @@ class SerializerTests(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
         self.today = jdatetime.date.today()
+        self.now = jdatetime.datetime.now()
 
         # Bars
         self.mybar = Bar.objects.create(name="foo", date=self.today)
+        self.mybartime = BarTime.objects.create(name="bartime", datetime=self.now)
 
     def test_serializers_works_correctly_on_valid_date(self):
-        serializer = JDateFieldSerialializer(self.mybar)
+        serializer = JDateFieldSerialilizer(self.mybar)
         self.assertEqual(serializer.data['date'], str(self.today))
 
     def test_serializers_works_correctly_on_leap_year(self):
@@ -357,22 +359,50 @@ class SerializerTests(TestCase):
         Make sure JDateFieldSerializer work's correctly on leap and normal year
         """
         # Date is not a leap yaer, So this is not acceptable
-        serializer = JDateFieldSerialializer(
+        serializer = JDateFieldSerialilizer(
             data={'name': 'leap-year', 'date': '1400-12-30'}
         )
         self.assertFalse(serializer.is_valid())
         self.assertIn('date', serializer.errors)
 
         # Date is a leap year and is acceptable
-        serializer = JDateFieldSerialializer(
+        serializer = JDateFieldSerialilizer(
             data={'name': 'leap-year', 'date': '1399-12-30'}
         )
         self.assertTrue(serializer.is_valid())
 
     def test_serializer_save_date_correctly(self):
         data = {'name': 'fooo', 'date': '1400-12-29'}
-        serializer = JDateFieldSerialializer(data=data)
+        serializer = JDateFieldSerialilizer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         bar = Bar.objects.get(name='fooo')
         self.assertEqual(str(bar.date), data['date'])
+
+    # write test for JDateTimeField serializer
+    def test_serializer_works_correctly_on_valid_datetime(self):
+        serializer = JDateTimeFieldSerializer(self.mybartime)
+        self.assertEqual(
+            serializer.data['datetime'],
+            str(self.now)
+            )
+
+    def test_serializer_with_different_formatting(self):
+        d_time = self.now.strftime("%Y-%m-%d %H:%M")
+        bartime_object = BarTime.objects.create(name="formatted", datetime=d_time)
+        self.assertEqual(
+            JDateTimeFieldSerializer(bartime_object).data['datetime'],
+            d_time
+            )
+        print(JDateTimeFieldSerializer(bartime_object).data['datetime'], d_time)
+
+    def test_serializer_with_invalid_datetime(self):
+        serializer = JDateTimeFieldSerializer(
+            data={'name': 'bartime', 'datetime': "1400-12-30 12:34:12"}
+        )
+        self.assertFalse(serializer.is_valid())
+
+        serializer = JDateTimeFieldSerializer(
+            data={'name': 'bartime', 'datetime': "1400-12-28 26:34:12"}
+        )
+        self.assertFalse(serializer.is_valid())

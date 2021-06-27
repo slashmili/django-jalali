@@ -2,7 +2,9 @@ import jdatetime
 from django.core import exceptions
 from rest_framework import serializers
 
-from django_jalali.db.models import jDateField
+from django_jalali.db.models import (
+    jDateField as jDateFieldModel, jDateTimeField as jDateTimeFieldModel,
+)
 
 
 class JDateField(serializers.DateField):
@@ -14,7 +16,7 @@ class JDateField(serializers.DateField):
             return value.date()
         if isinstance(value, jdatetime.date):
             return value
-        return jDateField.parse_date(value)
+        return jDateFieldModel.parse_date(value)
 
     # This method is used by DRF to bringing value back to python form
     def to_internal_value(self, value):
@@ -34,7 +36,13 @@ class JDateTimeField(serializers.DateTimeField):
             except ValueError:
                 raise exceptions.ValidationError(
                     self.error_messages['invalid'])
-        return JDateTimeField.parse_date(value)
+        return jDateTimeFieldModel.parse_date(value)
 
+    # This method is used by DRF to bringing value back to python form
     def to_internal_value(self, value):
         return self.to_python(value)
+
+    # This method is used by DRF for representing object in string form
+    # override this function with strftime if needed
+    def to_representation(self, value):
+        return str(value)

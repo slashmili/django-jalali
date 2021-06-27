@@ -255,7 +255,7 @@ class jDateTimeField(models.DateTimeField):
                         datetime=datetime_obj)
             except ValueError:
                 raise exceptions.ValidationError(
-                    cls.error_messages['invalid'])
+                    cls.default_error_messages['invalid'])
         if isinstance(datetime_obj, datetime.date):
             try:
                 if datetime_obj.year < 1700:
@@ -266,7 +266,7 @@ class jDateTimeField(models.DateTimeField):
                     return jdatetime.datetime.fromgregorian(date=datetime_obj)
             except ValueError:
                 raise exceptions.ValidationError(
-                    cls.error_messages['invalid'])
+                    cls.default_error_messages['invalid'])
 
         # Attempt to parse a datetime:
         datetime_obj = smart_str(datetime_obj)
@@ -281,7 +281,7 @@ class jDateTimeField(models.DateTimeField):
                 usecs = int(usecs)
             except ValueError:
                 raise exceptions.ValidationError(
-                    cls.error_messages['invalid'])
+                    cls.default_error_messages['invalid'])
         else:
             usecs = 0
         kwargs = {'microsecond': usecs}
@@ -310,8 +310,7 @@ class jDateTimeField(models.DateTimeField):
                     ).replace(**kwargs)
                 except ValueError:
                     pass
-
-        raise exceptions.ValidationError(cls.error_messages['invalid'])
+        raise exceptions.ValidationError(cls.default_error_messages['invalid'])
 
     def from_db_value(self, value, expression, connection):
         if value is None:
