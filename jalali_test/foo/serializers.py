@@ -7,7 +7,7 @@ from django_jalali.serializers.serializerfield import (
 from .models import Bar, BarTime
 
 
-class JDateFieldSerialilizer(ModelSerializer):
+class JDateFieldSerializer(ModelSerializer):
     date = JDateField()
 
     class Meta:
