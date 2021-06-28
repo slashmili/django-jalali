@@ -183,7 +183,7 @@ Admin Interface
 Django rest framework
 ---------------------
 
-There is a serializer fields corresponding to ``jmodels.JDateField`` and ``jmodels.JDateTimeField`` for DRF:
+There are serializer fields corresponding to ``jmodels.JDateField`` and ``jmodels.JDateTimeField`` for DRF:
 
 
 .. code:: python
