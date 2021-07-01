@@ -183,22 +183,29 @@ Admin Interface
 Django rest framework
 ---------------------
 
-There is a serializer field corresponding to ``jmodels.JDateField`` for DRF:
+There are serializer fields corresponding to ``jmodels.JDateField`` and ``jmodels.JDateTimeField`` for DRF:
 
 
 .. code:: python
 
-    from django_jalali.serializers.serializerfield import JDateField as JDateFieldSerializer
+    from django_jalali.serializers.serializerfield import JDateField, JDateTimeField
     from rest_framework.serializers import ModelSerializer
 
-    from foo.models import Bar
+    from foo.models import Bar, BarTime
 
 
     class JDateFieldSerialializer(ModelSerializer):
-        date = JDateFieldSerializer()
+        date = JDateField()
 
         class Meta:
             model = Bar
+            exclude = []
+
+    class JDateTimeFieldSerializer(ModelSerializer):
+        datetime = JDateTimeField()
+
+        class Meta:
+            model = BarTime
             exclude = []
 
 
