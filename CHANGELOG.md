@@ -3,7 +3,7 @@
 ### Changed
 - Drop Python 3.5 support
 
-## [4.1.2] - 2020-12-21
+## [4.2.0] - 2021-06-08
 - Add DRF serializer field for JDateField
 ### Changed
 - Drop Django 3.0 support
