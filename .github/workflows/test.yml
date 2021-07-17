@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  "unit-test":
+  "unit-test-sqlite":
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,7 +27,38 @@ jobs:
           pip install djangorestframework>=3.12
           export PYTHONPATH=$PYTHONPATH:$(pwd)
           cd jalali_test
-          python manage.py test
+          python manage.py test --settings=jalali_test.settings.test1_settings
+          cd ..
+          python setup.py sdist
+          pip install dist/django-jalali*
+  "unit-test-mysql":
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        django-version: [2.2, 3.1, 3.2]
+    name: Python ${{ matrix.python-version }} - Django ${{ matrix.django-version }}
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: mysql
+        ports: ['3306:3306']
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - run: |
+          pip install -q Django==${{ matrix.django-version }}
+          pip install jdatetime pytz mysqlclient mysql-connector-python
+          pip install djangorestframework>=3.12
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          cd jalali_test
+          python manage.py test --settings=jalali_test.settings.test2_settings
           cd ..
           python setup.py sdist
           pip install dist/django-jalali*
