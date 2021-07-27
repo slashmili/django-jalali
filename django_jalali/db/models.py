@@ -166,7 +166,7 @@ class jDateField(models.DateField):
 
         if lookup_type in ('month', 'day', 'week_day'):
             raise ValueError(
-                "jDateField dosn't work with month, day and week_day !")
+                "jDateField doesn't work with month, day and week_day !")
 
         return super().get_prep_lookup(lookup_type, value)
 
@@ -421,7 +421,7 @@ class jDateTimeField(models.DateTimeField):
 
         if lookup_type in ('month', 'day', 'week_day'):
             raise ValueError(
-                "jDateField dosn't work with month, day and week_day !")
+                "jDateTimeField doesn't work with month, day and week_day !")
 
         return super().get_prep_lookup(lookup_type, value)
 
