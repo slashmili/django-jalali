@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin.widgets import AdminTimeWidget
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from django_jalali import forms as jforms
 
