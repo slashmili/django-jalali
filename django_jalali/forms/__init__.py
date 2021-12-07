@@ -4,7 +4,7 @@ import jdatetime
 from django import forms
 from django.core import exceptions, validators
 from django.forms.utils import from_current_timezone, to_current_timezone
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from django_jalali.forms.widgets import jDateInput, jDateTimeInput
 

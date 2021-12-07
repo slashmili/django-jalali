@@ -4,7 +4,7 @@ import django_jalali.admin.filterspecs in to your admin.py
 """
 import jdatetime
 from django.contrib.admin.filterspecs import FilterSpec
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from django_jalali.db.models import jDateField
 

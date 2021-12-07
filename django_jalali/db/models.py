@@ -9,8 +9,8 @@ from django.conf import settings
 from django.core import exceptions
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import smart_str, smart_text
-from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_str
+from django.utils.translation import gettext as _
 
 from django_jalali import forms
 
@@ -190,7 +190,7 @@ class jDateField(models.DateField):
         if value is None:
             date_string = ''
         else:
-            date_string = smart_text(value)
+            date_string = smart_str(value)
         return date_string
 
     def formfield(self, **kwargs):
@@ -381,7 +381,7 @@ class jDateTimeField(models.DateTimeField):
         if value is None:
             date_string = ''
         else:
-            date_string = smart_text(value)
+            date_string = smart_str(value)
         return date_string
 
     def contribute_to_class(self, cls, name):

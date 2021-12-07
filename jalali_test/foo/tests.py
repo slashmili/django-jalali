@@ -14,7 +14,7 @@ from django.test import (
 )
 from django.test.utils import requires_tz_support
 from django.utils import timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from foo.admin import BarTimeAdmin
 from foo.models import (
     Bar, BarTime, DateTimeWithDefault, DateWithDefault, ModelWithAutoNowAdd,
@@ -153,8 +153,12 @@ class BarTimeTestCase(TestCase):
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_lookup_date_with_use_tz(self):
         current_timezone = timezone.get_current_timezone()
-        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-        jdt1 = current_timezone.localize(jdt1)
+        if get_version() >= '4.0':
+            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone)
+        else:
+            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+            jdt1 = current_timezone.localize(jdt1)
+
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
         self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000+0430')
@@ -220,20 +224,21 @@ class BarTimeTestCase(TestCase):
     @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
     def test_timezone(self):
         current_timezone = timezone.get_current_timezone()
-        jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-        jdt1 = current_timezone.localize(jdt1)
+        if get_version() >= '4.0':
+            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone)
+        else:
+            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
+            jdt1 = current_timezone.localize(jdt1)
 
         new_bartime = BarTime.objects.create(name="with timezone", datetime=jdt1)
-        self.assertTrue(hasattr(new_bartime.datetime.tzinfo, 'localize'))
         self.assertEqual(
-            new_bartime.datetime.tzinfo.utcoffset(new_bartime.datetime),
+            new_bartime.datetime.utcoffset(),
             datetime.timedelta(seconds=16200),
         )
 
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertTrue(hasattr(k[0].datetime.tzinfo, 'localize'))
         self.assertEqual(
-            k[0].datetime.tzinfo.utcoffset(k[0].datetime),
+            k[0].datetime.utcoffset(),
             datetime.timedelta(seconds=16200),
         )
 
@@ -304,7 +309,7 @@ class ListFiltersTests(TestCase):
 
         # Make sure the correct choice is selected
         filterspec = changelist.get_filters(request)[0][0]
-        self.assertEqual(force_text(filterspec.title), 'datetime')
+        self.assertEqual(force_str(filterspec.title), 'datetime')
         choice = select_by(filterspec.choices(changelist), "display", "Today")
         self.assertEqual(choice['selected'], True)
 
@@ -333,9 +338,10 @@ class ListFiltersTests(TestCase):
             modeladmin.date_hierarchy, modeladmin.search_fields,
             modeladmin.list_select_related, modeladmin.list_per_page,
             modeladmin.list_max_show_all, modeladmin.list_editable, modeladmin,
+            modeladmin.sortable_by,
         ]
-        if get_version() >= '2.1':
-            args.append(modeladmin.sortable_by)
+        if get_version() >= '4.0':
+            args.append(modeladmin.search_help_text)
         return ChangeList(*args)
 
 
