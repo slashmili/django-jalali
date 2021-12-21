@@ -3,7 +3,7 @@
 ### Changed
 - Add Python 3.10 support
 - Add Django 4.0 support
-- Drop Django 3.1 support
+- Drop Django < 3.2 support
 
 ## [4.3.0] - 2021-07-01
 - Add DRF serializer field for JDateTimeField
