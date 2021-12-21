@@ -23,7 +23,7 @@ Dependencies
 ------------
 
 -  jdatetime_
--  Django_ > 2.2
+-  Django_ > 3.2
 
     Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
 - `Django REST Framework`_ > 3.12 (If install with ``drf`` dependency)
