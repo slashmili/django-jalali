@@ -1,5 +1,6 @@
 # Changelog
 
+## [5.0.0] - 2021-12-21
 ### Changed
 - Add Python 3.10 support
 - Add Django 4.0 support
