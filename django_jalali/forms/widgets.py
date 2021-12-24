@@ -3,7 +3,7 @@ import time
 
 import jdatetime
 from django.forms import widgets
-from django.utils import datetime_safe, formats
+from django.utils import formats
 from django.utils.encoding import smart_str
 
 
@@ -48,17 +48,18 @@ class jDateTimeInput(widgets.Input):
     def __init__(self, attrs=None, format=None):
         super().__init__(attrs)
         if format:
-            self.format = format
+            self.format = format.sanitize_strftime_format(format)
             self.manual_format = True
         else:
-            self.format = formats.get_format('DATETIME_INPUT_FORMATS')[0]
+            self.format = format.sanitize_strftime_format(
+                formats.get_format('DATETIME_INPUT_FORMATS')[0]
+            )
             self.manual_format = False
 
     def _format_value(self, value):
         if self.is_localized and not self.manual_format:
             return formats.localize_input(value)
         elif hasattr(value, 'strftime'):
-            value = datetime_safe.new_datetime(value)
             return value.strftime(self.format)
         return value
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- Remove deprecated `datetime_safe` and use `sanitize_strftime_format`
+
 ## [5.0.0] - 2021-12-21
 ### Changed
 - Add Python 3.10 support
