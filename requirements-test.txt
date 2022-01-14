@@ -1,0 +1,3 @@
+djangorestframework>=3.12
+pytest
+pytest-django
