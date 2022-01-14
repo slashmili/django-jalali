@@ -7,19 +7,23 @@ on:
       - main
 
 jobs:
-  "unit-test":
+  unit-test:
+    name: Python ${{ matrix.python-version }} - Django ${{ matrix.django-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-        django-version: ['3.2', '4.0']
+        django-version: ['3.2', '4.0', 'main']
         exclude:
           - python-version: '3.6'
             django-version: '4.0'
           - python-version: '3.7'
             django-version: '4.0'
-
-    name: Python ${{ matrix.python-version }} - Django ${{ matrix.django-version }}
+        include:
+          - python-version: '3.8'
+            django-version: 'flake8'
+          - python-version: '3.8'
+            django-version: 'isort'
     steps:
       - uses: actions/checkout@v2
       - name: Setup python
@@ -27,17 +31,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-      - run: |
-          pip install -q Django==${{ matrix.django-version }}
-          pip install jdatetime pytz
-          pip install djangorestframework>=3.12
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
-          cd jalali_test
-          python manage.py test
-          cd ..
-          python setup.py sdist
-          pip install dist/django-jalali*
-  "build-and-install-package":
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade tox tox-gh-actions
+      - name: Tox tests
+        run: |
+          tox -v
+        env:
+          DJANGO: ${{ matrix.django-version }}
+
+  build-and-install-package:
     runs-on: ubuntu-latest
     name: Build and install the package
     steps:
@@ -51,29 +55,3 @@ jobs:
           pip install wheel
           python setup.py sdist
           pip install dist/django-jalali*
-  "flake8":
-    runs-on: ubuntu-latest
-    name: flake8
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-          architecture: x64
-      - run: |
-          pip install flake8
-          flake8
-  "isort":
-    runs-on: ubuntu-latest
-    name: isort
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-          architecture: x64
-      - run: |
-          pip install isort
-          isort --check-only --diff django_jalali jalali_test setup.py
