@@ -234,6 +234,56 @@ Timezone Settings
 -----------------
 From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``USE_TZ`` settings_ to save datetime with project timezone
 
+Development
+-----------
+
+You can contribute to this project forking it from GitHub and sending pull requests.
+
+First fork_ the repository_ and then clone it:
+
+.. code:: shell
+
+    $ git clone git@github.com:<you>/django-jalali.git
+
+Initialize a virtual environment for development purposes:
+
+.. code:: shell
+
+    $ python -m venv django_jalali_env
+    $ source ~/django_jalali_env/bin/activate
+
+Then install the necessary requirements:
+
+.. code:: shell
+
+    $ cd django-jalali
+    $ pip install -r requirements-test.txt
+
+Unit tests are located in the ``tests`` folder and can be easily run with the pytest tool:
+
+.. code:: shell
+
+    $ pytest
+
+Before committing, you can run all the above tests against all supported Python and Django versions with tox.
+You need to install tox first:
+
+.. code:: shell
+
+    $ pip install tox
+
+And then you can run all tests:
+
+.. code:: shell
+
+    $ tox
+
+If you wish to limit the testing to specific environment(s), you can parametrize the tox run:
+
+.. code:: shell
+
+    $ tox -e py39-django32
+
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
@@ -241,3 +291,5 @@ From *django_jalali* version 3 and *Django* 2 you can use ``TIME_ZONE`` and ``US
 .. _admin.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/foo/admin.py
 .. _settings: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L116
 .. _Django REST Framework: https://www.django-rest-framework.org/
+.. _fork: https://help.github.com/en/articles/fork-a-repo
+.. _repository: https://github.com/slashmili/django-jalali
