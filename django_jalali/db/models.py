@@ -306,7 +306,7 @@ class jDateTimeField(models.DateTimeField):
                 try:
                     return jdatetime.datetime.strptime(
                         datetime_obj,
-                        '%Y-%m-%d %H:%M'
+                        '%Y-%m-%d %H:%M:%S'
                     ).replace(**kwargs)
                 except ValueError:
                     pass
