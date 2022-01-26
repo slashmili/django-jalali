@@ -30,7 +30,7 @@ class BarTestCase(TestCase):
         self.assertEqual(obj.date1, jdatetime.datetime(1390, 6, 31))
         self.assertEqual(obj.date2, jdatetime.datetime(1390, 6, 31))
 
-    def test_save_specific_datetime(self):
+    def test_save_specific_date(self):
         Bar.objects.create(name='Test', date='1398-04-31')
         k = Bar.objects.filter(date='1398-04-31')
         self.assertEqual(k[0].date.day, 31)
