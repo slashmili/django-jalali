@@ -34,6 +34,18 @@ class jQuerySet(models.QuerySet):
                     last_day = 30
                 new_kwargs['%s__lte' % filed_name[0]] = jdatetime.datetime(
                     int(kwargs[k]), 12, last_day, 23, 59, 59)
+            elif "__date" in k:
+                jdate = kwargs[k]
+                if isinstance(jdate, jdatetime.datetime):
+                    gregorian_date = jdate.date().togregorian()
+                elif isinstance(jdate, jdatetime.date):
+                    gregorian_date = jdate.togregorian()
+                elif isinstance(jdate, str):
+                    year, month, day = map(int, jdate.split('-'))
+                    gregorian_date = jdatetime.date(year, month, day).togregorian()
+                else:
+                    raise TypeError(f"Must be instance of jdatetime.datetime, jdatetime.date or str")
+                new_kwargs[k] = gregorian_date
             else:
                 new_kwargs[k] = kwargs[k]
         return super().filter(*args, **new_kwargs)
