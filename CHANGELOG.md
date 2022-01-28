@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [5.1.0] - 2022-01-30
 - Add support for `__date` lookup filter
 
 ### Changed
