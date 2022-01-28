@@ -123,6 +123,10 @@ Usage
     >>> BarTime(name="Bar Time now", datetime=jdatetime.datetime(1380,8,2,12,12,12)).save()
     >>> BarTime.objects.filter(datetime__date=jdatetime.datetime(1380,8,2,12,12,12))
     [<BarTime: Bar Time now, 1380-08-0212:12:12>]
+    >>> BarTime.objects.filter(datetime__date=jdatetime.date(1380,8,2))
+    [<BarTime: Bar Time now, 1380-08-0212:12:12>]
+    >>> BarTime.objects.filter(datetime__date="1380-08-02")
+    [<BarTime: Bar Time now, 1380-08-0212:12:12>]
     >>> BarTime.objects.filter(datetime__lt=jdatetime.datetime(1380,8,2,12,12,12))
     []
     >>> BarTime.objects.filter(datetime__lte=jdatetime.datetime(1380,8,2,12,12,12))
