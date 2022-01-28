@@ -44,7 +44,7 @@ class jQuerySet(models.QuerySet):
                     year, month, day = map(int, jdate.split('-'))
                     gregorian_date = jdatetime.date(year, month, day).togregorian()
                 else:
-                    raise TypeError(f"Must be instance of jdatetime.datetime, jdatetime.date or str")
+                    raise TypeError(f"Value of `__date` filter must be an instance of jdatetime.datetime, jdatetime.date or str")
                 new_kwargs[k] = gregorian_date
             else:
                 new_kwargs[k] = kwargs[k]
