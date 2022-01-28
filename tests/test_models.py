@@ -139,8 +139,11 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(BarTime.objects.get(datetime__date=jdatetime_), bartime)
         self.assertEqual(BarTime.objects.get(datetime__date=jdatetime_.date()), bartime)
         self.assertEqual(BarTime.objects.get(datetime__date="1378-10-10"), bartime)
-        with self.assertRaises(BarTime.DoesNotExist):
-            BarTime.objects.get(datetime__date="1378-10-11")
+        with self.assertRaisesMessage(
+            TypeError,
+            "`__date` filter Expected jdatetime.datetime, jdatetime.date or str, got `int`.",
+        ):
+            BarTime.objects.get(datetime__date=1)
 
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
