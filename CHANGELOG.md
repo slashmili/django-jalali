@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Add support for `__date` lookup filter
+
 ### Changed
 - Remove deprecated `datetime_safe` and use `sanitize_strftime_format`
 
