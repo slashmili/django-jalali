@@ -135,13 +135,12 @@ class BarTimeTestCase(TestCase):
 
     def test_date_lookup_filter(self):
         jdatetime_ = jdatetime.datetime(1378, 10, 10)
-        BarTime.objects.create(name='Test', datetime=jdatetime_)
-        count_jdatetime = BarTime.objects.filter(datetime__date=jdatetime_).count()
-        count_jdate = BarTime.objects.filter(datetime__date=jdatetime_.date()).count()
-        count_str = BarTime.objects.filter(datetime__date="1378-10-10").count()
-        self.assertEqual(count_jdatetime, 1)
-        self.assertEqual(count_jdate, 1)
-        self.assertEqual(count_str, 1)
+        bartime = BarTime.objects.create(name="Test", datetime=jdatetime_)
+        self.assertEqual(BarTime.objects.get(datetime__date=jdatetime_), bartime)
+        self.assertEqual(BarTime.objects.get(datetime__date=jdatetime_.date()), bartime)
+        self.assertEqual(BarTime.objects.get(datetime__date="1378-10-10"), bartime)
+        with self.assertRaises(BarTime.DoesNotExist):
+            BarTime.objects.get(datetime__date="1378-10-11")
 
     def test_filter_by_exact_datetime(self):
         bar_times = BarTime.objects.filter(datetime=self.datetime)
