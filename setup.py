@@ -14,7 +14,7 @@ setup(
     keywords="django jalali",
     license='Python Software Foundation License',
     platforms='any',
-    install_requires=["jdatetime>=3.7.0", "django>=3.2"],
+    install_requires=["jdatetime>=4.0.0", "django>=3.2"],
     extras_require={'drf': 'djangorestframework>=3.12'},
     long_description=open('README.rst', encoding="utf-8").read(),
     classifiers=[
