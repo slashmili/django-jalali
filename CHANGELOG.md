@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- Update install_requires to use ``jdatetime>=4.0.0``
+
 ## [5.1.0] - 2022-01-30
 - Add support for `__date` lookup filter
 
