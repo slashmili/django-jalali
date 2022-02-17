@@ -48,12 +48,10 @@ class jDateTimeInput(widgets.Input):
     def __init__(self, attrs=None, format=None):
         super().__init__(attrs)
         if format:
-            self.format = format.sanitize_strftime_format(format)
+            self.format = formats
             self.manual_format = True
         else:
-            self.format = format.sanitize_strftime_format(
-                formats.get_format('DATETIME_INPUT_FORMATS')[0]
-            )
+            self.format = formats.get_format('DATETIME_INPUT_FORMATS')[0]
             self.manual_format = False
 
     def _format_value(self, value):
