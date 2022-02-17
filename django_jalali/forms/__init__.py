@@ -71,10 +71,10 @@ class jDateTimeField(forms.Field):
         if value in validators.EMPTY_VALUES:
             return None
         if isinstance(value, jdatetime.datetime):
-            return from_current_timezone(value)
+            return from_current_timezone(value.togregorian())
         if isinstance(value, jdatetime.date):
             result = jdatetime.datetime(value.year, value.month, value.day)
-            return from_current_timezone(result)
+            return from_current_timezone(result.togregorian())
         if isinstance(value, list):
             # Input comes from a SplitDateTimeWidget, for example. So, it's two
             # components: date and time.
@@ -102,7 +102,7 @@ class jDateTimeField(forms.Field):
                 second=second,
                 microsecond=microsecond,
             )
-            return from_current_timezone(result)
+            return from_current_timezone(result.togregorian())
 
         except (ValueError, AttributeError):
             pass
