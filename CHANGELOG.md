@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [6.0.0] - 2022-02-21
 ### Changed
 - Update install_requires to use ``jdatetime>=4.0.0``
 - Drop Python 3.6 support
