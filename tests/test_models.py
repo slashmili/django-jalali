@@ -10,12 +10,15 @@ from django.utils import timezone
 
 from django_jalali.db import models as jmodels
 from tests.models import (
-    Bar, BarTime, DateTimeWithDefault, DateWithDefault, ModelWithAutoNowAdd,
+    Bar,
+    BarTime,
+    DateTimeWithDefault,
+    DateWithDefault,
+    ModelWithAutoNowAdd,
 )
 
 
 class BarTestCase(TestCase):
-
     def setUp(self):
         self.today_string = "1390-5-12"
         self.today = jdatetime.date(1390, 5, 12)
@@ -31,8 +34,8 @@ class BarTestCase(TestCase):
         self.assertEqual(obj.date2, jdatetime.datetime(1390, 6, 31))
 
     def test_save_specific_date(self):
-        Bar.objects.create(name='Test', date='1398-04-31')
-        k = Bar.objects.filter(date='1398-04-31')
+        Bar.objects.create(name="Test", date="1398-04-31")
+        k = Bar.objects.filter(date="1398-04-31")
         self.assertEqual(k[0].date.day, 31)
 
     def test_filter_by_exact_date(self):
@@ -53,9 +56,9 @@ class BarTestCase(TestCase):
         self.assertEqual(
             MigrationWriter.serialize(field),
             (
-                'django_jalali.db.models.jDateField(default=datetime.date(2011, 9, 22))',
-                {'import django_jalali.db.models', 'import datetime'}
-            )
+                "django_jalali.db.models.jDateField(default=datetime.date(2011, 9, 22))",
+                {"import django_jalali.db.models", "import datetime"},
+            ),
         )
 
     def test_serialize_default_datetime_value(self):
@@ -64,14 +67,14 @@ class BarTestCase(TestCase):
         self.assertEqual(
             MigrationWriter.serialize(field),
             (
-                'django_jalali.db.models.jDateField(default=datetime.date(2013, 6, 2))',
-                {'import django_jalali.db.models', 'import datetime'}
-            )
+                "django_jalali.db.models.jDateField(default=datetime.date(2013, 6, 2))",
+                {"import django_jalali.db.models", "import datetime"},
+            ),
         )
 
     def test_filtering(self):
         today = jdatetime.date.today()
-        Bar.objects.create(date=today, name='test name')
+        Bar.objects.create(date=today, name="test name")
 
         # search by year
         jdm_date = Bar.objects.filter(date__year=today.year)
@@ -79,7 +82,7 @@ class BarTestCase(TestCase):
         self.assertEqual(jdm_date[0].date.year, today.year)
 
         # search by string
-        jdm_date = Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, today.day))
+        jdm_date = Bar.objects.filter(date=f"{today.year}-{today.month}-{today.day}")
         self.assertEqual(len(jdm_date), 1)
         self.assertEqual(jdm_date[0].date, today)
 
@@ -92,21 +95,23 @@ class BarTestCase(TestCase):
         self.assertEqual(len(jdm_date), 1)
         self.assertEqual(jdm_date[0].date, jdatetime.date.fromgregorian(date=g_2009))
 
-        jdm_date = Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, today.day))
+        jdm_date = Bar.objects.filter(date=f"{today.year}-{today.month}-{today.day}")
         self.assertEqual(len(jdm_date), 1)
         self.assertEqual(jdm_date[0].date, today)
 
-        jdm_date = Bar.objects.filter(date__in=['%s-%s-%s' % (today.year, today.month, today.day)])
+        jdm_date = Bar.objects.filter(
+            date__in=[f"{today.year}-{today.month}-{today.day}"]
+        )
         self.assertEqual(len(jdm_date), 1)
         self.assertEqual(jdm_date[0].date, today)
 
         # wrong day value
         with self.assertRaises(ValidationError):
-            Bar.objects.filter(date='%s-%s-%s' % (today.year, today.month, 35))
+            Bar.objects.filter(date=f"{today.year}-{today.month}-{35}")
 
         # invalid format
         with self.assertRaises(ValidationError):
-            Bar.objects.filter(date='%s%s/%s' % (today.year, today.month, 35))
+            Bar.objects.filter(date=f"{today.year}{today.month}/{35}")
 
         # invalid search
         with self.assertRaises(ValueError):
@@ -114,7 +119,6 @@ class BarTestCase(TestCase):
 
 
 class BarTimeTestCase(TestCase):
-
     def setUp(self):
         self.date_string = "1380-08-02"
         self.datetime = jdatetime.datetime(1380, 8, 2, 12, 12, 12)
@@ -125,12 +129,16 @@ class BarTimeTestCase(TestCase):
 
     def test_default_value(self):
         obj = DateTimeWithDefault.objects.create()
-        self.assertEqual(obj.datetime1, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000))
-        self.assertEqual(obj.datetime2, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000))
+        self.assertEqual(
+            obj.datetime1, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000)
+        )
+        self.assertEqual(
+            obj.datetime2, jdatetime.datetime(1390, 6, 31, 10, 22, 23, 240000)
+        )
 
     def test_save_specific_datetime(self):
-        BarTime.objects.create(name='Test', datetime='1398-04-31 12:12:12')
-        k = BarTime.objects.filter(datetime='1398-04-31 12:12:12')
+        BarTime.objects.create(name="Test", datetime="1398-04-31 12:12:12")
+        k = BarTime.objects.filter(datetime="1398-04-31 12:12:12")
         self.assertEqual(k[0].datetime.day, 31)
 
     def test_date_lookup_filter(self):
@@ -150,38 +158,40 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(len(bar_times), 1)
 
     @requires_tz_support
-    @skipUnlessDBFeature('has_zoneinfo_database')
-    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    @skipUnlessDBFeature("has_zoneinfo_database")
+    @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_lookup_date_with_use_tz(self):
         current_timezone = timezone.get_current_timezone()
-        if get_version() >= '4.0':
-            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone)
+        if get_version() >= "4.0":
+            jdt1 = jdatetime.datetime(
+                1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
+            )
         else:
             jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
             jdt1 = current_timezone.localize(jdt1)
 
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000+0430')
-        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
+        self.assertEqual(str(k[0].datetime), "1392-03-12 10:22:23.240000+0430")
+        self.assertEqual(k[0].datetime.strftime("%z"), "+0430")
 
     @requires_tz_support
-    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_lookup_date_with_use_tz_without_explicit_tzinfo(self):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000+0430')
-        self.assertEqual(k[0].datetime.strftime('%z'), '+0430')
+        self.assertEqual(str(k[0].datetime), "1392-03-12 10:22:23.240000+0430")
+        self.assertEqual(k[0].datetime.strftime("%z"), "+0430")
 
     @requires_tz_support
-    @override_settings(USE_TZ=False, TIME_ZONE='Asia/Tehran')
+    @override_settings(USE_TZ=False, TIME_ZONE="Asia/Tehran")
     def test_lookup_date_with_no_tz(self):
         jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
-        self.assertEqual(str(k[0].datetime), '1392-03-12 10:22:23.240000')
-        self.assertEqual(k[0].datetime.strftime('%z'), '')
+        self.assertEqual(str(k[0].datetime), "1392-03-12 10:22:23.240000")
+        self.assertEqual(k[0].datetime.strftime("%z"), "")
 
     def test_lookup_auto_now_add(self):
         ModelWithAutoNowAdd.objects.create()
@@ -190,7 +200,7 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(objects[0].datetimefield, dt)
 
     @requires_tz_support
-    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_lookup_auto_now_add_datetime_with_tz(self):
         ModelWithAutoNowAdd.objects.create()
         dt = ModelWithAutoNowAdd.objects.all()[0].datetimefield
@@ -203,10 +213,10 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(
             MigrationWriter.serialize(field),
             (
-                'django_jalali.db.models.jDateTimeField('
-                'default=datetime.datetime(2011, 9, 22, 10, 22, 23, 240000))',
-                {'import django_jalali.db.models', 'import datetime'}
-            )
+                "django_jalali.db.models.jDateTimeField("
+                "default=datetime.datetime(2011, 9, 22, 10, 22, 23, 240000))",
+                {"import django_jalali.db.models", "import datetime"},
+            ),
         )
 
     def test_serialize_default_datetime_value(self):
@@ -215,18 +225,20 @@ class BarTimeTestCase(TestCase):
         self.assertEqual(
             MigrationWriter.serialize(field),
             (
-                'django_jalali.db.models.jDateTimeField('
-                'default=datetime.datetime(2013, 6, 2, 10, 22, 23, 240000))',
-                {'import django_jalali.db.models', 'import datetime'}
-            )
+                "django_jalali.db.models.jDateTimeField("
+                "default=datetime.datetime(2013, 6, 2, 10, 22, 23, 240000))",
+                {"import django_jalali.db.models", "import datetime"},
+            ),
         )
 
     @requires_tz_support
-    @override_settings(USE_TZ=True, TIME_ZONE='Asia/Tehran')
+    @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_timezone(self):
         current_timezone = timezone.get_current_timezone()
-        if get_version() >= '4.0':
-            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone)
+        if get_version() >= "4.0":
+            jdt1 = jdatetime.datetime(
+                1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
+            )
         else:
             jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
             jdt1 = current_timezone.localize(jdt1)
@@ -244,5 +256,7 @@ class BarTimeTestCase(TestCase):
         )
 
     def test_chain_filters(self):
-        qs = BarTime.objects.filter(name=self.bar_time.name).filter(datetime__year=self.datetime.year)
+        qs = BarTime.objects.filter(name=self.bar_time.name).filter(
+            datetime__year=self.datetime.year
+        )
         self.assertEqual(qs.count(), 1)

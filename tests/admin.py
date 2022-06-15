@@ -7,18 +7,14 @@ from tests.models import Bar, BarTime
 
 
 class BarAdmin(admin.ModelAdmin):
-    list_filter = (
-        ('date', JDateFieldListFilter),
-    )
+    list_filter = (("date", JDateFieldListFilter),)
 
 
 admin.site.register(Bar, BarAdmin)
 
 
 class BarTimeAdmin(admin.ModelAdmin):
-    list_filter = (
-        ('datetime', JDateFieldListFilter),
-    )
+    list_filter = (("datetime", JDateFieldListFilter),)
 
 
 admin.site.register(BarTime, BarTimeAdmin)

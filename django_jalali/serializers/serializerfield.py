@@ -3,7 +3,8 @@ from django.core import exceptions
 from rest_framework import serializers
 
 from django_jalali.db.models import (
-    jDateField as jDateFieldModel, jDateTimeField as jDateTimeFieldModel,
+    jDateField as jDateFieldModel,
+    jDateTimeField as jDateTimeFieldModel,
 )
 
 
@@ -34,8 +35,7 @@ class JDateTimeField(serializers.DateTimeField):
             try:
                 return jdatetime.datetime(value.year, value.month, value.day)
             except ValueError:
-                raise exceptions.ValidationError(
-                    self.error_messages['invalid'])
+                raise exceptions.ValidationError(self.error_messages["invalid"])
         return jDateTimeFieldModel.parse_date(value)
 
     # This method is used by DRF to bringing value back to python form

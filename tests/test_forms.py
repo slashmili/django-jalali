@@ -26,4 +26,6 @@ class JDateTimeFieldTest(TestCase):
         for value in tests:
             with self.subTest(value=value):
                 f = jDateTimeField()
-                self.assertEqual(f.clean(value), jdatetime.datetime(1400, 11, 27, 12, 13, 20))
+                self.assertEqual(
+                    f.clean(value), jdatetime.datetime(1400, 11, 27, 12, 13, 20)
+                )
