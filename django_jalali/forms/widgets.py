@@ -8,7 +8,7 @@ from django.utils.encoding import smart_str
 
 
 class jDateInput(widgets.Input):
-    input_type = 'text'
+    input_type = "text"
     format = None
 
     def __init__(self, attrs=None, format=None):
@@ -18,9 +18,9 @@ class jDateInput(widgets.Input):
 
     def _format_value(self, value):
         if value is None:
-            return ''
-        elif hasattr(value, 'strftime'):
-            f = smart_str(self.format or formats.get_format('DATE_INPUT_FORMATS')[0])
+            return ""
+        elif hasattr(value, "strftime"):
+            f = smart_str(self.format or formats.get_format("DATE_INPUT_FORMATS")[0])
             return value.strftime(f)
 
         return value
@@ -34,7 +34,7 @@ class jDateInput(widgets.Input):
         # formatted by HiddenInput using formats.localize_input, which is not
         # necessarily the format used for this widget. Attempt to convert it.
         try:
-            input_format = formats.get_format('DATE_INPUT_FORMATS')[0]
+            input_format = formats.get_format("DATE_INPUT_FORMATS")[0]
             initial = jdatetime.date(*time.strptime(initial, input_format)[:3])
         except (TypeError, ValueError):
             pass
@@ -42,8 +42,8 @@ class jDateInput(widgets.Input):
 
 
 class jDateTimeInput(widgets.Input):
-    input_type = 'text'
-    format = '%Y-%m-%d %H:%M:%S'     # '2006-10-25 14:30:59'
+    input_type = "text"
+    format = "%Y-%m-%d %H:%M:%S"  # '2006-10-25 14:30:59'
 
     def __init__(self, attrs=None, format=None):
         super().__init__(attrs)
@@ -51,13 +51,13 @@ class jDateTimeInput(widgets.Input):
             self.format = formats
             self.manual_format = True
         else:
-            self.format = formats.get_format('DATETIME_INPUT_FORMATS')[0]
+            self.format = formats.get_format("DATETIME_INPUT_FORMATS")[0]
             self.manual_format = False
 
     def _format_value(self, value):
         if self.is_localized and not self.manual_format:
             return formats.localize_input(value)
-        elif hasattr(value, 'strftime'):
+        elif hasattr(value, "strftime"):
             return value.strftime(self.format)
         return value
 
@@ -66,7 +66,7 @@ class jDateTimeInput(widgets.Input):
         # formatted by HiddenInput using formats.localize_input, which is not
         # necessarily the format used for this widget. Attempt to convert it.
         try:
-            input_format = formats.get_format('DATETIME_INPUT_FORMATS')[0]
+            input_format = formats.get_format("DATETIME_INPUT_FORMATS")[0]
             initial = datetime.datetime(*time.strptime(initial, input_format)[:6])
         except (TypeError, ValueError):
             pass

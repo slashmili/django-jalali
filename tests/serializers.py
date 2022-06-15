@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 
 from django_jalali.serializers.serializerfield import (
-    JDateField, JDateTimeField,
+    JDateField,
+    JDateTimeField,
 )
 
 from .models import Bar, BarTime

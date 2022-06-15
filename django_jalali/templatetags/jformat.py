@@ -9,8 +9,8 @@ register = Library()
 @register.filter(expects_localtime=True, is_safe=False)
 def jformat(value, arg=None):
     """Formats a date or time according to the given format."""
-    if value in (None, ''):
-        return ''
+    if value in (None, ""):
+        return ""
     if arg is None:
         arg = "%c"
     try:
@@ -20,4 +20,4 @@ def jformat(value, arg=None):
             value = jdatetime.date.fromgregorian(date=value)
         return value.strftime(arg)
     except AttributeError:
-        return ''
+        return ""
