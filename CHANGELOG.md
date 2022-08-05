@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Add Django 4.1 support
+
 ## [6.0.0] - 2022-02-21
 ### Changed
 - Update install_requires to use ``jdatetime>=4.0.0``
