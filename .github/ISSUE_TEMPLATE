@@ -1,11 +1,11 @@
-## Is this feature request? Please report it in here: https://github.com/slashmili/django-jalali/discussions/categories/ideas
-## Do you have a question on how to use this library? ask you question in here: https://github.com/slashmili/django-jalali/discussions/categories/q-a
+> :warning: Open an issue if you are facing an unexpected behavior or encountered bugs.
 
-## If ONLY AND ONLY you are facing an unexpected behaviour create an issue
+> :information_source: Is this a feature request? Please report it here: https://github.com/slashmili/django-jalali/discussions/categories/ideas
 
-Please provide your configurations and softwares version
+> :question: Do you have a question on how to use this library? ask your question here: https://github.com/slashmili/django-jalali/discussions/categories/q-a
 
-* Python version:
-* Django version: 
-* django_jalali version:
-* OS: 
+#### Configurations
+- Python version:
+- Django version:
+- django_jalali version:
+- OS:
