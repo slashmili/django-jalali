@@ -28,3 +28,6 @@ pip-log.txt
 .idea
 
 db.sqlite3
+
+#Vscode
+.vscode
