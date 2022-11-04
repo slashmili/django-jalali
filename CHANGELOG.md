@@ -2,6 +2,7 @@
 
 ### Changed
 - Add Django 4.1 support
+- Confirm Python 3.11 support
 
 ## [6.0.0] - 2022-02-21
 ### Changed
