@@ -29,6 +29,18 @@ class JDateTimeField(serializers.DateTimeField):
         if value is None:
             return value
 
+        if isinstance(value, str):
+            for format in [
+                "%Y-%m-%d %H:%M:%S",
+                "%Y-%m-%d %H:%M",
+                "%Y-%m-%d",
+            ]:
+
+                try:
+                    return jdatetime.datetime.strptime(value, format)
+                except ValueError:
+                    pass
+
         if isinstance(value, jdatetime.datetime):
             return value
         if isinstance(value, jdatetime.date):

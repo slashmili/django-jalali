@@ -4,6 +4,9 @@
 - Add Django 4.1 support
 - Confirm Python 3.11 support
 
+### Fixed
+- Fix datetime parsing problem in ``JDateTimeField``
+
 ## [6.0.0] - 2022-02-21
 ### Changed
 - Update install_requires to use ``jdatetime>=4.0.0``
