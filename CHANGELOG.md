@@ -1,5 +1,6 @@
 # Changelog
 
+## [6.0.1] - 2022-11-29
 ### Changed
 - Add Django 4.1 support
 - Confirm Python 3.11 support
