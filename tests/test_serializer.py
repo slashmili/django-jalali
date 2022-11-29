@@ -17,6 +17,9 @@ class JDateFieldSerializerTests(TestCase):
         serializer = JDateFieldSerializer(self.mybar)
         self.assertEqual(serializer.data["date"], str(self.today))
 
+        serializer = JDateFieldSerializer(data={"name": "foo", "date": "1400-06-31"})
+        self.assertTrue(serializer.is_valid())
+
     def test_serializers_works_correctly_on_leap_year(self):
         """
         Make sure JDateFieldSerializer work's correctly on leap and normal year
@@ -55,6 +58,21 @@ class JDateTimeFieldSerializerTests(TestCase):
     def test_serializer_works_correctly_on_valid_datetime(self):
         serializer = JDateTimeFieldSerializer(self.mybartime)
         self.assertEqual(serializer.data["datetime"], str(self.now))
+
+        serializer = JDateTimeFieldSerializer(
+            data={"name": "bartime", "datetime": "1401-06-31"}
+        )
+        self.assertTrue(serializer.is_valid())
+
+        serializer = JDateTimeFieldSerializer(
+            data={"name": "bartime", "datetime": "1401-06-31 00:00"}
+        )
+        self.assertTrue(serializer.is_valid())
+
+        serializer = JDateTimeFieldSerializer(
+            data={"name": "bartime", "datetime": "1401-06-31 01:01:00"}
+        )
+        self.assertTrue(serializer.is_valid())
 
     def test_serializer_with_different_formatting(self):
         d_time = self.now.strftime("%Y-%m-%d %H:%M")
