@@ -76,7 +76,6 @@ class jDateField(models.DateField):
         default=models.NOT_PROVIDED,
         **kwargs,
     ):
-
         self.auto_now, self.auto_now_add = auto_now, auto_now_add
         # HACKs : auto_now_add/auto_now should be
         # done as a default or a pre_save.
@@ -241,7 +240,6 @@ class jDateTimeField(models.DateTimeField):
         default=models.NOT_PROVIDED,
         **kwargs,
     ):
-
         self.auto_now, self.auto_now_add = auto_now, auto_now_add
         # HACKs : auto_now_add/auto_now should be
         # done as a default or a pre_save.
