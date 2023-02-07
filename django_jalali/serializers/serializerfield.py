@@ -35,7 +35,6 @@ class JDateTimeField(serializers.DateTimeField):
                 "%Y-%m-%d %H:%M",
                 "%Y-%m-%d",
             ]:
-
                 try:
                     return jdatetime.datetime.strptime(value, format)
                 except ValueError:
