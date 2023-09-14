@@ -176,7 +176,7 @@ class jDateField(models.DateField):
 
         if lookup_type in ("exact", "gt", "gte", "lt", "lte"):
             prep = self.get_prep_value(value)
-            if type(prep) == datetime.datetime or type(prep) == datetime.date:
+            if isinstance(prep, (datetime.datetime, datetime.date)):
                 return prep
             return prep.togregorian()
 
@@ -435,7 +435,7 @@ class jDateTimeField(models.DateTimeField):
 
         if lookup_type in ("exact", "gt", "gte", "lt", "lte"):
             prep = self.get_prep_value(value)
-            if type(prep) == datetime.datetime or type(prep) == datetime.date:
+            if isinstance(prep, (datetime.datetime, datetime.date)):
                 return prep
             return prep.togregorian()
 
