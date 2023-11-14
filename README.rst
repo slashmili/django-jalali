@@ -138,6 +138,8 @@ Usage
     >>> BarTime.objects.filter(datetime__year=1380)
     [<BarTime: Bar Time now, 1380-08-0212:12:12>]
 
+⚠️ `__month` filter is not supported as explained in here_
+
 Using Templatetags
 ------------------
 
@@ -299,3 +301,4 @@ If you wish to limit the testing to specific environment(s), you can parametrize
 .. _Django REST Framework: https://www.django-rest-framework.org/
 .. _fork: https://help.github.com/en/articles/fork-a-repo
 .. _repository: https://github.com/slashmili/django-jalali
+.. _here: https://github.com/slashmili/django-jalali/issues/142#issuecomment-887464050
