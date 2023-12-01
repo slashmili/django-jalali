@@ -1,5 +1,10 @@
 # Changelog
 
+### Changed
+- Drop Python 3.7 support
+- Confirm Python 3.12 support
+- Drop Django 4.1 support
+
 ## [6.0.1] - 2022-11-29
 ### Changed
 - Add Django 4.1 support

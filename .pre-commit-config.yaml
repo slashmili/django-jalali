@@ -6,7 +6,7 @@ repos:
       - id: black
         args:
           - "--target-version"
-          - "py37"
+          - "py38"
   - repo: https://github.com/PyCQA/flake8
     rev: "6.1.0"
     hooks:
@@ -20,4 +20,4 @@ repos:
     rev: v3.15.0
     hooks:
     -   id: pyupgrade
-        args: [--py37-plus]
+        args: [--py38-plus]

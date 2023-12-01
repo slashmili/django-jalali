@@ -102,7 +102,7 @@ Usage
 .. code:: shell
 
     $ python manage.py shell
-    Python 3.7.0 (default, Nov 26 2018, 15:26:54)
+    Python 3.8.18 (default, Nov 26 2018, 15:26:54)
     [GCC 6.3.0 20170516] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     (InteractiveConsole)
