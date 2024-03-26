@@ -1,6 +1,6 @@
 # Changelog
 
-## [6.1.1] - 2024-03-27
+## [6.1.0] - 2024-03-26
 ### Changed
 - Use jdatetime 5.0.0
 - Drop Python 3.7 support
