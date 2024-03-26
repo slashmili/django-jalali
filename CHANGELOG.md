@@ -1,6 +1,8 @@
 # Changelog
 
+## [6.1.1] - 2024-03-27
 ### Changed
+- Use jdatetime 5.0.0
 - Drop Python 3.7 support
 - Confirm Python 3.12 support
 - Drop Django 4.1 support
