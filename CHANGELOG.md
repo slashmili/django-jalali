@@ -1,5 +1,9 @@
 # Changelog
 
+### Changed
+- Add Django 5.0 support
+- Drop Django 4.1 support
+
 ## [6.1.0] - 2024-03-26
 ### Changed
 - Use jdatetime 5.0.0
