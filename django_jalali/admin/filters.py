@@ -1,3 +1,4 @@
+import django
 import jdatetime
 from django.contrib import admin
 from django.contrib.admin.options import IncorrectLookupParameters
@@ -75,8 +76,15 @@ class JDateFieldListFilter(admin.FieldListFilter):
         super().__init__(field, request, params, model, model_admin, field_path)
 
     def queryset(self, request, queryset):
+        used_parameters = self.used_parameters.copy()
+        if django.VERSION > (5, 0):
+            used_parameters = {
+                k: v[0] if isinstance(v, list) else v
+                for k, v in used_parameters.items()
+            }
+
         try:
-            return queryset.filter(**self.used_parameters)
+            return queryset.filter(**used_parameters)
         except ValidationError as e:
             raise IncorrectLookupParameters(e)
 
@@ -84,9 +92,15 @@ class JDateFieldListFilter(admin.FieldListFilter):
         return [self.lookup_kwarg_since, self.lookup_kwarg_until]
 
     def choices(self, cl):
+        date_params = self.date_params
+        if django.VERSION > (5, 0):
+            date_params = {
+                k: v[0] if isinstance(v, list) else v for k, v in date_params.items()
+            }
+
         for title, param_dict in self.links:
             yield {
-                "selected": self.date_params == param_dict,
+                "selected": date_params == param_dict,
                 "query_string": cl.get_query_string(param_dict, [self.field_generic]),
                 "display": title,
             }
