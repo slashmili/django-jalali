@@ -1,6 +1,8 @@
 # Changelog
 
 ### Changed
+
+## [6.2.0] - 2024-03-29
 - Add Django 5.0 support
 - Drop Django 4.1 support
 
