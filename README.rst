@@ -28,6 +28,12 @@ Dependencies
     Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
 - `Django REST Framework`_ > 3.12 (If install with ``drf`` dependency)
 
+Supported Databases
+-------------------
+
+- SQLite
+- PostgreSQL
+
 Install
 -------
 .. code:: bash
