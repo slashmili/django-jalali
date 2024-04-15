@@ -22,7 +22,9 @@ class JDateFieldListFilter(admin.FieldListFilter):
 
         if isinstance(field, models.jDateTimeField):
             today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            format = "%Y-%m-%d %H:%M:%S"
         else:
+            format = "%Y-%m-%d"
             today = now.date()
 
         tomorrow = today + jdatetime.timedelta(days=1)
@@ -40,8 +42,8 @@ class JDateFieldListFilter(admin.FieldListFilter):
             (
                 _("Today"),
                 {
-                    self.lookup_kwarg_since: today.strftime("%Y-%m-%d %H:%M:%S"),
-                    self.lookup_kwarg_until: tomorrow.strftime("%Y-%m-%d %H:%M:%S"),
+                    self.lookup_kwarg_since: today.strftime(format),
+                    self.lookup_kwarg_until: tomorrow.strftime(format),
                 },
             ),
             (
@@ -49,26 +51,24 @@ class JDateFieldListFilter(admin.FieldListFilter):
                 {
                     self.lookup_kwarg_since: (
                         today - jdatetime.timedelta(days=7)
-                    ).strftime("%Y-%m-%d %H:%M:%S"),
-                    self.lookup_kwarg_until: tomorrow.strftime("%Y-%m-%d %H:%M:%S"),
+                    ).strftime(format),
+                    self.lookup_kwarg_until: tomorrow.strftime(format),
                 },
             ),
             (
                 _("This month"),
                 {
-                    self.lookup_kwarg_since: (today.replace(day=1)).strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    ),
-                    self.lookup_kwarg_until: next_month.strftime("%Y-%m-%d %H:%M:%S"),
+                    self.lookup_kwarg_since: (today.replace(day=1)).strftime(format),
+                    self.lookup_kwarg_until: next_month.strftime(format),
                 },
             ),
             (
                 _("This year"),
                 {
                     self.lookup_kwarg_since: (today.replace(month=1, day=1)).strftime(
-                        "%Y-%m-%d %H:%M:%S"
+                        format
                     ),
-                    self.lookup_kwarg_until: next_year.strftime("%Y-%m-%d %H:%M:%S"),
+                    self.lookup_kwarg_until: next_year.strftime(format),
                 },
             ),
         )
