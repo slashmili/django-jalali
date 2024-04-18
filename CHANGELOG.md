@@ -1,8 +1,11 @@
 # Changelog
 
-### Changed
+## [6.2.1] - 2024-04-18
+### Fixed
+- Fix JDateFieldListFilter bug with jDateField
 
 ## [6.2.0] - 2024-03-29
+### Changed
 - Add Django 5.0 support
 - Drop Django 4.1 support
 
