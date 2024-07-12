@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Drop Django 3.2 support
+
 ## [6.2.1] - 2024-04-18
 ### Fixed
 - Fix JDateFieldListFilter bug with jDateField

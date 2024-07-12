@@ -1,7 +1,6 @@
 import datetime
 
 import jdatetime
-from django import get_version
 from django.core.exceptions import ValidationError
 from django.db.migrations.writer import MigrationWriter
 from django.test import TestCase, override_settings, skipUnlessDBFeature
@@ -162,13 +161,9 @@ class BarTimeTestCase(TestCase):
     @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_lookup_date_with_use_tz(self):
         current_timezone = timezone.get_current_timezone()
-        if get_version() >= "4.0":
-            jdt1 = jdatetime.datetime(
-                1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
-            )
-        else:
-            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-            jdt1 = current_timezone.localize(jdt1)
+        jdt1 = jdatetime.datetime(
+            1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
+        )
 
         BarTime.objects.create(name="with timezone", datetime=jdt1)
         k = BarTime.objects.filter(datetime=jdt1)
@@ -235,13 +230,9 @@ class BarTimeTestCase(TestCase):
     @override_settings(USE_TZ=True, TIME_ZONE="Asia/Tehran")
     def test_timezone(self):
         current_timezone = timezone.get_current_timezone()
-        if get_version() >= "4.0":
-            jdt1 = jdatetime.datetime(
-                1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
-            )
-        else:
-            jdt1 = jdatetime.datetime(1392, 3, 12, 10, 22, 23, 240000)
-            jdt1 = current_timezone.localize(jdt1)
+        jdt1 = jdatetime.datetime(
+            1392, 3, 12, 10, 22, 23, 240000, tzinfo=current_timezone
+        )
 
         new_bartime = BarTime.objects.create(name="with timezone", datetime=jdt1)
         self.assertEqual(

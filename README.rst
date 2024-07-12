@@ -23,7 +23,7 @@ Dependencies
 ------------
 
 -  jdatetime_
--  Django_ > 3.2
+-  Django_ > 4.2
 
     Looking for Django 1.X support? Checkout *2.4.6* version in pypi.org
 - `Django REST Framework`_ > 3.12 (If install with ``drf`` dependency)
@@ -296,7 +296,7 @@ If you wish to limit the testing to specific environment(s), you can parametrize
 
 .. code:: shell
 
-    $ tox -e py39-django32
+    $ tox -e py39-django42
 
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
