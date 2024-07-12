@@ -1,5 +1,6 @@
 # Changelog
 
+## [7.0.0] - 2024-07-12
 ### Changed
 - Drop Django 3.2 support
 
