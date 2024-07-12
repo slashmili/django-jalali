@@ -1,7 +1,6 @@
 from urllib.parse import unquote
 
 import jdatetime
-from django import get_version
 from django.contrib.admin import site
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.auth.models import AnonymousUser
@@ -93,7 +92,6 @@ class ListFiltersTests(TestCase):
             modeladmin.list_editable,
             modeladmin,
             modeladmin.sortable_by,
+            modeladmin.search_help_text,
         ]
-        if get_version() >= "4.0":
-            args.append(modeladmin.search_help_text)
         return ChangeList(*args)
