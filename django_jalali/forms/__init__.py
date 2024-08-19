@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 import jdatetime
 from django import forms
@@ -19,7 +20,7 @@ class jDateField(forms.Field):
         super().__init__(*args, **kwargs)
         self.input_formats = input_formats
 
-    def to_python(self, value) -> jdatetime.date | None:
+    def to_python(self, value) -> Union[jdatetime.date, None]:
         """
         Validates that the input can be converted to a date. Returns a Python
         jdatetime.date object.
