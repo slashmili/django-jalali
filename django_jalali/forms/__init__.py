@@ -1,4 +1,5 @@
 import re
+from typing import Union
 
 import jdatetime
 from django import forms
@@ -19,10 +20,10 @@ class jDateField(forms.Field):
         super().__init__(*args, **kwargs)
         self.input_formats = input_formats
 
-    def to_python(self, value):
+    def to_python(self, value) -> Union[jdatetime.date, None]:
         """
         Validates that the input can be converted to a date. Returns a Python
-        datetime.date object.
+        jdatetime.date object.
         """
         if value in validators.EMPTY_VALUES:
             return None
@@ -30,6 +31,13 @@ class jDateField(forms.Field):
             return value.date()
         if isinstance(value, jdatetime.date):
             return value
+
+        if self.input_formats:
+            for input_format in self.input_formats:
+                try:
+                    return jdatetime.datetime.strptime(value, input_format).date()
+                except ValueError:
+                    pass
 
         groups = re.search(
             r"(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2})",
@@ -86,6 +94,13 @@ class jDateTimeField(forms.Field):
             ):
                 return None
             value = "%s %s" % tuple(value)
+
+        if self.input_formats:
+            for input_format in self.input_formats:
+                try:
+                    return jdatetime.datetime.strptime(value, input_format).date()
+                except ValueError:
+                    pass
 
         groups = re.search(
             r"(?P<year>[\d]{1,4})-(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2}) "
