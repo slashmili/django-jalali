@@ -1,5 +1,9 @@
 # Changelog
 
+## [7.1.0] - 2024-08-20
+### Changed
+- Respect jDateField's input_formats kwarg when parsing date
+
 ## [7.0.0] - 2024-07-12
 ### Changed
 - Drop Django 3.2 support
