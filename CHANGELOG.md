@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Confirm Django 5.1 support
+
 ## [7.1.0] - 2024-08-20
 ### Changed
 - Respect jDateField's input_formats kwarg when parsing date
