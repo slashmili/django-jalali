@@ -1,3 +1,7 @@
 img.ui-datepicker-trigger {
-    height: 15px;
+    height: 16px;
+    width: 16px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 5px;
 }
