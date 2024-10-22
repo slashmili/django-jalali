@@ -1,7 +1,11 @@
 # Changelog
 
+## [7.2.0] - 2024-08-20
 ### Changed
 - Confirm Django 5.1 support
+
+### Fixed
+- Fix datepicker for inline admin #263
 
 ## [7.1.0] - 2024-08-20
 ### Changed
