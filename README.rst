@@ -242,6 +242,16 @@ There are two ways to do achieve that, you can use of the approaches based on yo
     LANGUAGE_CODE = 'fa-ir'
     import locale
     locale.setlocale(locale.LC_ALL, "fa_IR.UTF-8")
+
+* If using Docker, add the following to your Dockerfile:
+
+.. code:: dockerfile
+
+    FROM python:3.11-slim-bookworm
+
+    RUN apt-get update && apt-get -y install locales && \
+     sed -i -e 's/# fa_IR UTF-8/fa_IR UTF-8/' /etc/locale.gen && \
+     dpkg-reconfigure --frontend=noninteractive locales
    
 
 Timezone Settings
