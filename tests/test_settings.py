@@ -19,4 +19,4 @@ class TestJalaliSettings(TestCase):
 
     def test_invalid_setting_access_raise_attribute_error(self):
         with self.assertRaises(AttributeError):
-            _ = jalali_settings.INVALID_SETTING
+            jalali_settings.INVALID_SETTING
