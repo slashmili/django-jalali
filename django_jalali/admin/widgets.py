@@ -1,32 +1,17 @@
 from django import forms
 from django.contrib.admin.widgets import AdminTimeWidget
-from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from django_jalali import forms as jforms
+from django_jalali.settings import jalali_settings
 
 
 class AdminjDateWidget(jforms.jDateInput):
-    @property
-    def media(self):
-        js = [
-            "jquery.ui.datepicker.jalali/scripts/jquery-1.10.2.min.js",
-            "jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js",
-            "jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js",
-            "jquery.ui.datepicker.jalali/scripts/calendar.js",
-            "jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js",
-            "main.js",
-        ]
 
-        css = {
-            "all": [
-                "admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css",
-                "admin/css/main.css",
-            ]
-        }
-
-        return forms.Media(js=[static("admin/%s" % path) for path in js], css=css)
+    class Media:
+        js = jalali_settings.ADMIN_JS_STATIC_FILES
+        css = jalali_settings.ADMIN_CSS_STATIC_FILES
 
     def __init__(self, attrs=None, format=None):
         final_attrs = {"class": "vjDateField", "size": "10"}

@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Add Jalali settings
+
 ## [7.2.0] - 2024-08-20
 ### Changed
 - Confirm Django 5.1 support

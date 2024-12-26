@@ -61,9 +61,41 @@ Usage
 
   $ python manage.py startapp foo
 
-3. Edit settings.py_ and add django_jalali and your foo to your INSTALLED_APPS (also config DATABASES setting)
+3. Edit your Django project's ``settings.py`` file to include ``django_jalali`` and your application in the ``INSTALLED_APPS`` list. Make sure that ``django_jalali`` is listed **before** your apps for proper functionality.
 
-    django_jalali should be added **before** your apps in order to work properly
+   Additionally, you can configure library settings using the ``JALALI_SETTINGS`` dictionary. If a setting is not explicitly defined, the default values will be used.
+
+   .. code-block:: python
+
+      # settings.py
+      INSTALLED_APPS = [
+          "django.contrib.admin",
+          "django.contrib.auth",
+          "django.contrib.contenttypes",
+          "django.contrib.sessions",
+          "django.contrib.messages",
+          "django.contrib.staticfiles",
+          "django_jalali",  # Place this before your custom apps
+      ]
+
+      JALALI_SETTINGS = {
+          # JavaScript static files for the admin Jalali date widget
+          "ADMIN_JS_STATIC_FILES": [
+              "admin/jquery.ui.datepicker.jalali/scripts/jquery-1.10.2.min.js",
+              "admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js",
+              "admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js",
+              "admin/jquery.ui.datepicker.jalali/scripts/calendar.js",
+              "admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js",
+              "admin/main.js",
+          ],
+          # CSS static files for the admin Jalali date widget
+          "ADMIN_CSS_STATIC_FILES": {
+              "all": [
+                  "admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css",
+                  "admin/css/main.css",
+              ]
+          },
+      }
 
 4. Edit foo/models.py_
 
@@ -307,6 +339,16 @@ If you wish to limit the testing to specific environment(s), you can parametrize
 .. code:: shell
 
     $ tox -e py39-django42
+
+To add a new value to the Jalali settings, just add its default value to the ``DEFAULTS`` dictionary located in ``django_jalali/setting.py``.
+
+You can access the new setting in your code as shown below:
+
+.. code-block:: python
+
+    from django_jalali.settings import jalali_settings
+
+    custom_settings = jalali_settings.CUSTOM_SETTINGS
 
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
