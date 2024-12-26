@@ -340,6 +340,16 @@ If you wish to limit the testing to specific environment(s), you can parametrize
 
     $ tox -e py39-django42
 
+To add a new value to the Jalali settings, just add its default value to the ``DEFAULTS`` dictionary located in ``django_jalali/setting.py``.
+
+You can access the new setting in your code as shown below:
+
+.. code-block:: python
+
+    from django_jalali.settings import jalali_settings
+
+    custom_settings = jalali_settings.CUSTOM_SETTINGS
+
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
