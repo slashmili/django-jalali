@@ -1,7 +1,9 @@
 # Changelog
 
+## [7.3.0] - 2025-01-13
+
 ### Changed
-- Add Jalali settings
+- Add Jalali settings #269
 
 ## [7.2.0] - 2024-08-20
 ### Changed
