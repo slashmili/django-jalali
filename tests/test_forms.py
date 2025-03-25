@@ -1,4 +1,5 @@
 import jdatetime
+from django.forms.utils import from_current_timezone
 from django.test import TestCase
 
 from django_jalali.forms import jDateField, jDateTimeField
@@ -50,18 +51,24 @@ class JDateTimeFieldTest(TestCase):
             "1400-11-27 12:13:20",
             jdatetime.datetime(1400, 11, 27, 12, 13, 20),
         )
+        expected = from_current_timezone(
+            jdatetime.datetime(1400, 11, 27, 12, 13, 20).togregorian()
+        )
+
         for value in tests:
             with self.subTest(value=value):
                 f = jDateTimeField()
-                self.assertEqual(
-                    f.clean(value), jdatetime.datetime(1400, 11, 27, 12, 13, 20)
-                )
+                self.assertEqual(f.clean(value), expected)
 
     def test_field_with_one_input_formats(self):
-        tests = (
+        tests = [
             "1400/11/27 12:13",
             jdatetime.datetime(1400, 11, 27, 12, 13, 20),
-        )
+        ]
+        expected_outputs = [
+            jdatetime.datetime(1400, 11, 27, 12, 13, 0).togregorian(),
+            jdatetime.datetime(1400, 11, 27, 12, 13, 20).togregorian(),
+        ]
         for value in tests:
             with self.subTest(value=value):
                 f = jDateTimeField(
@@ -70,7 +77,7 @@ class JDateTimeFieldTest(TestCase):
                     ]
                 )
                 self.assertEqual(
-                    f.clean(value), jdatetime.datetime(1400, 11, 27, 12, 13, 20)
+                    f.clean(value), from_current_timezone(expected_outputs.pop(0))
                 )
 
     def test_field_with_multiple_input_formats(self):
