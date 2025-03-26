@@ -1,5 +1,8 @@
 # Changelog
 
+### Changed
+- Replace persian astronomical calendar with persian algoritmic calendar #281
+
 ## [7.3.0] - 2025-01-13
 
 ### Changed
