@@ -1,5 +1,8 @@
 # Changelog
 
+### Fixed
+- Fix calendar icon displaying in admin when static files served on another domain #280
+
 ## [7.3.0] - 2025-01-13
 
 ### Changed
