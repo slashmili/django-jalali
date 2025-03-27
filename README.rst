@@ -350,6 +350,17 @@ You can access the new setting in your code as shown below:
 
     custom_settings = jalali_settings.CUSTOM_SETTINGS
 
+Javascrip Credits
+-----------
+
+This project includes few JS files to provide the functionality to show datepicker in Jalali in the admin area:
+
+*  jQuery: licensed under the MIT License.
+* JQuery UI: licensed under the MIT License.
+* jquery.ui.datepicker.jalali: impelemented by http://hasheminezhad.com
+* JavaScript functions for positional astronomy by https://www.fourmilab.ch/documents/calendar/
+
+
 .. _jdatetime: https://github.com/slashmili/python-jalali
 .. _Django: https://www.djangoproject.com/
 .. _settings.py: https://github.com/slashmili/django-jalali/blob/master/jalali_test/jalali_test/settings.py#L40
