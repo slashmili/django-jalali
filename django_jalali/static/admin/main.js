@@ -1,8 +1,8 @@
 $(function () {
     function activateDatepicker() {
-        $('.vjDateField').each(function() {
-            var inputId = $(this).attr('id') || '';
-            if (inputId.includes('__prefix__')) {
+        $(".vjDateField").each(function() {
+            var inputId = $(this).attr("id") || "";
+            if (inputId.includes("__prefix__")) {
                 return;
             }
 
@@ -11,7 +11,6 @@ $(function () {
                 changeMonth: true,
                 changeYear: true,
                 showOn: "both",
-                buttonImage: "/static/admin/jquery.ui.datepicker.jalali/themes/base/images/icon-calendar.svg",
                 buttonImageOnly: true,
                 isRTL: false,
                 buttonText: "یک تاریخ انتخاب کنید",
@@ -22,11 +21,11 @@ $(function () {
     if (!$.datepicker){$ = django.jQuery;}
     activateDatepicker();
 
-    $(document).on('formset:added', function(event, $row, formsetName) {
+    $(document).on("formset:added", function(event, $row, formsetName) {
         activateDatepicker();
     });
 
-    $(document).on('formset:removed', function(event, $row, formsetName) {
+    $(document).on("formset:removed", function(event, $row, formsetName) {
         activateDatepicker();
     });
 });
