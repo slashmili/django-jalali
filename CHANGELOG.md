@@ -1,19 +1,22 @@
 # Changelog
 
 ### Changed
-- Replace persian astronomical calendar with persian algoritmic calendar #281
+- Replace persian astronomical calendar with persian algoritmic calendar [#281](https://github.com/slashmili/django-jalali/pull/281)
+
+### Fixed
+- Fix calendar icon displaying in admin when static files served on another domain [#280](https://github.com/slashmili/django-jalali/pull/280)
 
 ## [7.3.0] - 2025-01-13
 
 ### Changed
-- Add Jalali settings #269
+- Add Jalali settings [#269](https://github.com/slashmili/django-jalali/pull/269)
 
 ## [7.2.0] - 2024-08-20
 ### Changed
 - Confirm Django 5.1 support
 
 ### Fixed
-- Fix datepicker for inline admin #263
+- Fix datepicker for inline admin [#263](https://github.com/slashmili/django-jalali/pull/263)
 
 ## [7.1.0] - 2024-08-20
 ### Changed
