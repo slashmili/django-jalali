@@ -7,12 +7,19 @@ function mod(a, b) {return a - (b * Math.floor(a / b));}
 
                 This program is in the public domain.
 */
+
+//  LEAP_GREGORIAN  --  Is a given year in the Gregorian calendar a leap year ?
+
 function leap_gregorian(year)
 {
     return ((year % 4) == 0) &&
             (!(((year % 100) == 0) && ((year % 400) != 0)));
 }
+
+//  GREGORIAN_TO_JD  --  Determine Julian day number from Gregorian calendar date
+
 var GREGORIAN_EPOCH = 1721425.5;
+
 function gregorian_to_jd(year, month, day)
 {
     return (GREGORIAN_EPOCH - 1) +
@@ -26,11 +33,15 @@ function gregorian_to_jd(year, month, day)
            ) +
            day);
 }
+
+
+//  JD_TO_GREGORIAN  --  Calculate Gregorian calendar date from Julian day
+
 function jd_to_gregorian(jd) {
     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
         yindex, dyindex, year, yearday, leapadj;
 
-    wjd = Math.floor(jd - 0.5) + 0.5;
+    wjd = Math.floor(jd) + 0.5;
     depoch = wjd - GREGORIAN_EPOCH;
     quadricent = Math.floor(depoch / 146097);
     dqc = mod(depoch, 146097);
@@ -54,78 +65,136 @@ function jd_to_gregorian(jd) {
     return new Array(year, month, day);
 }
 
-function leap_islamic(year)
-{
-    return (((year * 11) + 14) % 30) < 11;
-}
-var ISLAMIC_EPOCH = 1948439.5;
-function islamic_to_jd(year, month, day)
-{
-    return (day +
-            Math.ceil(29.5 * (month - 1)) +
-            (year - 1) * 354 +
-            Math.floor((3 + (11 * year)) / 30) +
-            ISLAMIC_EPOCH) - 1;
-}
-function jd_to_islamic(jd)
-{
-    var year, month, day;
+/*  TEHRAN_EQUINOX  --  Determine Julian day and fraction of the
+                        March equinox at the Tehran meridian in
+                        a given Gregorian year.  */
 
-    jd = Math.floor(jd) + 0.5;
-    year = Math.floor(((30 * (jd - ISLAMIC_EPOCH)) + 10646) / 10631);
-    month = Math.min(12,
-                Math.ceil((jd - (29 + islamic_to_jd(year, 1, 1))) / 29.5) + 1);
-    day = (jd - islamic_to_jd(year, month, 1)) + 1;
-    return new Array(year, month, day);
+function tehran_equinox(year)
+{
+    var equJED, equJD, equAPP, equTehran, dtTehran;
+
+    //  March equinox in dynamical time
+    equJED = equinox(year, 0);
+
+    //  Correct for delta T to obtain Universal time
+    equJD = equJED - (deltat(year) / (24 * 60 * 60));
+
+    //  Apply the equation of time to yield the apparent time at Greenwich
+    equAPP = equJD + equationOfTime(equJED);
+
+    /*  Finally, we must correct for the constant difference between
+        the Greenwich meridian andthe time zone standard for
+    Iran Standard time, 52°30' to the East.  */
+
+    dtTehran = (52 + (30 / 60.0) + (0 / (60.0 * 60.0))) / 360;
+    equTehran = equAPP + dtTehran;
+
+    return equTehran;
 }
 
-function leap_persian(year)
+
+/*  TEHRAN_EQUINOX_JD  --  Calculate Julian day during which the
+                           March equinox, reckoned from the Tehran
+                           meridian, occurred for a given Gregorian
+                           year.  */
+
+function tehran_equinox_jd(year)
 {
-    return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
+    var ep, epg;
+
+    ep = tehran_equinox(year);
+    epg = Math.floor(ep);
+
+    return epg;
 }
+
+/*  PERSIANA_YEAR  --  Determine the year in the Persian
+                       astronomical calendar in which a
+                       given Julian day falls.  Returns an
+             	       array of two elements:
+
+                            [0]  Persian year
+                            [1]  Julian day number containing
+                                 equinox for this year.
+*/
+
 var PERSIAN_EPOCH = 1948320.5;
-function persian_to_jd(year, month, day)
+var PERSIAN_WEEKDAYS = new Array("Yekshanbeh", "Doshanbeh",
+                                 "Seshhanbeh", "Chaharshanbeh",
+                                 "Panjshanbeh", "Jomeh", "Shanbeh");
+function persiana_year(jd)
 {
-    var epbase, epyear;
+    var guess = jd_to_gregorian(jd)[0] - 2,
+        lasteq, nexteq, adr;
 
-    epbase = year - ((year >= 0) ? 474 : 473);
-    epyear = 474 + mod(epbase, 2820);
+    lasteq = tehran_equinox_jd(guess);
+    while (lasteq > jd) {
+        guess--;
+        lasteq = tehran_equinox_jd(guess);
+    }
+    nexteq = lasteq - 1;
+    while (!((lasteq <= jd) && (jd < nexteq))) {
+        lasteq = nexteq;
+        guess++;
+        nexteq = tehran_equinox_jd(guess);
+    }
+    adr = Math.round((lasteq - PERSIAN_EPOCH) / TropicalYear) + 1;
 
-    return day +
+    return new Array(adr, lasteq);
+}
+
+
+/*  PERSIANA_TO_JD  --  Obtain Julian day from a given Persian
+                    	astronomical calendar date.  */
+
+function persiana_to_jd(year, month, day)
+{
+    var adr, equinox, guess, jd;
+
+    guess = (PERSIAN_EPOCH - 1) + (TropicalYear * ((year - 1) - 1));
+    adr = new Array(year - 1, 0);
+
+    while (adr[0] < year) {
+        adr = persiana_year(guess);
+        guess = adr[1] + (TropicalYear + 2);
+    }
+    equinox = adr[1];
+
+    jd = equinox +
             ((month <= 7) ?
                 ((month - 1) * 31) :
                 (((month - 1) * 30) + 6)
             ) +
-            Math.floor(((epyear * 682) - 110) / 2816) +
-            (epyear - 1) * 365 +
-            Math.floor(epbase / 2820) * 1029983 +
-            (PERSIAN_EPOCH - 1);
+            (day - 1);
+    return jd;
 }
-function jd_to_persian(jd)
-{
-    var year, month, day, depoch, cycle, cyear, ycycle,
-        aux1, aux2, yday;
 
+/*  JD_TO_PERSIANA  --  Calculate date in the Persian astronomical
+                        calendar from Julian day.  */
+
+function jd_to_persiana(jd)
+{
+    var year, month, day,
+        adr, equinox, yday;
 
     jd = Math.floor(jd) + 0.5;
-
-    depoch = jd - persian_to_jd(475, 1, 1);
-    cycle = Math.floor(depoch / 1029983);
-    cyear = mod(depoch, 1029983);
-    if (cyear == 1029982) {
-        ycycle = 2820;
-    } else {
-        aux1 = Math.floor(cyear / 366);
-        aux2 = mod(cyear, 366);
-        ycycle = Math.floor(((2134 * aux1) + (2816 * aux2) + 2815) / 1028522) +
-                    aux1 + 1;
-    }
-    year = ycycle + (2820 * cycle) + 474;
-    if (year <= 0) {
-        year--;
-    }
-    yday = (jd - persian_to_jd(year, 1, 1)) + 1;
+    adr = persiana_year(jd);
+    year = adr[0];
+    equinox = adr[1];
+    day = Math.floor((jd - equinox) / 30) + 1;
+    
+    yday = (Math.floor(jd) - persiana_to_jd(year, 1, 1)) + 1;
     month = (yday <= 186) ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30);
-    day = (jd - persian_to_jd(year, month, 1)) + 1;
+    day = (Math.floor(jd) - persiana_to_jd(year, month, 1)) + 1;
+
     return new Array(year, month, day);
+}
+
+/*  LEAP_PERSIANA  --  Is a given year a leap year in the Persian
+    	    	       astronomical calendar ?  */
+
+function leap_persiana(year)
+{
+    return (persiana_to_jd(year + 1, 1, 1) -
+            persiana_to_jd(year, 1, 1)) > 365;
 }
