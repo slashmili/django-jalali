@@ -1,5 +1,7 @@
 # Changelog
 
+## [7.4.0] - 2025-03-27
+
 ### Changed
 - Replace persian astronomical calendar with persian algoritmic calendar [#281](https://github.com/slashmili/django-jalali/pull/281)
 
