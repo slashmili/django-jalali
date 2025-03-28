@@ -351,7 +351,7 @@ You can access the new setting in your code as shown below:
     custom_settings = jalali_settings.CUSTOM_SETTINGS
 
 Javascrip Credits
------------
+-----------------
 
 This project includes few JS files to provide the functionality to show datepicker in Jalali in the admin area:
 
